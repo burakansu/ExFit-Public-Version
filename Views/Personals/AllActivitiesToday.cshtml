@@ -1,0 +1,99 @@
+﻿@model ExFit.Models.PersonalsViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutPartial.cshtml";
+}
+<div class="col-xl-12 col-md-12 box-col-8 xl-70">
+    <div class="email-right-aside bookmark-tabcontent contacts-tabs">
+        <div class="card email-body radius-left">
+            <div class="ps-0">
+                <div class="tab-content">
+                    <div class="tab-pane fade active show" id="pills-personal" role="tabpanel" aria-labelledby="pills-personal-tab">
+                        <div class="card mb-0">
+                            <div class="card-header d-flex">
+                                <h5>Bugünkü Bildirimler</h5>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="row list-persons" id="addcon">
+                                    <div id="divEditPage" class="col-xl-12 xl-12 col-md-7 box-col-6" style="padding:50px;">
+                                        <div class="row">
+                                            <div class="col-xl-12 recent-order-sec">
+                                                <div class="table-responsive">
+                                                    <h5></h5>
+                                                    <table class="table table-bordernone">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Oluşturan Personel</th>
+                                                                <th>İşlem Türü</th>
+                                                                <th>İlgili Üye</th>
+                                                                <th>Tarih</th>
+                                                                <th>
+
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                            @foreach (var item in Model.TodayTasks)
+                                                            {
+                                                                <tr>
+                                                                    <td>
+                                                                        <div class="media">
+                                                                            <img style="height:35px; width:35px;" class="img-fluid rounded-circle" src="@item.User_IMG" alt="" data-original-title="" title="">
+                                                                            <div class="media-body"><a asp-action="UserSettings" asp-controller="Personals" asp-route-id="@item.User_ID"><span>@item.UserName</span></a></div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <p>@item.Description</p>
+                                                                    </td>
+                                                                    <td>
+                                                                        <p>@item.MemberName</p>
+                                                                    </td>
+                                                                    <td><p>@item.Create_Date.ToShortDateString()</p></td>
+                                                                    <td>
+                                                                        @if (Model.User.Type == 1)
+                                                                        {
+                                                                            <a asp-action="Delete_Task" asp-controller="Home" asp-route-id="@item.Task_ID"><p>Sil</p></a>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <p>Sil</p>
+                                                                        }
+
+                                                                    </td>
+                                                                </tr>
+                                                            }
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="code-box-copy">
+                                                    <button class="code-box-copy__btn btn-clipboard" data-clipboard-target="#recent-order" title="Copy"><i class="icofont icofont-copy-alt"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

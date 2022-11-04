@@ -1,0 +1,92 @@
+﻿@model MembersViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutPartial.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-6">
+                <h3>Silinmiş Üyeler</h3>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Anasayfa</a></li>
+                    <li class="breadcrumb-item"><a>Üyeler</a></li>
+                    <li class="breadcrumb-item"><a>Silinmiş Üyeler</a></li>
+                </ol>
+            </div>
+            <div class="col-sm-6">
+                <!-- Bookmark Start-->
+                <div class="bookmark">
+                    <ul>
+                        <li><a asp-action="Index" asp-controller="Home"><i data-feather="home"></i></a></li>
+                        <li><a asp-action="CheckInMember" asp-controller="Members"><i data-feather="user-plus"></i></a></li>
+                        <li><a asp-action="Index" asp-controller="Personals"><i data-feather="briefcase"></i></a></li>
+                        <li><a asp-action="AllMembers" asp-controller="Members"><i data-feather="database"></i></a></li>
+                        <li><a asp-action="ExcersizeRoom" asp-controller="ExcersizeRoom"><i data-feather="clipboard"></i></a></li>
+                        <li><a href="https://burakkansu.com" target="_blank"><i data-feather="info"></i></a></li>                   
+                    </ul>
+                </div>
+                <!-- Bookmark Ends-->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Base styles-->
+<div class="col-sm-12">
+    <div class="card">
+        <div class="card-body">
+            <div class="table">
+                <table class="dataTable table-hover" id="example-style-1">
+                    <thead>
+                        <tr>
+                            <th scope="col">Resim</th>
+                            <th scope="col">Adı</th>
+                            <th scope="col">Telefon</th>
+                            <th scope="col">Mail</th>
+                            <th scope="col">Başlangıç</th>
+                            <th scope="col">Bitiş</th>
+                            <th scope="col">Adres</th>
+                            <th scope="col"> </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var item in Model.Members)
+                        {
+                            <tr>
+                                <td>
+                                    <a asp-action="OpenedMember" asp-controller="Members" asp-route-id="@item.Member_ID">
+                                        <img style="width:50px; height:50px; margin-right:15px;" class="img-50 img-fluid rounded-circle update_img_0" alt="" src="@item.IMG">
+                                    </a>
+                                </td>
+                                <td>
+                                    <a asp-action="OpenedMember" asp-controller="Members" asp-route-id="@item.Member_ID">
+                                        @item.FullName
+                                    </a>
+                                </td>
+                                <td><a asp-action="OpenedMember" asp-controller="Members" asp-route-id="@item.Member_ID">@item.Phone</a></td>
+                                <td><a asp-action="OpenedMember" asp-controller="Members" asp-route-id="@item.Member_ID">@item.Mail</a></td>
+                                <td><a asp-action="OpenedMember" asp-controller="Members" asp-route-id="@item.Member_ID">@item.Registration_Date.ToString("MM/dd/yyyy")</a></td>
+                                <td><a asp-action="OpenedMember" asp-controller="Members" asp-route-id="@item.Member_ID">@item.Registration_Time.ToString("MM/dd/yyyy")</a></td>
+                                <td><a asp-action="OpenedMember" asp-controller="Members" asp-route-id="@item.Member_ID">@item.Adress</a></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a asp-action="ActiveMember" asp-controller="Members" asp-route-id="@item.Member_ID" class="btn btn-light"><i class="fa fa-plus"></i></a>
+                                        <a asp-action="DeleteMember" asp-controller="Members" asp-route-id="@item.Member_ID" class="btn btn-danger "><i class="fa fa-trash"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                    <tfoot>
+                        <tr></tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Base styles Ends-->

@@ -1,0 +1,230 @@
+﻿@model MembersViewModel
+@{
+    if (Model.Member.Member_ID == 0)
+    {
+        Layout = "~/Views/Shared/_LayoutPartial.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+}
+
+<div class="container-fluid">
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-6">
+
+                @if (Model.Member.Member_ID != 0)
+                {
+                    <h3>Güncelleniyor <strong>@Model.Member.FullName</strong></h3>
+                }
+                else
+                {
+                    <h3>Yeni Kayıt</h3>
+                }
+
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Anasayfa</a></li>
+                    <li class="breadcrumb-item"><a asp-controller="AllMembers" asp-action="Index">Üyeler</a></li>
+                    <li class="breadcrumb-item"><a>Yeni Kayıt</a></li>
+                </ol>
+            </div>
+            <div class="col-sm-6">
+
+                <!-- Bookmark Start-->
+                <div class="bookmark">
+                    <ul>
+                        <li><a asp-action="Index" asp-controller="Home"><i data-feather="home"></i></a></li>
+                        <li><a asp-action="CheckInMember" asp-controller="Members"><i data-feather="user-plus"></i></a></li>
+                        <li><a asp-action="Index" asp-controller="Personals"><i data-feather="briefcase"></i></a></li>
+                        <li><a asp-action="AllMembers" asp-controller="Members"><i data-feather="database"></i></a></li>
+                        <li><a asp-action="ExcersizeRoom" asp-controller="ExcersizeRoom"><i data-feather="clipboard"></i></a></li>
+                        <li><a href="https://burakkansu.com" target="_blank"><i data-feather="info"></i></a></li>
+                    </ul>
+                </div>
+                <!-- Bookmark Ends-->
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Container-fluid starts-->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <form class="f1" enctype="multipart/form-data" method="POST" asp-controller="Members" asp-action="SaveMember">
+                        <div class="f1-steps">
+                            <div class="f1-progress">
+                                <div class="f1-progress-line" data-now-value="16.66" data-number-of-steps="3"></div>
+                            </div>
+                            <div class="f1-step active">
+                                <div class="f1-step-icon"><i class="fa fa-user"></i></div>
+                                <p>Kişisel Bilgiler</p>
+                            </div>
+                            <div class="f1-step">
+                                <div class="f1-step-icon"><i class="fa fa-edit"></i></div>
+                                <p>Egzersiz</p>
+                            </div>
+                            <div class="f1-step">
+                                <div class="f1-step-icon"><i class="fa fa-cutlery"></i></div>
+                                <p>Diyet</p>
+                            </div>
+                        </div>
+
+                        <!-- fieldset Start-->
+                        <fieldset>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="mb-3">
+                                        <label>Ad</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="icon-user"></i></span>
+                                            <input class="form-control" asp-for="Member.Name" type="text" placeholder="Ad *" required />
+                                            @*@Html.TextBoxFor(m => m.Member.Name, new{ @class="form-control  required", @type="text", @placeholder="Ad *"})*@
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="mb-3">
+                                        <label>Soyad</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="icon-user"></i></span>
+                                            @Html.TextBoxFor(m => m.Member.Surname, new{ @class="form-control  required", @required="", @type="text", @placeholder="Soyad *"})
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="mb-3">
+                                        <label>Mail</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fa fa-comment-o"></i></span>
+                                            @Html.TextBoxFor(m => m.Member.Mail, new{ @class="form-control  required", @required="", @type="text", @placeholder="Example@gmail.com*"})
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="mb-3">
+                                        <label>Telefon</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fa fa-phone"></i></span>
+                                            @Html.TextBoxFor(m => m.Member.Phone, new{ @class="form-control  required", @type="text", @placeholder="(+90)"})
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="mb-3">
+                                        <label>Ücret</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fa fa-try"></i></span>
+                                            @Html.TextBoxFor(m => m.Member.Price, new{ @class="form-control  required", @type="text", @placeholder="TL*"})
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="mb-3">
+                                        <label>Üyelik Başlangıç</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                            @Html.TextBoxFor(m => m.Member.Registration_Date, new{ @class="datepicker-here form-control digits", @type="text"})
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="mb-3">
+                                        <label>Üyelik Bitiş</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                            @Html.TextBoxFor(m => m.Member.Registration_Time, new{ @class="datepicker-here form-control digits", @type="text"})
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="mb-3">
+                                        <label>Profil Resmi</label>
+                                        @Html.TextBoxFor(m => m.Member.FileAvatarIMG, new{ @class="form-control", @type="file", @name="file"})
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="mb-3">
+                                        <label>Sağlık Raporu</label>
+                                        @Html.TextBoxFor(m => m.Member.FileHealthReport, new{ @class="form-control", @type="file", @name="file"})
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="mb-3">
+                                        <label>Kimlik Kartı</label>
+                                        @Html.TextBoxFor(m => m.Member.FileIdentityCard, new{ @class="form-control", @type="file", @name="file"})
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label>Adres</label>
+                                        @Html.TextAreaFor(m => m.Member.Adress, new{@style="height:100px;", @required="", @class="form-control  required", @id="exampleFormControlTextarea4", @rows="3"})
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="f1-buttons">
+                                <a asp-action="Index" asp-controller="Home" class="btn btn-danger" type="button">İptal</a>
+                                <button class="btn btn-primary btn-next" type="button">İleri</button>
+                            </div>
+                        </fieldset>
+                        <!-- fieldset End-->
+                        <!-- fieldset Start-->
+                        <fieldset>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="mb-3">
+                                        <label>Egzersiz Programı</label>
+                                        @Html.DropDownListFor(m => m.Member.Excersize_ID,new SelectList(Model.ExcersizeArray, "Excersize_ID","Excersize_Name"), new {@class="form-select", @id="ExcersizeList"})
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="f1-buttons">
+                                <a asp-action="Index" asp-controller="Home" class="btn btn-danger" type="button">İptal</a>
+                                <button class="btn btn-primary btn-previous" type="button">Geri</button>
+                                <button class="btn btn-primary btn-next" type="button">İleri</button>
+                            </div>
+                        </fieldset>
+                        <!-- fieldset End-->
+                        <!-- fieldset Start-->
+                        <fieldset>
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="mb-3">
+                                        <label>Egzersiz Programı</label>
+                                        @Html.DropDownListFor(m => m.Member.Diet_ID,new SelectList(Model.DietArray, "Diet_ID","Diet_Name"), new {@class="form-select", @id="DietList"})
+                                    </div>
+                                </div>
+                            </div>
+
+                            @Html.HiddenFor(m => m.Member.Member_ID)
+                            @Html.HiddenFor(m => m.Member.IMG)
+                            @Html.HiddenFor(m => m.Member.Identity_Card)
+                            @Html.HiddenFor(m => m.Member.Health_Report)
+                            <div class="f1-buttons">
+                                <a asp-action="Index" asp-controller="Home" class="btn btn-danger" type="button">İptal</a>
+                                <button class="btn btn-primary btn-previous" type="button">Geri</button>
+                                <button class="btn btn-primary btn-previous" type="submit">Kaydet</button>
+                            </div>
+                        </fieldset>
+                        <!-- fieldset End-->
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Container-fluid Ends-->

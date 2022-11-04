@@ -1,0 +1,85 @@
+﻿@model ExFit.Models.PersonalsViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutPartial.cshtml";
+}
+<div class="container-fluid">
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-6">
+                <h3>Personeller</h3>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Anasayfa</a></li>
+                    <li class="breadcrumb-item"><a>Personeller</a></li>
+                </ol>
+            </div>
+            <div class="col-sm-6">
+                <!-- Bookmark Start-->
+                <div class="bookmark">
+                    <ul>
+                        <li><a asp-action="Index" asp-controller="Home"><i data-feather="home"></i></a></li>
+                        @*<li><a asp-action="AllActivitiesToday" asp-controller="Personals"><i data-feather="message-square"></i></a></li>*@
+                        <li><a asp-action="CheckInMember" asp-controller="Members"><i data-feather="user-plus"></i></a></li>
+                        <li><a asp-action="Index" asp-controller="Personals"><i data-feather="briefcase"></i></a></li>
+                        <li><a asp-action="AllMembers" asp-controller="Members"><i data-feather="database"></i></a></li>
+                        <li><a asp-action="ExcersizeRoom" asp-controller="ExcersizeRoom"><i data-feather="clipboard"></i></a></li>
+                        <li><a href="https://burakkansu.com" target="_blank"><i data-feather="info"></i></a></li>
+                        
+                    </ul>
+                </div>
+                <!-- Bookmark Ends-->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <div class="email-right-aside bookmark-tabcontent contacts-tabs">
+        <div class="card email-body radius-left">
+            <div class="ps-0">
+                <div class="tab-content">
+                    <div class="tab-pane fade active show" id="pills-personal" role="tabpanel" aria-labelledby="pills-personal-tab">
+                        <div class="card mb-0">
+                            <div class="card-body p-0">
+                                <div class="row list-persons" id="addcon">
+                                    <div class="col-xl-4 xl-50 col-md-5 box-col-6">
+                                        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+
+                                            @foreach (var item in Model.Users)
+                                            {
+                                                <a id="btnPersonEdit" data-id="@item.User_ID" class=" nav-link " data-bs-toggle="pill" href="" role="tab" aria-controls="v-pills-user" aria-selected="true">
+                                                    <div class="media">
+                                                        <img class="img-50 img-fluid m-r-20 rounded-circle update_img_0" src="@item.IMG" alt="">
+                                                        <div class="media-body">
+                                                            <h6> <span class="first_name_0">@item.Name</span><span class="last_name_0"> @item.Surname</span></h6>
+                                                            <p class="email_add_0">@item.Position</p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            }
+
+                                        </div>
+                                    </div>
+                                    <div id="divEditPage" class="col-xl-8 xl-50 col-md-7 box-col-6">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+            $(document).on('click', '#btnPersonEdit', function () {
+                var id = $(this).attr("data-id");
+                $("#divEditPage").load("/Personals/GetUser?id=" + id, function () {
+                });
+            });
+        });
+    </script>
+}

@@ -1,0 +1,92 @@
+﻿@model ExFit.Models.PersonalsViewModel
+
+
+
+<div class="tab-content" id="v-pills-tabContent">
+    <div class="tab-pane tab-content-child fade show active" id="v-pills-user" role="tabpanel" aria-labelledby="v-pills-user-tab">
+        <div class="profile-mail">
+            <div class="media align-items-center">
+                <img class="img-100 img-fluid m-r-20 rounded-circle update_img_0" src="@Model.SelectedUser.IMG" alt="">
+                <input class="updateimg" type="file" name="img" onchange="readURL(this,0)">
+                <div class="media-body mt-0">
+                    <h5><span class="first_name_0">@Model.SelectedUser.Name</span><span class="last_name_0">@Model.SelectedUser.Surname</span></h5>
+                    <p class="email_add_0">@Model.SelectedUser.Mail</p>
+                    <ul>
+                        <li><a asp-action="UserSettings" asp-controller="Personals" asp-route-id="@Model.SelectedUser.User_ID">Personel Kartı</a></li>
+                        <li><a onclick="printContact(0)" data-bs-toggle="modal" data-bs-target="#printModal">Yazdır</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="email-general">
+                <h6 class="mb-3">General</h6>
+                <ul>
+                    <li>İsim <span class="font-primary first_name_0">@Model.SelectedUser.Name</span></li>
+                    <li>Soyisim <span class="font-primary">@Model.SelectedUser.Surname</span></li>
+                    <li>Pozisyon<span class="font-primary personality_0">@Model.SelectedUser.Position</span></li>
+                    <li>Telefon Numarası<span class="font-primary mobile_num_0">@Model.SelectedUser.Phone</span></li>
+                    <li>Email Address <span class="font-primary email_add_0">@Model.SelectedUser.Mail</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="editpersonalform" class="contact-editform">
+    <form enctype="multipart/form-data" method="POST" asp-controller="Personals" asp-action="Registrying">
+        <div class="row g-2">
+            <div class="mt-0 mb-3 col-md-12">
+                <label>İsim</label>
+                <div class="row">
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.SelectedUser.Name, new{ @class="form-control", @type="text", @required="", @placeholder="İsim"})
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.SelectedUser.Surname, new{ @class="form-control", @type="text", @required="", @placeholder="Soyisim"})
+                    </div>
+                </div>
+            </div>
+            <div class="mt-0 mb-3 col-md-12">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label>İletişim</label>
+                        @Html.TextBoxFor(m => m.SelectedUser.Mail, new{ @class="form-control", @type="text", @required="", @placeholder="Mail"})
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.SelectedUser.Phone, new{ @class="form-control", @type="text", @required="", @placeholder="Telefon Numarası"})
+                    </div>
+                </div>
+            </div>
+            <div class="mt-0 mb-3 col-md-12">
+                <label>Resim</label>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        @Html.HiddenFor(m => m.SelectedUser.IMG, new{ @class="form-control"})
+                        @Html.HiddenFor(m => m.SelectedUser.Password, new{ @class="form-control"})
+                        @Html.HiddenFor(m => m.SelectedUser.Type, new{ @class="form-control"})
+                        @Html.HiddenFor(m => m.SelectedUser.User_ID, new{ @class="form-control"})
+
+                        @Html.TextBoxFor(m => m.file, new{ @class="form-control", @type="file", @name="file"})
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.SelectedUser.Position, new{ @class="form-control", @type="text", @required="", @placeholder="Pozisyon"})
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-0 mb-3 col-md-12">
+            <div class="row">
+                <div class="col-sm-6">
+
+                    @if (Model.User.Type == 1)
+                    {
+                        <button class="btn btn-primary update-contact" type="submit">Kaydet</button>
+                        <button asp-controller="Personals" asp-action="Delete" asp-route-id=@Model.SelectedUser.User_ID class="btn btn-danger update-contact">İşten Çıkar</button>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,142 @@
+﻿@model DietRoomViewModel
+
+@{
+    if (Model.Diet == null)
+    {
+        Layout = "~/Views/Shared/_LayoutPartial.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+}
+<div class="container-fluid">
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-6">
+                <h3>Diyet Programları</h3>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Director">Anasayfa</a></li>
+                    <li class="breadcrumb-item"><a>Programlar</a></li>
+                    <li class="breadcrumb-item"><a>Diyet</a></li>
+                </ol>
+            </div>
+            <div class="col-sm-6">
+                <!-- Bookmark Start-->
+                <div class="bookmark">
+                    <ul>
+                        <li>
+                            <a data-bs-toggle="modal" data-original-title="Ekle" data-bs-target="#exampleModal2"><i data-feather="plus"></i></a>
+                            <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="card">
+                                            <div class="card-header p-0">
+                                                <div class="card-options">
+                                                    <div class="u-step" style="width:100%;">
+                                                        <i style="float:right;" data-feather="edit"></i>
+                                                        <div class="u-step-desc">
+                                                            <h6 class="u-step-title">Yeni Diyet Programı</h6>
+                                                            <p style="margin-top:5px;">Bilgileri girin Ve kaydedin</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <form enctype="multipart/form-data" method="POST" asp-controller="DietRoom" asp-action="SaveDatabaseDiet">
+                                                    <div class="mb-3">
+                                                        <label>Diyet Programı</label>
+                                                        @Html.TextBoxFor(m => m.Diet.FileDietIMG, new{ @class="form-control", @type="file", @name="file"})
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label>Diyet Adı</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text"><i class="icon-user"></i></span>
+                                                            @Html.TextBoxFor(m => m.Diet.Diet_Name, new{ @class="form-control  required", @type="text", @placeholder="Diyet Adı *"})
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label>Yazan</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text"><i class="icon-user"></i></span>
+                                                            @Html.TextBoxFor(m => m.Diet.Author, new{ @class="form-control  required", @type="text", @placeholder="Ad *"})
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-footer">
+                                                        <button style="width:100%;" class="btn btn-primary me-3" type="submit">Kaydet</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li><a asp-action="Index" asp-controller="Home"><i data-feather="home"></i></a></li>
+                        @*<li><a asp-action="AllActivitiesToday" asp-controller="Personals"><i data-feather="message-square"></i></a></li>*@
+                        <li><a asp-action="CheckInMember" asp-controller="Members"><i data-feather="user-plus"></i></a></li>
+                        <li><a asp-action="Index" asp-controller="Personals"><i data-feather="briefcase"></i></a></li>
+                        <li><a asp-action="AllMembers" asp-controller="Members"><i data-feather="database"></i></a></li>
+                        <li><a asp-action="ExcersizeRoom" asp-controller="ExcersizeRoom"><i data-feather="clipboard"></i></a></li>
+                        <li><a href="https://burakkansu.com" target="_blank"><i data-feather="info"></i></a></li>
+
+                    </ul>
+                </div>
+                <!-- Bookmark Ends-->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Container-fluid starts-->
+<div class="container-fluid user-card">
+    <div class="row">
+        @foreach (var item in Model.Diets)
+        {
+            <div class="col-md-4 col-lg-4 col-xl-3 box-col-4">
+                <div class="card custom-card" style="border-radius:10px;">
+                    <div style="height:250px; text-align:center">
+                        <a href="javascript:void(0)" data-bs-toggle="modal" data-original-title="test" data-bs-target="#exampleModal_@item.Diet_ID">
+                            <img style="height:250px;object-fit:contain;" class="img-fluid" src="@item.IMG" alt="">
+                        </a>
+                    </div>
+                    <div class="text-center profile-details">
+                        <ul class="card-social">
+                            <li><a href="javascript:void(0)" data-bs-toggle="modal" data-original-title="test" data-bs-target="#exampleModal_@item.Diet_ID"><i class="fa fa-picture-o"></i></a></li>
+                            <!-- Modal-->
+                            <div class="modal fade" id="exampleModal_@item.Diet_ID" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">@item.Diet_Name</h5>
+                                            <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <img class="img-fluid" src="@item.IMG" alt="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <li><a href="javascript:void(0)"><i class="fa fa-refresh"></i></a></li>
+                            <li><a asp-action="DeleteDiet" asp-controller="DietRoom" asp-route-id="@item.Diet_ID"><i class="fa fa-trash"></i></a></li>
+                        </ul>
+                        <a href="javascript:void(0)" data-bs-toggle="modal" data-original-title="test" data-bs-target="#exampleModal_@item.Diet_ID">
+                            <h4>@item.Diet_Name</h4>
+                        </a>
+                        <h6>@item.Author</h6>
+                    </div>
+                    <div class="card-footer row">
+                        <div class="col-6 col-sm-6">
+                            <h6>Kullanım</h6>
+                            <p class="counter">@item.Count</p>
+                        </div>
+                        <div class="col-6 col-sm-6">
+                            <h6>Eklenme Tarihi</h6>
+                            <p>@item.Registration_Date.ToShortDateString()</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<!-- Container-fluid Ends-->

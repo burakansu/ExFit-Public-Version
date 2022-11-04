@@ -1,0 +1,1 @@
+﻿wwwroot dizini bu versiyonda devre dışı bırakılmıştır.
