@@ -61,8 +61,8 @@ namespace FunctionLayer.Stats_Manager.Regression
                 return Yi_Tilda;
             }
             SQL sQL = new SQL();
-            DataTable TBL = sQL.GetTBL("SELECT Weight FROM TBL_Members_Meazurements WHERE Member_ID=" + ID);
-            n = TBL.Rows.Count;
+            var Array = sQL.Get<int[]>("SELECT Weight FROM TBL_Members_Meazurements WHERE Member_ID=" + ID);
+            n = Array.Count();
             Yi_Tilda = new Double[Total];
             Xi = new Double[12];
             Yi = new Double[n];
@@ -74,7 +74,7 @@ namespace FunctionLayer.Stats_Manager.Regression
                 }
                 for (int i = 0; i < n; i++)
                 {
-                    Yi[i] = (int)TBL.Rows[i]["Weight"];
+                    Yi[i] = Convert.ToDouble(Array[i]);
                 }
             }
             Method_b();
