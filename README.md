@@ -1,6 +1,5 @@
 ### Gym Manager And Statistical Analyzer
 
-(**MVVMC**) Tasarım Şeması izlenerek Yazılmıştır.
 
 
 ### Katmanlı Mimari Yapısı
