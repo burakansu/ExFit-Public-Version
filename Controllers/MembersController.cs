@@ -1,7 +1,11 @@
 ﻿using BussinesLayer;
 using ExFit.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Data;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace ExFit.Controllers
 {

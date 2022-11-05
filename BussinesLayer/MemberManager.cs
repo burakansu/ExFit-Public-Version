@@ -11,7 +11,7 @@ namespace BussinesLayer
         SQL sQL = new SQL();
         public int CountMembers()
         {
-            return sQL.Get<int>("SELECT COUNT(*) FROM TBL_Members")[0];
+            return sQL.GetSingle<int>("SELECT COUNT(*) FROM TBL_Members");
         }
         public List<ObjMember> GetMembers(int last = 0, int pasive = 0)
         {
@@ -45,7 +45,7 @@ namespace BussinesLayer
         }
         public void SaveMemberMeazurements(ObjMemberMeazurement objMemberMeazurement)
         {
-            int Count = sQL.Get<int>("SELECT COUNT(*) FROM TBL_Members_Meazurements WHERE Member_ID=" + objMemberMeazurement.Member_ID)[0];
+            int Count = sQL.GetSingle<int>("SELECT COUNT(*) FROM TBL_Members_Meazurements WHERE Member_ID=" + objMemberMeazurement.Member_ID);
             objMemberMeazurement.Which_Month = Count + 1;
             sQL.Execute("INSERT INTO TBL_Members_Meazurements (Member_ID,Shoulder,Chest,Arm,Belly,Leg,Weight,Age,Size,Which_Month,Avarage_Asleep_Time,Avarage_Calorie_Intake) VALUES (@Member_ID,@Shoulder,@Chest,@Arm,@Belly,@Leg,@Weight,@Age,@Size,@Which_Month,@Avarage_Asleep_Time,@Avarage_Calorie_Intake) ", objMemberMeazurement);
         }
@@ -70,7 +70,7 @@ namespace BussinesLayer
             {
                 for (int i = 0; i < TBL.Rows.Count; i++)
                 {
-                    Weights[i] = (double)TBL.Rows[i]["Weight"];
+                    Weights[i] = Convert.ToDouble(TBL.Rows[i]["Weight"]);
                     WeightsAndCurve[i] = Weights[i];
                 }
                 LinearCurve linearCurve = new LinearCurve();
