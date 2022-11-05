@@ -64,11 +64,11 @@ namespace BussinesLayer
         public double[] GetMemberWeightsArray(int id)
         {
             var Array = sQL.Get<int[]>("SELECT Weight FROM TBL_Members_Meazurements WHERE Member_ID=" + id);
-            double[] Weights = new double[Array.Count];
+            double[] Weights = new double[Array.Count()];
             double[] WeightsAndCurve = new double[12];
-            if (Array.Count > 0)
+            if (Array.Count() > 0)
             {
-                for (int i = 0; i < Array.Count; i++)
+                for (int i = 0; i < Array.Count(); i++)
                 {
                     Weights[i] = Convert.ToDouble(Array[i]);
                     WeightsAndCurve[i] = Weights[i];
