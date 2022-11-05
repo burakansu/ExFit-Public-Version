@@ -14,14 +14,9 @@ namespace ObjectLayer
             get
             {
                 SQL sQL = new SQL();
-                DataTable MembersTable = sQL.GetTBL("SELECT Name,Surname FROM TBL_Members WHERE Member_ID=" + this.Member_ID);
-                if (MembersTable.Rows.Count > 0)
-                {
-                    String FullName = (String)MembersTable.Rows[0]["Name"];
-                    FullName += " " + (String)MembersTable.Rows[0]["Surname"];
-                    return FullName;
-                }
-                return "-";
+                string Name = sQL.GetSingle<string>("SELECT Name FROM TBL_Members WHERE Member_ID=" + this.Member_ID);
+                string Surname = sQL.GetSingle<string>("SELECT Surname FROM TBL_Members WHERE Member_ID=" + this.Member_ID);
+                return Name + " " + Surname;
             }
         }
         public string User_IMG
@@ -29,12 +24,7 @@ namespace ObjectLayer
             get
             {
                 SQL sQL = new SQL();
-                DataTable Tbl_User = sQL.GetTBL("SELECT IMG FROM TBL_Users WHERE User_ID=" + this.User_ID);
-                if (Tbl_User.Rows.Count > 0)
-                {
-                    return (String)Tbl_User.Rows[0]["IMG"];
-                }
-                return "-";
+                return sQL.GetSingle<string>("SELECT IMG FROM TBL_Users WHERE User_ID=" + this.User_ID);
             }
         }
         public string UserName
@@ -42,14 +32,9 @@ namespace ObjectLayer
             get
             {
                 SQL sQL = new SQL();
-                DataTable Tbl_User = sQL.GetTBL("SELECT Name,Surname FROM TBL_Users WHERE User_ID=" + this.User_ID);
-                if (Tbl_User.Rows.Count > 0)
-                {
-                    String FullName = (String)Tbl_User.Rows[0]["Name"];
-                    FullName += " " + (String)Tbl_User.Rows[0]["Surname"];
-                    return FullName;
-                }
-                return "-";
+                string Name = sQL.GetSingle<string>("SELECT Name FROM TBL_Users WHERE User_ID=" + this.User_ID);
+                string Surname = sQL.GetSingle<string>("SELECT Surname FROM TBL_Users WHERE User_ID=" + this.User_ID);
+                return Name + " " + Surname;
             }
         }
     }
