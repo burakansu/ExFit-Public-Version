@@ -1,10 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace DatabaseLayer.MSSQL_Databases.ExFit_Database
+﻿namespace DatabaseLayer.MSSQL_Databases.ExFit_Database
 {
     public class TBL_Blog
     {
-        [Key]
         public int Post_ID { get; set; }
         public string IMG { get; set; }
         public string Head { get; set; }

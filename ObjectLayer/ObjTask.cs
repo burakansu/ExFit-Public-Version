@@ -6,12 +6,15 @@ namespace ObjectLayer
 {
     public class ObjTask : TBL_Tasks
     {
+
+        //Sanal Tablo Kolonları
+
         public string MemberName
         { 
             get
             {
                 SQL sQL = new SQL();
-                DataTable MembersTable = sQL.GetDataTable("SELECT Name,Surname FROM TBL_Members WHERE Member_ID=" + this.Member_ID);
+                DataTable MembersTable = sQL.GetTBL("SELECT Name,Surname FROM TBL_Members WHERE Member_ID=" + this.Member_ID);
                 if (MembersTable.Rows.Count > 0)
                 {
                     String FullName = (String)MembersTable.Rows[0]["Name"];
@@ -26,7 +29,7 @@ namespace ObjectLayer
             get
             {
                 SQL sQL = new SQL();
-                DataTable Tbl_User = sQL.GetDataTable("SELECT IMG FROM TBL_Users WHERE User_ID=" + this.User_ID);
+                DataTable Tbl_User = sQL.GetTBL("SELECT IMG FROM TBL_Users WHERE User_ID=" + this.User_ID);
                 if (Tbl_User.Rows.Count > 0)
                 {
                     return (String)Tbl_User.Rows[0]["IMG"];
@@ -39,7 +42,7 @@ namespace ObjectLayer
             get
             {
                 SQL sQL = new SQL();
-                DataTable Tbl_User = sQL.GetDataTable("SELECT Name,Surname FROM TBL_Users WHERE User_ID=" + this.User_ID);
+                DataTable Tbl_User = sQL.GetTBL("SELECT Name,Surname FROM TBL_Users WHERE User_ID=" + this.User_ID);
                 if (Tbl_User.Rows.Count > 0)
                 {
                     String FullName = (String)Tbl_User.Rows[0]["Name"];

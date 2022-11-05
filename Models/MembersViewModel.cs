@@ -15,6 +15,9 @@ namespace ExFit.Models
         public List<ObjMemberMeazurement> MemberMeazurements { get; set; }
         public double[] MemberWeightArray { get; set; }
         public List<ObjTask> Tasks { get; set; }
+
+        // ViewModel in içine gömülü sanal property ler.
+
         public List<ObjExcersize> ExcersizeArray
         {
             get

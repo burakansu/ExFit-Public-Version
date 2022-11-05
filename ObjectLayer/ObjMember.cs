@@ -1,5 +1,4 @@
 ﻿using DatabaseLayer;
-using DatabaseLayer.ExFit_Database;
 using Microsoft.AspNetCore.Http;
 
 namespace ObjectLayer
@@ -9,6 +8,9 @@ namespace ObjectLayer
         public IFormFile? FileAvatarIMG { get; set; }
         public IFormFile? FileHealthReport { get; set; }
         public IFormFile? FileIdentityCard { get; set; }
+
+        //Sanal Tablo Kolonları
+
         public string FullName
         {
             get
@@ -21,8 +23,7 @@ namespace ObjectLayer
             get
             {
                 SQL sQL = new SQL();
-                return sQL.Count_Database("SELECT DATEDIFF(DAY,'" + DateTime.Now.ToString("yyyyMMdd") + "','"+ this.Registration_Time.ToString("yyyyMMdd") +"')");
-
+                return sQL.GetSingle<int>("SELECT DATEDIFF(DAY,'" + DateTime.Now.ToString("yyyyMMdd") + "','"+ this.Registration_Time.ToString("yyyyMMdd") + "')");
             }
         }
     }

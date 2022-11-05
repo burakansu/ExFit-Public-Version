@@ -1,10 +1,6 @@
 ﻿using BussinesLayer;
 using ExFit.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace ExFit.Controllers
 {
@@ -28,7 +24,7 @@ namespace ExFit.Controllers
         public IActionResult DeleteExcersize(int id)
         {
             excersize_Manager.DeleteExcersize(id);
-            return RedirectToAction("ExcersizeRoom", "ExcersizeRoom", ViewModel());
+            return RedirectToAction("Index", "Home");
         }
         public async Task<IActionResult> SaveDatabaseExcersizeAsync(ExcersizeRoomViewModel viewModelExcersizeRoom)
         {
@@ -44,7 +40,7 @@ namespace ExFit.Controllers
             else if (viewModelExcersizeRoom.Excersize.IMG == null) { viewModelExcersizeRoom.Excersize.IMG = "/Member/ProfilePhotos/AvatarNull.png"; }
             excersize_Manager.AddDatabaseExcersize(viewModelExcersizeRoom.Excersize);
             TaskBuilder(5, 0);
-            return RedirectToAction("ExcersizeRoom", "ExcersizeRoom", ViewModel());
+            return RedirectToAction("Index", "Home");
         }
     }
 }

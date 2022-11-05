@@ -1,8 +1,6 @@
 ﻿using BussinesLayer;
 using ExFit.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace ExFit.Controllers
 {
@@ -13,6 +11,10 @@ namespace ExFit.Controllers
         TaskManager taskManager = new TaskManager();
         UserManager userManager = new UserManager();
 
+        public HomeController(ILogger<HomeController> logger)
+        {
+            _logger = logger;
+        }
         public HomeViewModel ViewModel()
         {
             HomeViewModel homeViewModel = new HomeViewModel();
@@ -25,10 +27,6 @@ namespace ExFit.Controllers
             homeViewModel.User = userManager.GetUser((int)HttpContext.Session.GetInt32("ID"));
             homeViewModel.TodayTaskCount = taskManager.CountTasks();
             return homeViewModel;
-        }
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
         }
         public IActionResult Index()
         {          
