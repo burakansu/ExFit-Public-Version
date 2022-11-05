@@ -15,10 +15,15 @@ Tüm İstatistiksel Formüllerin Ve Hesaplamaların Yapıldığı Katman.
 ### Kullanılan Teknolojiler
 
 Veritabanı **TSQL**
+
 ORM Sistemi **Dapper** 
+
 Sekmelerde Ve Çeşitli Noktalarda Sayfa Yüklemelerinde **Ajax**
+
 Full Responsive Tasarım Ve Animasyonlar  **Html5, Css3, Javascript**
+
 Geliştirme Ortamı **.Net 6** VS2022
+
 **Jquery ve Bootstrap** Kütüphanelerinden Yararlanılmıştır.
 
 ### Canlı Olarak Deneyin
