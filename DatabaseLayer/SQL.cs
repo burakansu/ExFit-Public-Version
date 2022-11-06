@@ -6,7 +6,7 @@ namespace DatabaseLayer
 {
     public class SQL
     {
-        public static string Sql = "";
+        public static string Sql;
 
         public List<T> Get<T>(string sql)
         {
