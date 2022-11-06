@@ -23,7 +23,7 @@ namespace ObjectLayer
             get
             {
                 SQL sQL = new SQL();
-                return sQL.GetSingle<int>("SELECT DATEDIFF(DAY,'" + DateTime.Now.ToString("yyyyMMdd") + "','"+ this.Registration_Time.ToString("yyyyMMdd") + "')");
+                return sQL.Single<int>("SELECT DATEDIFF(DAY,'" + DateTime.Now.ToString("yyyyMMdd") + "','"+ this.Registration_Time.ToString("yyyyMMdd") + "')");
             }
         }
     }

@@ -20,7 +20,7 @@ namespace BussinesLayer
         public void SaveTask(ObjTask objTask)
         {
             objTask.Create_Date = DateTime.Now;
-            SQL.Execute("INSERT INTO TBL_Tasks (Description,Create_Date,User_ID,Member_ID) VALUES (@Description,@Create_Date,@User_ID,@Member_ID)", objTask);
+            SQL.Run("INSERT INTO TBL_Tasks (Description,Create_Date,User_ID,Member_ID) VALUES (@Description,@Create_Date,@User_ID,@Member_ID)", objTask);
         }
         public void DeleteTask(int Task_ID, int last = 0)
         {
@@ -36,7 +36,7 @@ namespace BussinesLayer
         }
         public int CountTasks()
         {
-            return SQL.GetSingle<int>("SELECT COUNT(*) FROM TBL_Tasks");
+            return SQL.Single<int>("SELECT COUNT(*) FROM TBL_Tasks");
         }
     }
 }

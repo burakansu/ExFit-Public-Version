@@ -15,7 +15,7 @@ namespace ObjectLayer
             get
             {
                 SQL sQL = new SQL();
-                return sQL.GetSingle<int>("SELECT COUNT(*) FROM TBL_Members WHERE Excersize_ID="+ this.Excersize_ID);
+                return sQL.Single<int>("SELECT COUNT(*) FROM TBL_Members WHERE Excersize_ID="+ this.Excersize_ID);
             }   
         }
     }

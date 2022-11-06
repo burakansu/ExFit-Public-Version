@@ -14,7 +14,7 @@ namespace BussinesLayer
         }
         public ObjUser CheckUserEntering(ObjUser User)
         {
-            ObjUser _user = SQL.GetSingle<ObjUser>("SELECT * FROM TBL_Users WHERE Mail='" + User.Mail + "' AND Password='" + User.Password + "'");
+            ObjUser _user = SQL.Single<ObjUser>("SELECT * FROM TBL_Users WHERE Mail='" + User.Mail + "' AND Password='" + User.Password + "'");
 
             if (_user.User_ID != 0)
             {
@@ -32,17 +32,17 @@ namespace BussinesLayer
         {
             if (objUser.User_ID != 0)
             {
-                SQL.Execute("UPDATE TBL_Users SET Phone=@Phone ,Name=@Name ,Surname=@Surname ,Mail=@Mail ,Password=@Password ,Position=@Position ,IMG=@IMG WHERE User_ID=" + objUser.User_ID, objUser);
+                SQL.Run("UPDATE TBL_Users SET Phone=@Phone ,Name=@Name ,Surname=@Surname ,Mail=@Mail ,Password=@Password ,Position=@Position ,IMG=@IMG WHERE User_ID=" + objUser.User_ID, objUser);
                 taskManager.DeleteTask(0, 1);
             }
             else
             {
-                SQL.Execute("INSERT INTO TBL_Users (Name,Surname,Mail,Password,Position,Type,IMG,Phone) VALUES (@Name,@Surname,@Mail,@Password,@Position,@Type,@IMG,@Phone)", objUser);
+                SQL.Run("INSERT INTO TBL_Users (Name,Surname,Mail,Password,Position,Type,IMG,Phone) VALUES (@Name,@Surname,@Mail,@Password,@Position,@Type,@IMG,@Phone)", objUser);
             }
         }
         public void DeleteUser(int User_ID)
         {
-            SQL.Execute("DELETE TBL_Users WHERE User_ID=" + User_ID);
+            SQL.Run("DELETE TBL_Users WHERE User_ID=" + User_ID);
         }
         public List<ObjTask> GetUserTasks(int id)
         {
@@ -50,7 +50,7 @@ namespace BussinesLayer
         }
         public ObjUser GetUser(int ID)
         {
-            return SQL.GetSingle<ObjUser>("SELECT * FROM TBL_Users WHERE User_ID=" + ID);
+            return SQL.Single<ObjUser>("SELECT * FROM TBL_Users WHERE User_ID=" + ID);
         }
         public List<ObjUser> GetUsers()
         {
