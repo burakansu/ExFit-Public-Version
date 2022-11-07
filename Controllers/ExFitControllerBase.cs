@@ -6,7 +6,7 @@ using ObjectLayer;
 
 namespace ExFit.Controllers
 {
-    public class ExFitControllerBase : Controller
+    public class MemberControllerBase : Controller
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {

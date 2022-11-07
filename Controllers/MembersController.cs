@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ExFit.Controllers
 {
-    public class MembersController : ExFitControllerBase
+    public class MembersController : MemberControllerBase
     {
         UserManager userManager = new UserManager();
         MemberManager memberManager = new MemberManager();

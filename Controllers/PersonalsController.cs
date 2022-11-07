@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ExFit.Controllers
 {
-    public class PersonalsController : ExFitControllerBase
+    public class PersonalsController : MemberControllerBase
     {
         UserManager userManager = new UserManager();
         TaskManager taskManager = new TaskManager();

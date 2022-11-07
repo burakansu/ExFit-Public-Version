@@ -34,6 +34,17 @@ namespace BussinesLayer
         }
         public List<ObjMember> GetMembers(int last = 0, int pasive = 0)
         {
+            IncomeManager incomeManager = new IncomeManager();
+            ObjIncome objIncome = new ObjIncome();
+            int c = sQL.Value<int>("SELECT Count(*) FROM TBL_Members WHERE Registration_Date BETWEEN '" + DateTime.Now.Year + "-" + DateTime.Now.Month + "-01' AND '" + DateTime.Now.Year + "-" + DateTime.Now.Month + "-28' ");
+            if (c > 0)
+            {
+                objIncome.Value = sQL.Value<int>("SELECT SUM(Price) AS 'summary' FROM TBL_Members WHERE Registration_Date BETWEEN '" + DateTime.Now.Year + "-" + DateTime.Now.Month + "-01' AND '" + DateTime.Now.Year + "-" + DateTime.Now.Month + "-28' ");
+                objIncome.Income_ID = sQL.Single<int>("SELECT Income_ID FROM TBL_Income WHERE WhichMonth=" + DateTime.Now.Month);
+                incomeManager.SaveIncome(objIncome);
+            }
+
+
             string Query = "SELECT * FROM TBL_Members WHERE Block = 0";
             if (last == 1) { Query = "SELECT top 3 * FROM TBL_Members ORDER BY Member_ID DESC"; }
             else if (pasive == 1) { Query = "SELECT * FROM TBL_Members WHERE Block = 1"; }
@@ -41,7 +52,7 @@ namespace BussinesLayer
         }
         public ObjMember GetMember(int id)
         {
-                return sQL.Single<ObjMember>("SELECT * FROM TBL_Members WHERE Member_ID=" + id);
+            return sQL.Single<ObjMember>("SELECT * FROM TBL_Members WHERE Member_ID=" + id);
         }
         public void DeleteMember(int id, bool Del = false)
         {

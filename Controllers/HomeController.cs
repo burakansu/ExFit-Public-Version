@@ -6,12 +6,14 @@ using Microsoft.Extensions.Logging;
 
 namespace ExFit.Controllers
 {
-    public class HomeController : ExFitControllerBase
+    public class HomeController : MemberControllerBase
     {
         private readonly ILogger<HomeController> _logger;
         MemberManager memberManager = new MemberManager();
         TaskManager taskManager = new TaskManager();
         UserManager userManager = new UserManager();
+        CostManager costManager = new CostManager();
+        IncomeManager incomeManager = new IncomeManager();
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -19,16 +21,33 @@ namespace ExFit.Controllers
         }
         public _MembersViewModel ViewModel()
         {
-            _MembersViewModel homeViewModel = new _MembersViewModel();
-            homeViewModel.ThisYearRegistrys = memberManager.GetThisYearRegystry();
-            homeViewModel.Members = memberManager.GetMembers(0, 0);
-            homeViewModel.LastMembers = memberManager.GetMembers(1, 0);            
-            homeViewModel.Users = userManager.GetUsers();
-            homeViewModel.Income = memberManager.GetIncome();
-            homeViewModel.Tasks = taskManager.GetLastFiveTask();
-            homeViewModel.User = userManager.GetUser((int)HttpContext.Session.GetInt32("ID"));
-            homeViewModel.TodayTaskCount = taskManager.CountTasks();
-            return homeViewModel;
+            _MembersViewModel Model = new _MembersViewModel();
+            Model.ThisYearRegistrys = memberManager.GetThisYearRegystry();
+            Model.Members = memberManager.GetMembers(0, 0);
+            Model.LastMembers = memberManager.GetMembers(1, 0);            
+            Model.Users = userManager.GetUsers();
+            Model.Income = memberManager.GetIncome();
+            Model.Costs = costManager.GetCosts();
+            Model.Incomes = incomeManager.GetIncomes();
+            Model.Tasks = taskManager.GetLastFiveTask();
+            Model.User = userManager.GetUser((int)HttpContext.Session.GetInt32("ID"));
+            Model.TodayTaskCount = taskManager.CountTasks();
+            int[] incomes = new int[Model.Incomes.Count];
+            int[] costs = new int[Model.Costs.Count];
+            int i = 0,j = 0;
+            foreach (var item in Model.Incomes)
+            {
+                incomes[i] = item.Value;
+                i++;
+            }
+            foreach (var item in Model.Costs)
+            {
+                costs[j] = item.Which_Cost;
+                j++;
+            }
+            Model.IncomeArray = incomes;
+            Model.CostArray = costs;
+            return Model;
         }
         public IActionResult Index()
         {          
@@ -47,6 +66,10 @@ namespace ExFit.Controllers
         public IActionResult _LastTasks()
         {
             return PartialView("Partial/_LastTasks", ViewModel());
+        }
+        public IActionResult _Growth()
+        {
+            return PartialView("Partial/_Growth", ViewModel());
         }
         public IActionResult Privacy()
         {

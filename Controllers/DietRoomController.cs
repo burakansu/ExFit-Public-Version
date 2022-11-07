@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ExFit.Controllers
 {
-    public class DietRoomController : ExFitControllerBase
+    public class DietRoomController : MemberControllerBase
     {
         DietManager dietManager = new DietManager();
         TaskManager taskManager = new TaskManager();

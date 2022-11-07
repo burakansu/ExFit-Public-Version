@@ -1,4 +1,5 @@
-﻿using ObjectLayer;
+﻿using DatabaseLayer;
+using ObjectLayer;
 using System.Collections.Generic;
 
 namespace ExFit.Models
@@ -14,6 +15,10 @@ namespace ExFit.Models
         public ObjMemberMeazurement MemberMeazurement { get; set; }
         public List<ObjMemberMeazurement> MemberMeazurements { get; set; }
         public int[] MemberMeazurementsArray { get; set; }
+        public int[] CostArray { get; set; }
+        public int[] IncomeArray { get; set; }
+        public List<ObjCost> Costs { get; set; }
+        public List<ObjIncome> Incomes { get; set; }
         public int Income { get; set; }
         public int ActiveMembersCount { get { return Members.Count; }}
         public int ActivePersonalCount { get { return Users.Count; }}
@@ -23,6 +28,14 @@ namespace ExFit.Models
 
         // ViewModel in içine gömülü sanal property ler.
 
+        public int Profit 
+        { 
+            get
+            {
+                SQL sQL = new SQL();
+                return this.Income - sQL.Value<int>("SELECT SUM(Rent,Electric,Water,Staff_Salaries,Other) FROM TBL_Cost");
+            } 
+        }
         public int MemberCapasity 
         { 
             get

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ExFit.Controllers
 {
-    public class ExcersizeRoomController : ExFitControllerBase
+    public class ExcersizeRoomController : MemberControllerBase
     {
         ExcersizeManager excersize_Manager = new ExcersizeManager();
         TaskManager taskManager = new TaskManager();
