@@ -28,7 +28,7 @@ namespace ExFit.Controllers
         public IActionResult DeleteDiet(int id)
         {
             dietManager.DeleteDiet(id);
-            return RedirectToAction("DietRoom", "DietRoom", ViewModel());
+            return RedirectToAction("Index", "Home");
         }
         public async Task<IActionResult> SaveDatabaseDietAsync(DietRoomViewModel viewModelDietRoom)
         {
@@ -44,7 +44,7 @@ namespace ExFit.Controllers
             else if (viewModelDietRoom.Diet.IMG == null) { viewModelDietRoom.Diet.IMG = "/Member/ProfilePhotos/AvatarNull.png"; }
             dietManager.AddDatabaseDiet(viewModelDietRoom.Diet);
             TaskBuilder(6, 0);
-            return RedirectToAction("DietRoom", "DietRoom", ViewModel());
+            return RedirectToAction("Index", "Home");
         }
     }
 }

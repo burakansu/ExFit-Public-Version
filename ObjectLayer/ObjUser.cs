@@ -4,6 +4,9 @@ namespace ObjectLayer
 {
     public class ObjUser : TBL_Users
     {
+
+        //Sanal Tablo Kolonları
+
         public string FullName
         {
             get

@@ -3,7 +3,7 @@ using ObjectLayer;
 
 namespace BussinesLayer
 {
-    public class Excersize_Manager
+    public class ExcersizeManager
     {
         SQL SQL = new SQL();
         public List<ObjExcersize> GetExcersizes(int id = 0, bool Special = false)

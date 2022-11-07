@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ExFit.Models
 {
-    public class HomeViewModel
+    public class _MembersViewModel
     {
         public ObjUser User { get; set; }
         public List<ObjUser> Users { get; set; }
@@ -20,6 +20,9 @@ namespace ExFit.Models
         public int TaskCount { get { return Tasks.Count; } }
         public int TodayTaskCount { get; set; }
         public int[] ThisYearRegistrys { get; set; }
+
+        // ViewModel in içine gömülü sanal property ler.
+
         public int MemberCapasity 
         { 
             get

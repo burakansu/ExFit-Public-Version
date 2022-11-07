@@ -13,9 +13,13 @@ namespace ExFit.Controllers
         TaskManager taskManager = new TaskManager();
         UserManager userManager = new UserManager();
 
-        public HomeViewModel ViewModel()
+        public HomeController(ILogger<HomeController> logger)
         {
-            HomeViewModel homeViewModel = new HomeViewModel();
+            _logger = logger;
+        }
+        public _MembersViewModel ViewModel()
+        {
+            _MembersViewModel homeViewModel = new _MembersViewModel();
             homeViewModel.ThisYearRegistrys = memberManager.GetThisYearRegystry();
             homeViewModel.Members = memberManager.GetMembers(0, 0);
             homeViewModel.LastMembers = memberManager.GetMembers(1, 0);            
@@ -25,10 +29,6 @@ namespace ExFit.Controllers
             homeViewModel.User = userManager.GetUser((int)HttpContext.Session.GetInt32("ID"));
             homeViewModel.TodayTaskCount = taskManager.CountTasks();
             return homeViewModel;
-        }
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
         }
         public IActionResult Index()
         {          

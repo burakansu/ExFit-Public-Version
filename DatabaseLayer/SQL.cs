@@ -1,48 +1,40 @@
-﻿using System.Data;
+﻿using Dapper;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace DatabaseLayer
 {
     public class SQL
     {
-        public SqlConnection Connection;
-        public static string Sql = "data source=.\\SQLEXPRESS;Initial Catalog=ExFit_Database;Integrated Security=true";
-        public SqlCommand Command = new SqlCommand();
-        public SqlDataAdapter Mega_Adapter = null;
-     
-        public void Open()
+        public static string Sql;
+
+        public List<T> Get<T>(string sql)
         {
-            Connection = new SqlConnection(Sql);
-            Command.Connection = Connection;
-            if (Connection.State != System.Data.ConnectionState.Open)
+            using (IDbConnection c = new SqlConnection(Sql))
             {
-                Connection.Open();
+                return c.Query<T>(sql).ToList();
             }
         }
-        public void Close()
+        public T Single<T>(string sql)
         {
-            if (Connection.State != System.Data.ConnectionState.Closed)
+            using (IDbConnection c = new SqlConnection(Sql))
             {
-                Connection.Close();
+                return c.QuerySingle<T>(sql);
             }
-            Connection.Dispose();
         }
-        public DataTable GetDataTable(string sql)
+        public T Value<T>(string sql)
         {
-            Open();
-            DataTable tbl = new DataTable();
-            Mega_Adapter = new SqlDataAdapter(sql, Connection);
-            Mega_Adapter.Fill(tbl);
-            Close();
-            return tbl;
+            using (IDbConnection c = new SqlConnection(Sql))
+            {
+                return c.QueryFirstOrDefault<T>(sql); 
+            }
         }
-        public int Count_Database(string sql)
+        public void Run(string sql, object param = null)
         {
-            Open();
-            SqlCommand Command = new SqlCommand(sql, Connection);
-            Int32 count = (Int32)Command.ExecuteScalar();
-            Close();
-            return count;
+            using (IDbConnection c = new SqlConnection(Sql))
+            {
+                c.Execute(sql, param);
+            }
         }
     }
 }

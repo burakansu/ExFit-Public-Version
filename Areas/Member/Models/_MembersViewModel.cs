@@ -2,23 +2,20 @@
 using ObjectLayer;
 using System.Collections.Generic;
 
-namespace ExFit.Models
+namespace ExFit.Areas.Member.Models
 {
-    public class MembersViewModel
+    public class _MembersViewModel
     {
-        public ObjUser User { get; set; }
-        public ObjMember Member { get; set; }
-        public ObjExcersize MemberExcersize { get; set; }
-        public ObjDiet MemberDiet { get; set; }
-        public List<ObjMember> Members { get; set; }
-        public ObjMemberMeazurement MemberMeazurement { get; set; }
-        public List<ObjMemberMeazurement> MemberMeazurements { get; set; }
-        public double[] MemberWeightArray { get; set; }
-        public List<ObjTask> Tasks { get; set; }
+        public ObjMember _Member { get; set; }
+        public ObjExcersize _MemberExcersize { get; set; }
+        public ObjDiet _MemberDiet { get; set; }
+        public List<ObjMemberMeazurement> _MemberMeazurements { get; set; }
+        public int[] _MemberMeazurementsArray { get; set; }
+        public double[] _MemberWeightArray { get; set; }
 
         // ViewModel in içine gömülü sanal property ler.
 
-        public List<ObjExcersize> ExcersizeArray
+        public List<ObjExcersize> _ExcersizeArray
         {
             get
             {
@@ -27,7 +24,7 @@ namespace ExFit.Models
                 return ObjExcersizeslist;
             }
         }
-        public List<ObjDiet> DietArray
+        public List<ObjDiet> _DietArray
         {
             get
             {

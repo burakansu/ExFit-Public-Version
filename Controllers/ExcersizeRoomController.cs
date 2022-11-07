@@ -10,7 +10,7 @@ namespace ExFit.Controllers
 {
     public class ExcersizeRoomController : ExFitControllerBase
     {
-        Excersize_Manager excersize_Manager = new Excersize_Manager();
+        ExcersizeManager excersize_Manager = new ExcersizeManager();
         TaskManager taskManager = new TaskManager();
         UserManager userManager = new UserManager();
         public ExcersizeRoomViewModel ViewModel()
@@ -28,7 +28,7 @@ namespace ExFit.Controllers
         public IActionResult DeleteExcersize(int id)
         {
             excersize_Manager.DeleteExcersize(id);
-            return RedirectToAction("ExcersizeRoom", "ExcersizeRoom", ViewModel());
+            return RedirectToAction("Index", "Home");
         }
         public async Task<IActionResult> SaveDatabaseExcersizeAsync(ExcersizeRoomViewModel viewModelExcersizeRoom)
         {
@@ -44,7 +44,7 @@ namespace ExFit.Controllers
             else if (viewModelExcersizeRoom.Excersize.IMG == null) { viewModelExcersizeRoom.Excersize.IMG = "/Member/ProfilePhotos/AvatarNull.png"; }
             excersize_Manager.AddDatabaseExcersize(viewModelExcersizeRoom.Excersize);
             TaskBuilder(5, 0);
-            return RedirectToAction("ExcersizeRoom", "ExcersizeRoom", ViewModel());
+            return RedirectToAction("Index", "Home");
         }
     }
 }

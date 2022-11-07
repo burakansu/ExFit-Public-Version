@@ -3,6 +3,8 @@ using System.Data;
 
 namespace FunctionLayer.Stats_Manager.Regression
 {
+    // Üstel(Quadratic) Regresyon eğrisi çizer.
+
     public class QuadraticCurve
     {
         Double[] Xi, Yi, Yi_Tilda, Z;
@@ -30,8 +32,8 @@ namespace FunctionLayer.Stats_Manager.Regression
         public Double[] Curve(int ID,int Total)
         {
             SQL sQL = new SQL();
-            DataTable TBL = sQL.GetDataTable("SELECT Weight FROM TBL_Members_Meazurements WHERE Member_ID=" + ID);
-            n = TBL.Rows.Count;
+            List<int> Array = sQL.Get<int>("SELECT Weight FROM TBL_Members_Meazurements WHERE Member_ID=" + ID);
+            n = Array.Count();
             Yi_Tilda = new Double[Total];
             Xi = new Double[12];
             Yi = new Double[n];
@@ -44,7 +46,7 @@ namespace FunctionLayer.Stats_Manager.Regression
                 }
                 for (int i = 0; i < n; i++)
                 {
-                    Yi[i] = (int)TBL.Rows[i]["Weight"];
+                    Yi[i] = Convert.ToDouble(Array[i]);
                 }
             }
             Method_B();

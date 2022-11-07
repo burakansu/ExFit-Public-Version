@@ -50,7 +50,7 @@ namespace ExFit.Controllers
         public IActionResult Delete(int id)
         {
             userManager.DeleteUser(id);
-            return RedirectToAction("Index", ViewModel());
+            return RedirectToAction("Index", "Home");
         }
         public async Task<IActionResult> RegistryingAsync(PersonalsViewModel personalsViewModel)
         {
@@ -68,7 +68,7 @@ namespace ExFit.Controllers
             userManager.SaveUser(personalsViewModel.SelectedUser);
             TaskBuilder(4, 0);
             personalsViewModel.User = userManager.GetUser((int)HttpContext.Session.GetInt32("ID"));
-            return RedirectToAction("Index", "Personals", new { ID = personalsViewModel.SelectedUser.User_ID });
+            return RedirectToAction("Index", "Home");
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace DatabaseLayer.ExFit_Database
+﻿namespace DatabaseLayer.ExFit_Database
 {
     public class TBL_Members_Meazurements
     {

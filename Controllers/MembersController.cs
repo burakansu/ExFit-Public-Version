@@ -1,18 +1,11 @@
 ﻿using BussinesLayer;
-using DatabaseLayer.ExFit_Database;
 using ExFit.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ObjectLayer;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection.Metadata;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace ExFit.Controllers
 {
@@ -22,7 +15,7 @@ namespace ExFit.Controllers
         MemberManager memberManager = new MemberManager();
         TaskManager taskManager = new TaskManager();
         DietManager dietManager = new DietManager();
-        Excersize_Manager excersizeManager = new Excersize_Manager();
+        ExcersizeManager excersizeManager = new ExcersizeManager();
         private MembersViewModel ViewModel(int last, int passive, int id = 0)
         {
             MembersViewModel viewModelMembers = new MembersViewModel();
@@ -86,7 +79,7 @@ namespace ExFit.Controllers
             }
             TaskBuilder(1, Model.Member.Member_ID);
             Model.User = userManager.GetUser((int)HttpContext.Session.GetInt32("ID"));
-            return RedirectToAction("AllMembers", "Members", Model);
+            return RedirectToAction("Index", "Home");
         }
         public IActionResult SaveMemberMeazurements(MembersViewModel Model)
         {
@@ -129,7 +122,7 @@ namespace ExFit.Controllers
         {
             memberManager.DeleteMember(id, true);
             TaskBuilder(7, 0);
-            return RedirectToAction("AllPassivedMembers", "Members");
+            return RedirectToAction("Index", "Home");
         }
         public IActionResult ActiveMember(int id)
         {
