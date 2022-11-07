@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ExFit.Models
 {
-    public class HomeViewModel
+    public class _MembersViewModel
     {
         public ObjUser User { get; set; }
         public List<ObjUser> Users { get; set; }

@@ -28,11 +28,16 @@
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="BussinesLayer\BussinesLayer.csproj" />
     <ProjectReference Include="FunctionLayer\FunctionLayer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Member\Views\" />
   </ItemGroup>
 
 </Project>

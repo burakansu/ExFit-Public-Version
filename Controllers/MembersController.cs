@@ -15,7 +15,7 @@ namespace ExFit.Controllers
         MemberManager memberManager = new MemberManager();
         TaskManager taskManager = new TaskManager();
         DietManager dietManager = new DietManager();
-        Excersize_Manager excersizeManager = new Excersize_Manager();
+        ExcersizeManager excersizeManager = new ExcersizeManager();
         private MembersViewModel ViewModel(int last, int passive, int id = 0)
         {
             MembersViewModel viewModelMembers = new MembersViewModel();

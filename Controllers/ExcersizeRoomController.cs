@@ -10,7 +10,7 @@ namespace ExFit.Controllers
 {
     public class ExcersizeRoomController : ExFitControllerBase
     {
-        Excersize_Manager excersize_Manager = new Excersize_Manager();
+        ExcersizeManager excersize_Manager = new ExcersizeManager();
         TaskManager taskManager = new TaskManager();
         UserManager userManager = new UserManager();
         public ExcersizeRoomViewModel ViewModel()

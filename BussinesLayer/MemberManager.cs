@@ -1,7 +1,6 @@
 ﻿using DatabaseLayer;
 using FunctionLayer.Stats_Manager.Regression;
 using ObjectLayer;
-using System.Data;
 using ObjMember = ObjectLayer.ObjMember;
 
 namespace BussinesLayer
@@ -9,6 +8,26 @@ namespace BussinesLayer
     public class MemberManager
     {
         SQL sQL = new SQL();
+        public int Authorization(int Joined_Member_ID)
+        {
+            if (Joined_Member_ID != 0) { return 1; }
+            else { return 0; }
+        }
+        public ObjMember CheckMemberEntering(ObjMember member)
+        {
+            ObjMember _member = sQL.Single<ObjMember>("SELECT * FROM TBL_Members WHERE Mail='" + member.Mail + "' AND Password='" + member.Password + "'");
+
+            if (_member.Member_ID != 0)
+            {
+                member.Member_ID = _member.Member_ID;
+                return member;
+            }
+            else
+            {
+                member.Member_ID = 0;
+                return member;
+            }
+        }
         public int CountMembers()
         {
             return sQL.Single<int>("SELECT COUNT(*) FROM TBL_Members");
