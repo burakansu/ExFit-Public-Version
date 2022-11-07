@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ExFit.Models
 {
-    public class _MembersViewModel
+    public class HomeViewModel
     {
         public ObjUser User { get; set; }
         public List<ObjUser> Users { get; set; }

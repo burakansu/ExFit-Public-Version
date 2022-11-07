@@ -19,9 +19,9 @@ namespace ExFit.Controllers
         {
             _logger = logger;
         }
-        public _MembersViewModel ViewModel()
+        public HomeViewModel ViewModel()
         {
-            _MembersViewModel Model = new _MembersViewModel();
+            HomeViewModel Model = new HomeViewModel();
             Model.ThisYearRegistrys = memberManager.GetThisYearRegystry();
             Model.Members = memberManager.GetMembers(0, 0);
             Model.LastMembers = memberManager.GetMembers(1, 0);            

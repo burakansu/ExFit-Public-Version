@@ -8,7 +8,7 @@ namespace BussinesLayer
         SQL SQL = new SQL();
         public List<ObjCost> GetCosts()
         {
-            return SQL.Get<ObjCost>("SELECT * FROM TBL_Cost");
+            return SQL.Get<ObjCost>("SELECT * FROM TBL_Cost"); 
         }
         public ObjCost GetCost(int id)
         {

@@ -5,22 +5,22 @@ namespace BussinesLayer
 {
     public class TaskManager
     {
-        SQL SQL = new SQL();
+        SQL sQL = new SQL();
         public List<ObjTask> GetLastFiveTask(int all = 0)
         {
             if (all == 1)
             {
-                return SQL.Get<ObjTask>("SELECT * FROM TBL_Tasks WHERE Create_Date='" + DateTime.Now.ToString("yyyy-MM-dd") + "' ORDER BY Task_ID desc");
+                return sQL.Get<ObjTask>("SELECT * FROM TBL_Tasks WHERE Create_Date='" + DateTime.Now.ToString("yyyy-MM-dd") + "' ORDER BY Task_ID desc");
             }
             else
             {
-                return SQL.Get<ObjTask>("SELECT TOP(5)* FROM TBL_Tasks ORDER BY Task_ID desc");
+                return sQL.Get<ObjTask>("SELECT TOP(5)* FROM TBL_Tasks ORDER BY Task_ID desc");
             }
         }
         public void SaveTask(ObjTask objTask)
         {
             objTask.Create_Date = DateTime.Now;
-            SQL.Run("INSERT INTO TBL_Tasks (Description,Create_Date,User_ID,Member_ID) VALUES (@Description,@Create_Date,@User_ID,@Member_ID)", objTask);
+            sQL.Run("INSERT INTO TBL_Tasks (Description,Create_Date,User_ID,Member_ID) VALUES (@Description,@Create_Date,@User_ID,@Member_ID)", objTask);
         }
         public void DeleteTask(int Task_ID, int last = 0)
         {
@@ -36,7 +36,7 @@ namespace BussinesLayer
         }
         public int CountTasks()
         {
-            return SQL.Single<int>("SELECT COUNT(*) FROM TBL_Tasks");
+            return sQL.Value<int>("SELECT COUNT(*) FROM TBL_Tasks");
         }
     }
 }
