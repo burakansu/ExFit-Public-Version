@@ -2,6 +2,7 @@
 using ExFit.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ObjectLayer;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -13,17 +14,46 @@ namespace ExFit.Controllers
         DietManager dietManager = new DietManager();
         TaskManager taskManager = new TaskManager();
         UserManager userManager = new UserManager();
-        public DietRoomViewModel ViewModel()
+        FoodManager foodManager = new FoodManager();
+
+        public DietRoomViewModel ViewModel(int id = 0)
         {
-            DietRoomViewModel viewModelDietRoom = new DietRoomViewModel();
-            viewModelDietRoom.Diets = dietManager.GetDiets();
-            viewModelDietRoom.Tasks = taskManager.GetLastFiveTask();
-            viewModelDietRoom.User = userManager.GetUser((int)HttpContext.Session.GetInt32("ID"));
-            return viewModelDietRoom;
+            DietRoomViewModel VM = new DietRoomViewModel();
+            VM.Diets = dietManager.GetDiets();
+            VM.Tasks = taskManager.GetLastFiveTask();
+            VM.User = userManager.GetUser((int)HttpContext.Session.GetInt32("ID"));
+            if (id != 0)
+            {
+                VM.Diet = dietManager.GetDiets(id, true)[0];
+                VM.Foods = foodManager.GetFoods();
+            }
+            else { VM.Diet = new ObjDiet(); }
+
+            return VM;
         }
         public IActionResult DietRoom()
         {                       
             return View(ViewModel());
+        }
+        public IActionResult EditDiet(int id = 0)
+        {
+            return View(ViewModel(id));
+        }
+        public IActionResult FoodRoom(int id = 0)
+        {
+            return View(ViewModel(id));
+        }
+        public IActionResult SaveFood(DietRoomViewModel Model)
+        {
+            Model.Food.Diet_ID = Model.Diet.Diet_ID;
+            Model.Food.Day = Model._Day;
+            foodManager.AddDatabaseFood(Model.Food);
+            return RedirectToAction("EditDiet", "DietRoom", new { id = Model.Food.Diet_ID });
+        }
+        public IActionResult DeleteFood(int id = 0, int Diet_ID = 0)
+        {
+            foodManager.DeleteFood(id);
+            return RedirectToAction("EditDiet", "DietRoom", new { id = Diet_ID });
         }
         public IActionResult DeleteDiet(int id)
         {

@@ -9,5 +9,8 @@ namespace ExFit.Models
         public ObjDiet Diet { get; set; }
         public List<ObjDiet> Diets { get; set; }
         public List<ObjTask> Tasks { get; set; }
+        public List<ObjFood> Foods { get; set; }
+        public ObjFood Food { get; set; }
+        public int _Day { get; set; }
     }
 }
