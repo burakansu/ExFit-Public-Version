@@ -20,7 +20,7 @@ namespace ExFit.Areas.Member.Controllers
             if (Model._Member.Member_ID != 0)
             {
                 HttpContext.Session.SetInt32("Member_ID", Model._Member.Member_ID);
-                return RedirectToAction("Index", "Home", new { ID = Model._Member.Member_ID });
+                return RedirectToAction("Index", "Home");
             }
             else
             {

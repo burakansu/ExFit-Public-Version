@@ -21,7 +21,8 @@ namespace BussinesLayer
         public void AddDatabaseDiet(ObjDiet objDiet)
         {
             objDiet.Registration_Date = DateTime.Now;
-            SQL.Run("INSERT INTO TBL_Diet (IMG,Diet_Name,Author,Registration_Date) VALUES (@IMG,@Diet_Name,@Author,@Registration_Date)", objDiet);
+            objDiet.IMG = "";
+            SQL.Run("INSERT INTO TBL_Diet (Diet_Name,Author,Registration_Date) VALUES (@Diet_Name,@Author,@Registration_Date)", objDiet);
         }
     }
 }

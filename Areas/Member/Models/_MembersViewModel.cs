@@ -12,9 +12,12 @@ namespace ExFit.Areas.Member.Models
         public List<ObjMemberMeazurement> _MemberMeazurements { get; set; }
         public int[] _MemberMeazurementsArray { get; set; }
         public double[] _MemberWeightArray { get; set; }
-
-        // ViewModel in içine gömülü sanal property ler.
-
+        public List<ObjFood> Foods { get; set; }
+        public ObjFood Food { get; set; }
+        public int _DDay { get; set; }
+        public List<ObjPractice> Practices { get; set; }
+        public ObjPractice Practice { get; set; }
+        public int _EDay { get; set; }
         public List<ObjExcersize> _ExcersizeArray
         {
             get

@@ -21,6 +21,7 @@ namespace BussinesLayer
         public void AddDatabaseExcersize(ObjExcersize objExcersize)
         {
             objExcersize.Registration_Date = DateTime.Now;
+            objExcersize.IMG = "";
             SQL.Run("INSERT INTO TBL_Excersize(IMG, Excersize_Name, Author, Registration_Date) VALUES (@IMG, @Excersize_Name, @Author, @Registration_Date)", objExcersize);
         }
     }

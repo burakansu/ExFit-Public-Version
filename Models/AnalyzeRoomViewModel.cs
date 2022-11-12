@@ -16,8 +16,6 @@ namespace ExFit.Models
         public List<ObjIncome> Incomes { get; set; }
         public int Income { get; set; }
 
-        // ViewModel in içine gömülü sanal property ler.
-
         public int Profit
         {
             get

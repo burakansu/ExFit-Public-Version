@@ -7,7 +7,6 @@ namespace ExFit.Controllers
 {
     public class LogInController : Controller
     {
-        UserManager userManager = new UserManager();
         public IActionResult SignIn()
         {
             HttpContext.Session.SetInt32("ID", 0);
@@ -15,7 +14,7 @@ namespace ExFit.Controllers
         }
         public IActionResult Entering(LogInViewModel logInViewModel)
         {
-            logInViewModel.User = userManager.CheckUserEntering(logInViewModel.User);
+            logInViewModel.User = new UserManager().CheckUserEntering(logInViewModel.User);
             if (logInViewModel.User.User_ID != 0)
             {
                 HttpContext.Session.SetInt32("ID", logInViewModel.User.User_ID);

@@ -8,19 +8,14 @@ namespace ExFit.Controllers
 {
     public class AnalyzeRoomController : MemberControllerBase
     {
-        MemberManager memberManager = new MemberManager();
-        TaskManager taskManager = new TaskManager();
-        UserManager userManager = new UserManager();
-        CostManager costManager = new CostManager();
-        IncomeManager incomeManager = new IncomeManager();
         public AnalyzeRoomViewModel ViewModel()
         {
             AnalyzeRoomViewModel Model = new AnalyzeRoomViewModel();
-            Model.Income = memberManager.GetIncome();
-            Model.Costs = costManager.GetCosts();
-            Model.Incomes = incomeManager.GetIncomes();
-            Model.Tasks = taskManager.GetLastFiveTask();
-            Model.User = userManager.GetUser((int)HttpContext.Session.GetInt32("ID"));
+            Model.Income = new MemberManager().GetIncome();
+            Model.Costs = new CostManager().GetCosts();
+            Model.Incomes = new IncomeManager().GetIncomes();
+            Model.Tasks = new TaskManager().GetLastFiveTask();
+            Model.User = new UserManager().GetUser((int)HttpContext.Session.GetInt32("ID"));
             int[] incomes = new int[Model.Incomes.Count];
             int[] costs = new int[Model.Costs.Count];
             int i = 0, j = 0;
@@ -44,12 +39,12 @@ namespace ExFit.Controllers
         }
         public IActionResult SaveCost(ObjCost objCost)
         {
-            costManager.AddDatabaseCost(objCost);
+            new CostManager().AddDatabaseCost(objCost);
             return RedirectToAction("Index", "Home");
         }
         public IActionResult DeleteCost(int id)
         {
-            costManager.DeleteCost(id);
+            new CostManager().DeleteCost(id);
             return RedirectToAction("Index", "Home");
         }
     }

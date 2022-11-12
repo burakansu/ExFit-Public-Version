@@ -1,13 +1,10 @@
 ﻿using DatabaseLayer;
 using DatabaseLayer.ExFit_Database;
-using Microsoft.AspNetCore.Http;
 
 namespace ObjectLayer
 {
     public class ObjExcersize : TBL_Excersize
     {
-        public IFormFile? FileExcersizeIMG { get; set; }
-
         //Sanal Tablo Kolonları
 
         public int Count 

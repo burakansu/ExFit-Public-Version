@@ -26,8 +26,6 @@ namespace ExFit.Models
         public int TodayTaskCount { get; set; }
         public int[] ThisYearRegistrys { get; set; }
 
-        // ViewModel in içine gömülü sanal property ler.
-
         public int Profit 
         { 
             get

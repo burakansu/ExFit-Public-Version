@@ -9,12 +9,6 @@ namespace ExFit.Controllers
     public class HomeController : MemberControllerBase
     {
         private readonly ILogger<HomeController> _logger;
-        MemberManager memberManager = new MemberManager();
-        TaskManager taskManager = new TaskManager();
-        UserManager userManager = new UserManager();
-        CostManager costManager = new CostManager();
-        IncomeManager incomeManager = new IncomeManager();
-
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
@@ -22,16 +16,16 @@ namespace ExFit.Controllers
         public HomeViewModel ViewModel()
         {
             HomeViewModel Model = new HomeViewModel();
-            Model.ThisYearRegistrys = memberManager.GetThisYearRegystry();
-            Model.Members = memberManager.GetMembers(0, 0);
-            Model.LastMembers = memberManager.GetMembers(1, 0);            
-            Model.Users = userManager.GetUsers();
-            Model.Income = memberManager.GetIncome();
-            Model.Costs = costManager.GetCosts();
-            Model.Incomes = incomeManager.GetIncomes();
-            Model.Tasks = taskManager.GetLastFiveTask();
-            Model.User = userManager.GetUser((int)HttpContext.Session.GetInt32("ID"));
-            Model.TodayTaskCount = taskManager.CountTasks();
+            Model.ThisYearRegistrys = new MemberManager().GetThisYearRegystry();
+            Model.Members = new MemberManager().GetMembers(0, 0);
+            Model.LastMembers = new MemberManager().GetMembers(1, 0);            
+            Model.Users = new UserManager().GetUsers();
+            Model.Income = new MemberManager().GetIncome();
+            Model.Costs = new CostManager().GetCosts();
+            Model.Incomes = new IncomeManager().GetIncomes();
+            Model.Tasks = new TaskManager().GetLastFiveTask();
+            Model.User = new UserManager().GetUser((int)HttpContext.Session.GetInt32("ID"));
+            Model.TodayTaskCount = new TaskManager().CountTasks();
             int[] incomes = new int[Model.Incomes.Count];
             int[] costs = new int[Model.Costs.Count];
             int i = 0,j = 0;
@@ -50,13 +44,13 @@ namespace ExFit.Controllers
             return Model;
         }
         public IActionResult Index()
-        {          
-            userManager.Authorization((int)HttpContext.Session.GetInt32("ID"));                       
+        {
+            new UserManager().Authorization((int)HttpContext.Session.GetInt32("ID"));                       
             return View(ViewModel());
         }
         public IActionResult Delete_Task(int id)
         {
-            taskManager.DeleteTask(id);
+            new TaskManager().DeleteTask(id);
             return RedirectToAction("Index","Home", ViewModel());
         }
         public IActionResult _Activities(int id)
