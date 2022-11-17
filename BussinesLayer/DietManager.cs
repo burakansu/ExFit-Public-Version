@@ -21,7 +21,38 @@ namespace BussinesLayer
         public void AddDatabaseDiet(ObjDiet objDiet)
         {
             objDiet.Registration_Date = DateTime.Now;
-            SQL.Run("INSERT INTO TBL_Diet (IMG,Diet_Name,Author,Registration_Date) VALUES (@IMG,@Diet_Name,@Author,@Registration_Date)", objDiet);
+            objDiet.IMG = "";
+            SQL.Run("INSERT INTO TBL_Diet (Diet_Name,Author,Registration_Date) VALUES (@Diet_Name,@Author,@Registration_Date)", objDiet);
+        }
+        public int[] Counts(int day, int id)
+        {
+            int[] ints = { 0, 0, 0, 0, 0, 0 };
+            List<ObjFood> list = SQL.Get<ObjFood>("SELECT * FROM TBL_Food WHERE Day=" + day + " AND Diet_ID=" + id);
+            foreach (var item in list)
+            {
+                switch (item.MealType)
+                {
+                    case 1:
+                        ints[0] = 1;
+                        break;
+                    case 2:
+                        ints[1] = 1;
+                        break;
+                    case 3:
+                        ints[2] = 1;
+                        break;
+                    case 4:
+                        ints[3] = 1;
+                        break;
+                    case 5:
+                        ints[4] = 1;
+                        break;
+                    case 6:
+                        ints[5] = 1;
+                        break;
+                }
+            }
+            return ints;
         }
     }
 }

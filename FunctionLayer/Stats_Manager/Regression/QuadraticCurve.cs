@@ -31,8 +31,7 @@ namespace FunctionLayer.Stats_Manager.Regression
         }
         public Double[] Curve(int ID,int Total)
         {
-            SQL sQL = new SQL();
-            List<int> Array = sQL.Get<int>("SELECT Weight FROM TBL_Members_Meazurements WHERE Member_ID=" + ID);
+            List<int> Array = new SQL().Get<int>("SELECT Weight FROM TBL_Members_Meazurements WHERE Member_ID=" + ID);
             n = Array.Count();
             Yi_Tilda = new Double[Total];
             Xi = new Double[12];

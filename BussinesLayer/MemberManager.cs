@@ -30,10 +30,21 @@ namespace BussinesLayer
         }
         public int CountMembers()
         {
-            return sQL.Single<int>("SELECT COUNT(*) FROM TBL_Members");
+            return sQL.Value<int>("SELECT COUNT(*) FROM TBL_Members");
         }
         public List<ObjMember> GetMembers(int last = 0, int pasive = 0)
         {
+            IncomeManager incomeManager = new IncomeManager();
+            ObjIncome objIncome = new ObjIncome();
+            int c = sQL.Value<int>("SELECT Count(*) FROM TBL_Members WHERE Registration_Date BETWEEN '" + DateTime.Now.Year + "-" + DateTime.Now.Month + "-01' AND '" + DateTime.Now.Year + "-" + DateTime.Now.Month + "-28' ");
+            if (c > 0)
+            {
+                objIncome.Value = sQL.Value<int>("SELECT SUM(Price) AS 'summary' FROM TBL_Members WHERE Registration_Date BETWEEN '" + DateTime.Now.Year + "-" + DateTime.Now.Month + "-01' AND '" + DateTime.Now.Year + "-" + DateTime.Now.Month + "-28' ");
+                objIncome.Income_ID = sQL.Value<int>("SELECT Income_ID FROM TBL_Income WHERE WhichMonth=" + DateTime.Now.Month);
+                incomeManager.SaveIncome(objIncome);
+            }
+
+
             string Query = "SELECT * FROM TBL_Members WHERE Block = 0";
             if (last == 1) { Query = "SELECT top 3 * FROM TBL_Members ORDER BY Member_ID DESC"; }
             else if (pasive == 1) { Query = "SELECT * FROM TBL_Members WHERE Block = 1"; }
@@ -41,7 +52,7 @@ namespace BussinesLayer
         }
         public ObjMember GetMember(int id)
         {
-                return sQL.Single<ObjMember>("SELECT * FROM TBL_Members WHERE Member_ID=" + id);
+            return sQL.Single<ObjMember>("SELECT * FROM TBL_Members WHERE Member_ID=" + id);
         }
         public void DeleteMember(int id, bool Del = false)
         {
@@ -64,7 +75,7 @@ namespace BussinesLayer
         }
         public void SaveMemberMeazurements(ObjMemberMeazurement objMemberMeazurement)
         {
-            int Count = sQL.Single<int>("SELECT COUNT(*) FROM TBL_Members_Meazurements WHERE Member_ID=" + objMemberMeazurement.Member_ID);
+            int Count = sQL.Value<int>("SELECT COUNT(*) FROM TBL_Members_Meazurements WHERE Member_ID=" + objMemberMeazurement.Member_ID);
             objMemberMeazurement.Which_Month = Count + 1;
             sQL.Run("INSERT INTO TBL_Members_Meazurements (Member_ID,Shoulder,Chest,Arm,Belly,Leg,Weight,Age,Size,Which_Month,Avarage_Asleep_Time,Avarage_Calorie_Intake) VALUES (@Member_ID,@Shoulder,@Chest,@Arm,@Belly,@Leg,@Weight,@Age,@Size,@Which_Month,@Avarage_Asleep_Time,@Avarage_Calorie_Intake) ", objMemberMeazurement);
         }
@@ -78,7 +89,7 @@ namespace BussinesLayer
         }
         public int GetIncome()
         {
-            return sQL.Single<int>("SELECT SUM(Price) FROM TBL_Members");
+            return sQL.Value<int>("SELECT SUM(Price) FROM TBL_Members");
         }
         public double[] GetMemberWeightsArray(int id)
         {
@@ -115,10 +126,10 @@ namespace BussinesLayer
             for (int i = 1; i <= 12; i++)
             {
                 String CommandPart = "'" + year + "-" + i + "-31'";
-                int RealDate = sQL.Single<int>("SELECT ISDATE (" + CommandPart + ")");
+                int RealDate = sQL.Value<int>("SELECT ISDATE (" + CommandPart + ")");
                 if (RealDate == 1)
                 {
-                    ints[i - 1] = sQL.Single<int>("SELECT COUNT(Name) FROM TBL_Members WHERE Registration_Date BETWEEN '" + year + "-" + i + "-01' AND " + CommandPart + " ");
+                    ints[i - 1] = sQL.Value<int>("SELECT COUNT(Name) FROM TBL_Members WHERE Registration_Date BETWEEN '" + year + "-" + i + "-01' AND " + CommandPart + " ");
                 }
                 else
                 {
@@ -126,10 +137,10 @@ namespace BussinesLayer
                     {
                         int day = 30;
                         CommandPart = "'" + year + "-" + i + "-" + day + "'";
-                        RealDate = sQL.Single<int>("SELECT ISDATE (" + CommandPart + ")");
+                        RealDate = sQL.Value<int>("SELECT ISDATE (" + CommandPart + ")");
                         if (RealDate == 1)
                         {
-                            ints[i - 1] = sQL.Single<int>("SELECT COUNT(Name) FROM TBL_Members WHERE Registration_Date BETWEEN '" + year + "-" + i + "-01' AND " + CommandPart + " ");
+                            ints[i - 1] = sQL.Value<int>("SELECT COUNT(Name) FROM TBL_Members WHERE Registration_Date BETWEEN '" + year + "-" + i + "-01' AND " + CommandPart + " ");
                         }
                         day--;
                     }

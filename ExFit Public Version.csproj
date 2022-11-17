@@ -36,8 +36,4 @@
     <ProjectReference Include="FunctionLayer\FunctionLayer.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Areas\Member\Views\" />
-  </ItemGroup>
-
 </Project>

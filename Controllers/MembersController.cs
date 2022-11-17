@@ -9,31 +9,26 @@ using System.Threading.Tasks;
 
 namespace ExFit.Controllers
 {
-    public class MembersController : ExFitControllerBase
+    public class MembersController : MemberControllerBase
     {
-        UserManager userManager = new UserManager();
-        MemberManager memberManager = new MemberManager();
-        TaskManager taskManager = new TaskManager();
-        DietManager dietManager = new DietManager();
-        ExcersizeManager excersizeManager = new ExcersizeManager();
         private MembersViewModel ViewModel(int last, int passive, int id = 0)
         {
             MembersViewModel viewModelMembers = new MembersViewModel();
             if (id != 0)
             {
-                viewModelMembers.Member = (ObjectLayer.ObjMember)memberManager.GetMember(id);
-                viewModelMembers.MemberMeazurements = memberManager.GetMemberMeazurements(id);
-                viewModelMembers.MemberWeightArray = memberManager.GetMemberWeightsArray(id);
-                viewModelMembers.MemberDiet = dietManager.GetDiets(viewModelMembers.Member.Diet_ID, true)[0]; 
-                viewModelMembers.MemberExcersize = excersizeManager.GetExcersizes(viewModelMembers.Member.Excersize_ID, true)[0]; 
+                viewModelMembers.Member = (ObjectLayer.ObjMember)new MemberManager().GetMember(id);
+                viewModelMembers.MemberMeazurements = new MemberManager().GetMemberMeazurements(id);
+                viewModelMembers.MemberWeightArray = new MemberManager().GetMemberWeightsArray(id);
+                viewModelMembers.MemberDiet = new DietManager().GetDiets(viewModelMembers.Member.Diet_ID, true)[0];
+                viewModelMembers.MemberExcersize = new ExcersizeManager().GetExcersizes(viewModelMembers.Member.Excersize_ID, true)[0];
             }
             else
             {
-                viewModelMembers.Members = memberManager.GetMembers(last, passive);
+                viewModelMembers.Members = new MemberManager().GetMembers(last, passive);
                 viewModelMembers.Member = new ObjectLayer.ObjMember();
             }
-            viewModelMembers.Tasks = taskManager.GetLastFiveTask();
-            viewModelMembers.User = userManager.GetUser((int)HttpContext.Session.GetInt32("ID"));
+            viewModelMembers.Tasks = new TaskManager().GetLastFiveTask();
+            viewModelMembers.User = new UserManager().GetUser((int)HttpContext.Session.GetInt32("ID"));
             return viewModelMembers;
         }
         public async Task<IActionResult> SaveMemberAsync(MembersViewModel Model)
@@ -71,20 +66,20 @@ namespace ExFit.Controllers
             }
             else if (Model.Member.Identity_Card == null) { Model.Member.Identity_Card = "/Member/ProfilePhotos/AvatarNull.png"; }
 
-            memberManager.SaveMember(Model.Member);
+            new MemberManager().SaveMember(Model.Member);
 
             if (Model.Member.Member_ID == 0)
             {
-                TaskBuilder(0, Model.Member.Member_ID);            
+                TaskBuilder(0, Model.Member.Member_ID);
             }
             TaskBuilder(1, Model.Member.Member_ID);
-            Model.User = userManager.GetUser((int)HttpContext.Session.GetInt32("ID"));
+            Model.User = new UserManager().GetUser((int)HttpContext.Session.GetInt32("ID"));
             return RedirectToAction("Index", "Home");
         }
         public IActionResult SaveMemberMeazurements(MembersViewModel Model)
         {
             Model.MemberMeazurement.Member_ID = Model.Member.Member_ID;
-            memberManager.SaveMemberMeazurements(Model.MemberMeazurement);
+            new MemberManager().SaveMemberMeazurements(Model.MemberMeazurement);
             return RedirectToAction("MemberAddMeazurements", "Members", new { id = Model.Member.Member_ID });
         }
         public IActionResult AllMembers()
@@ -109,35 +104,35 @@ namespace ExFit.Controllers
         }
         public IActionResult DeleteMemberMeazurements(int member_id, int id)
         {
-            memberManager.DeleteMemberMeazurements(id);
+            new MemberManager().DeleteMemberMeazurements(id);
             return RedirectToAction("MemberAddMeazurements", "Members", new { id = member_id });
         }
         public IActionResult PassiveMember(int id)
         {
-            memberManager.DeleteMember(id);
+            new MemberManager().DeleteMember(id);
             TaskBuilder(2, id);
             return RedirectToAction("OpenedMember", "Members", new { id = id });
         }
         public IActionResult DeleteMember(int id)
         {
-            memberManager.DeleteMember(id, true);
+            new MemberManager().DeleteMember(id, true);
             TaskBuilder(7, 0);
             return RedirectToAction("Index", "Home");
         }
         public IActionResult ActiveMember(int id)
         {
-            memberManager.ActiveMember(id);
+            new MemberManager().ActiveMember(id);
             TaskBuilder(3, id);
             return RedirectToAction("OpenedMember", "Members", new { id = id });
         }
         public IActionResult DeleteMemberExcersize(int id)
         {
-            excersizeManager.DeleteExcersize(id, true);
+            new ExcersizeManager().DeleteExcersize(id, true);
             return RedirectToAction("OpenedMember", "Members", new { id = id });
         }
         public IActionResult DeleteMemberDiet(int id)
         {
-            dietManager.DeleteDiet(id, true);
+            new DietManager().DeleteDiet(id, true);
             return RedirectToAction("OpenedMember", "Members", new { id = id });
         }
     }
