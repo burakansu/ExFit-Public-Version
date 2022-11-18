@@ -14,12 +14,13 @@ namespace BussinesLayer
         }
         public ObjUser CheckUserEntering(ObjUser User)
         {
-            ObjUser _user = SQL.Single<ObjUser>("SELECT * FROM TBL_Users WHERE Mail='" + User.Mail + "' AND Password='" + User.Password + "'");
+             int id = SQL.Value<int>("SELECT ISNULL((SELECT User_ID FROM TBL_Users WHERE Mail='" + User.Mail + "' AND Password='" + User.Password + "'),'0') AS i");
+             int type = SQL.Value<int>("SELECT ISNULL((SELECT Type FROM TBL_Users WHERE User_ID=" + id + "),'0') AS i");
 
-            if (_user.User_ID != 0)
+            if (id != 0)
             {
-                User.User_ID = _user.User_ID;
-                User.Type = _user.Type;
+                User.User_ID = id;
+                User.Type = type;
                 return User;
             }
             else

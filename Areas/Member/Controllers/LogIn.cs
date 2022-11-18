@@ -24,7 +24,7 @@ namespace ExFit.Areas.Member.Controllers
             }
             else
             {
-                return RedirectToAction("/MemberHome/Index");
+                return RedirectToAction("SignIn", "LogIn");
             }
         }
     }

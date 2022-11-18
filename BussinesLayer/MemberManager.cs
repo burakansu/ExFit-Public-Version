@@ -15,11 +15,10 @@ namespace BussinesLayer
         }
         public ObjMember CheckMemberEntering(ObjMember member)
         {
-            ObjMember _member = sQL.Single<ObjMember>("SELECT * FROM TBL_Members WHERE Mail='" + member.Mail + "' AND Password='" + member.Password + "'");
-
-            if (_member.Member_ID != 0)
+            int id = sQL.Value<int>("SELECT ISNULL((SELECT Member_ID FROM TBL_Members WHERE Mail='" + member.Mail + "' AND Password='" + member.Password + "'),'0') AS i");
+            if (id != 0)
             {
-                member.Member_ID = _member.Member_ID;
+                member.Member_ID = id;
                 return member;
             }
             else

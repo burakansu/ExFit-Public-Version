@@ -14,14 +14,20 @@ namespace ExFit.Controllers
         {
             var ControllerName = context.RouteData.Values["controller"].ToString();
             var ActionName = context.RouteData.Values["action"].ToString();
-
-            if ((int)HttpContext.Session.GetInt32("Member_ID") == 0)
+            if (HttpContext.Session.GetInt32("Member_ID") != null)
             {
-                context.Result = LocalRedirect("/MemberHome/MemberLogIn/SignIn");
+                if ((int)HttpContext.Session.GetInt32("Member_ID") == 0)
+                {
+                    context.Result = LocalRedirect("/MemberHome/MemberLogIn/SignIn");
+                }
+                else
+                {
+                    base.OnActionExecuting(context);
+                }
             }
             else
             {
-                base.OnActionExecuting(context);
+                context.Result = LocalRedirect("/MemberHome/MemberLogIn/SignIn");
             }
         }
         public _MembersViewModel ViewModel()

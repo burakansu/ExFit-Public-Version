@@ -13,13 +13,20 @@ namespace ExFit.Controllers
             var ControllerName = context.RouteData.Values["controller"].ToString();
             var ActionName = context.RouteData.Values["action"].ToString();
 
-            if ((int)HttpContext.Session.GetInt32("ID") == 0)
+            if (HttpContext.Session.GetInt32("ID") != null)
             {
-                context.Result = LocalRedirect("/LogIn/SignIn");
+                if ((int)HttpContext.Session.GetInt32("ID") == 0)
+                {
+                    context.Result = LocalRedirect("/LogIn/SignIn");
+                }
+                else
+                {
+                    base.OnActionExecuting(context);
+                }
             }
             else
             {
-                base.OnActionExecuting(context);
+                context.Result = LocalRedirect("/LogIn/SignIn");
             }
         }
         public void TaskBuilder(int type, int id)

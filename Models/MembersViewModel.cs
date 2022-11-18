@@ -20,19 +20,14 @@ namespace ExFit.Models
         {
             get
             {
-                ExcersizeManager excersize_Manager = new ExcersizeManager();
-                List<ObjExcersize> ObjExcersizeslist = excersize_Manager.GetExcersizes();
-                return ObjExcersizeslist;
+                return new ExcersizeManager().GetExcersizes();
             }
         }
         public List<ObjDiet> DietArray
         {
             get
             {
-
-                DietManager dietManager = new DietManager();
-                List<ObjDiet> objDiets = dietManager.GetDiets();
-                return objDiets;
+                return new DietManager().GetDiets();
             }
         }
     }
