@@ -1,33 +1,54 @@
-﻿using DatabaseLayer;
+﻿using ExFit.Data;
 using ObjectLayer;
 
 namespace BussinesLayer
 {
     public class DietManager
     {
-        SQL SQL = new SQL();
+        private Context context;
+        public DietManager(Context _context)
+        {
+            context = _context;
+        }
         public List<ObjDiet> GetDiets(int id = 0, bool Special = false)
         {
-            string Query = "SELECT * FROM TBL_Diet WHERE Active = 1";
-            if (id != 0 || Special == true) { Query = "SELECT * FROM TBL_Diet WHERE Diet_ID=" + id; };
-            return SQL.Get<ObjDiet>(Query);
+            if (id != 0 || Special == true) 
+            {
+                return context.Diets.Where(x => x.Diet_ID == id).ToList();
+            }
+            else
+            {
+                return context.Diets.Where(x => x.Active == 1).ToList();
+            }
         }
         public void DeleteDiet(int id, bool Special = false)
         {
-            string Query = "UPDATE TBL_Diet SET Active=0 WHERE Diet_ID=" + id;
-            if (Special == true) { Query = "UPDATE TBL_Members SET Diet_ID = 0 WHERE Member_ID=" + id; }
-            SQL.Run(Query);
+            if (Special == true) 
+            {
+                ObjMember objMember = context.Members.Single(x => x.Member_ID == id);
+                objMember.Diet_ID = 0;
+                context.Members.Update(objMember);
+                context.SaveChanges();
+            }
+            else
+            {
+                ObjDiet objDiet = context.Diets.Single(x => x.Diet_ID == id);
+                objDiet.Active = 0;
+                context.Diets.Update(objDiet);
+                context.SaveChanges();
+            }
         }
         public void AddDatabaseDiet(ObjDiet objDiet)
         {
             objDiet.Registration_Date = DateTime.Now;
             objDiet.IMG = "";
-            SQL.Run("INSERT INTO TBL_Diet (Diet_Name,Author,Registration_Date) VALUES (@Diet_Name,@Author,@Registration_Date)", objDiet);
+            context.Add(objDiet);
+            context.SaveChanges();
         }
         public int[] Counts(int day, int id)
         {
             int[] ints = { 0, 0, 0, 0, 0, 0 };
-            List<ObjFood> list = SQL.Get<ObjFood>("SELECT * FROM TBL_Food WHERE Day=" + day + " AND Diet_ID=" + id);
+            List<ObjFood> list = context.Foods.Where(x => x.Day == day && x.Diet_ID == id).ToList();
             foreach (var item in list)
             {
                 switch (item.MealType)

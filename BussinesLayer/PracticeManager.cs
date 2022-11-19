@@ -1,22 +1,28 @@
-﻿using DatabaseLayer;
+﻿using ExFit.Data;
 using ObjectLayer;
 
 namespace BussinesLayer
 {
     public class PracticeManager
     {
-        SQL SQL = new SQL();
+        private Context context;
+        public PracticeManager(Context _context)
+        {
+            context = _context;
+        }
         public List<ObjPractice> GetPractices()
         {
-            return SQL.Get<ObjPractice>("SELECT * FROM TBL_Practice");
+            return context.Practices.OrderBy(x => x.Practice_ID).ToList();
         }
         public void DeletePractice(int id)
         {
-            SQL.Run("DELETE TBL_Practice WHERE Practice_ID="+ id);
+            context.Practices.Remove(context.Practices.Single(x => x.Practice_ID == id));
+            context.SaveChanges();
         }
         public void AddDatabasePractice(ObjPractice objPractice)
         {
-            SQL.Run("INSERT INTO TBL_Practice (BodySection, Name, SetCount, Repeat, CoolDownTime, Note, Day, Excersize_ID) VALUES (@BodySection, @Name, @SetCount, @Repeat, @CoolDownTime, @Note, @Day, @Excersize_ID) ", objPractice);
+            context.Add(objPractice);
+            context.SaveChanges();
         }
     }
 }

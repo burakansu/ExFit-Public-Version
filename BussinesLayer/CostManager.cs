@@ -1,28 +1,34 @@
-﻿using DatabaseLayer;
+﻿using ExFit.Data;
 using ObjectLayer;
 
 namespace BussinesLayer
 {
     public class CostManager
     {
-        SQL SQL = new SQL();
+        private Context context;
+        public CostManager(Context _context)
+        {
+            context = _context;
+        }
         public List<ObjCost> GetCosts()
         {
-            return SQL.Get<ObjCost>("SELECT * FROM TBL_Cost"); 
+            return context.Costs.OrderBy(x => x.Cost_ID).ToList();
         }
         public ObjCost GetCost(int id)
         {
-            return SQL.Single<ObjCost>("SELECT * FROM TBL_Cost WHERE Cost_ID=" + id);
+            return context.Costs.Single(x => x.Cost_ID == id);
         }
         public void DeleteCost(int id)
         {
-            SQL.Run("DELETE TBL_Cost WHERE Cost_ID="+ id);
+            context.Costs.Remove(context.Costs.Single(x => x.Cost_ID == id));
+            context.SaveChanges();
         }
         public void AddDatabaseCost(ObjCost objCost)
         {
             objCost.Year = DateTime.Now;
             objCost.WhichMonth = DateTime.Now.Month;
-            SQL.Run("INSERT INTO TBL_Cost (Rent,Electric,Water,Staff_Salaries,Other,WhichMonth,Year) VALUES (@Rent,@Electric,@Water,@Staff_Salaries,@Other,@WhichMonth,@Year)", objCost);
+            context.Add(objCost);
+            context.SaveChanges();
         }
     }
 }

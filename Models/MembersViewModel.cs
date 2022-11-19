@@ -1,5 +1,4 @@
-﻿using BussinesLayer;
-using ObjectLayer;
+﻿using ObjectLayer;
 using System.Collections.Generic;
 
 namespace ExFit.Models
@@ -15,20 +14,7 @@ namespace ExFit.Models
         public List<ObjMemberMeazurement> MemberMeazurements { get; set; }
         public double[] MemberWeightArray { get; set; }
         public List<ObjTask> Tasks { get; set; }
-
-        public List<ObjExcersize> ExcersizeArray
-        {
-            get
-            {
-                return new ExcersizeManager().GetExcersizes();
-            }
-        }
-        public List<ObjDiet> DietArray
-        {
-            get
-            {
-                return new DietManager().GetDiets();
-            }
-        }
+        public List<ObjExcersize> ExcersizeArray { get; set; }
+        public List<ObjDiet> DietArray { get; set; }
     }
 }

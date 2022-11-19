@@ -1,4 +1,5 @@
 ﻿using DatabaseLayer.ExFit_Database;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ObjectLayer
 {
@@ -7,6 +8,7 @@ namespace ObjectLayer
 
         //Sanal Tablo Kolonları
 
+        [NotMapped]
         public string FullName
         {
             get

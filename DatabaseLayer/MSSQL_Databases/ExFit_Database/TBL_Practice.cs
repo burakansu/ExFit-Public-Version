@@ -1,7 +1,10 @@
-﻿namespace DatabaseLayer.MSSQL_Databases.ExFit_Database
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DatabaseLayer.MSSQL_Databases.ExFit_Database
 {
     public class TBL_Practice
     {
+        [Key]
         public int Practice_ID { get; set; }
         public int Day { get; set; }
         public int BodySection { get; set; }

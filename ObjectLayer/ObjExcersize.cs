@@ -1,5 +1,6 @@
 ﻿using DatabaseLayer;
 using DatabaseLayer.ExFit_Database;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ObjectLayer
 {
@@ -7,6 +8,7 @@ namespace ObjectLayer
     {
         //Sanal Tablo Kolonları
 
+        [NotMapped]
         public int Count 
         { 
             get

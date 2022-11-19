@@ -1,5 +1,6 @@
 ﻿using DatabaseLayer;
 using DatabaseLayer.MSSQL_Databases.ExFit_Database;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ObjectLayer
 {
@@ -8,6 +9,7 @@ namespace ObjectLayer
 
         //Sanal Tablo Kolonları
 
+        [NotMapped]
         public string MemberName
         { 
             get
@@ -17,6 +19,7 @@ namespace ObjectLayer
                 return Name + " " + Surname;
             }
         }
+        [NotMapped]
         public string User_IMG
         {
             get
@@ -24,6 +27,7 @@ namespace ObjectLayer
                 return new SQL().Value<string>("SELECT IMG FROM TBL_Users WHERE User_ID=" + this.User_ID);
             }
         }
+        [NotMapped]
         public string UserName
         {
             get

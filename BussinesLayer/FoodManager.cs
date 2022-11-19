@@ -1,22 +1,28 @@
-﻿using DatabaseLayer;
+﻿using ExFit.Data;
 using ObjectLayer;
 
 namespace BussinesLayer
 {
     public class FoodManager
     {
-        SQL SQL = new SQL();
+        private Context context;
+        public FoodManager(Context _context)
+        {
+            context = _context;
+        }
         public List<ObjFood> GetFoods()
         {
-            return SQL.Get<ObjFood>("SELECT * FROM TBL_Food");
+            return context.Foods.OrderBy(x => x.Food_ID).ToList();
         }
         public void DeleteFood(int id)
         {
-            SQL.Run("DELETE TBL_Food WHERE Food_ID=" + id);
+            context.Foods.Remove(context.Foods.Single(x => x.Food_ID == id));
+            context.SaveChanges();
         }
         public void AddDatabaseFood(ObjFood ObjFood)
         {
-            SQL.Run("INSERT INTO TBL_Food (MealType, Name, Calorie, Protein, Fat, Note, Day, Diet_ID) VALUES (@MealType, @Name, @Calorie, @Protein, @Fat, @Note, @Day, @Diet_ID) ", ObjFood);
+            context.Add(ObjFood);
+            context.SaveChanges();
         }
     }
 }

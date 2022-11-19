@@ -1,4 +1,5 @@
 ﻿using BussinesLayer;
+using ExFit.Data;
 using ExFit.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,25 +12,32 @@ namespace ExFit.Controllers
 {
     public class MembersController : MemberControllerBase
     {
+        private Context context;
+        public MembersController(Context _context)
+        {
+            context = _context;
+        }
         private MembersViewModel ViewModel(int last, int passive, int id = 0)
         {
-            MembersViewModel viewModelMembers = new MembersViewModel();
+            MembersViewModel VM = new MembersViewModel();
             if (id != 0)
             {
-                viewModelMembers.Member = (ObjectLayer.ObjMember)new MemberManager().GetMember(id);
-                viewModelMembers.MemberMeazurements = new MemberManager().GetMemberMeazurements(id);
-                viewModelMembers.MemberWeightArray = new MemberManager().GetMemberWeightsArray(id);
-                viewModelMembers.MemberDiet = new DietManager().GetDiets(viewModelMembers.Member.Diet_ID, true)[0];
-                viewModelMembers.MemberExcersize = new ExcersizeManager().GetExcersizes(viewModelMembers.Member.Excersize_ID, true)[0];
+                VM.Member = (ObjectLayer.ObjMember)new MemberManager(context).GetMember(id);
+                VM.MemberMeazurements = new MemberManager(context).GetMemberMeazurements(id);
+                VM.MemberWeightArray = new MemberManager(context).GetMemberWeightsArray(id);
+                VM.MemberDiet = new DietManager(context).GetDiets(VM.Member.Diet_ID, true)[0];
+                VM.MemberExcersize = new ExcersizeManager(context).GetExcersizes(VM.Member.Excersize_ID, true)[0];
+                VM.ExcersizeArray = new ExcersizeManager(context).GetExcersizes();
+                VM.DietArray = new DietManager(context).GetDiets();
             }
             else
             {
-                viewModelMembers.Members = new MemberManager().GetMembers(last, passive);
-                viewModelMembers.Member = new ObjectLayer.ObjMember();
+                VM.Members = new MemberManager(context).GetMembers(last, passive);
+                VM.Member = new ObjectLayer.ObjMember();
             }
-            viewModelMembers.Tasks = new TaskManager().GetLastFiveTask();
-            viewModelMembers.User = new UserManager().GetUser((int)HttpContext.Session.GetInt32("ID"));
-            return viewModelMembers;
+            VM.Tasks = new TaskManager(context).GetLastFiveTask();
+            VM.User = new UserManager(context).GetUser((int)HttpContext.Session.GetInt32("ID"));
+            return VM;
         }
         public async Task<IActionResult> SaveMemberAsync(MembersViewModel Model)
         {
@@ -66,20 +74,20 @@ namespace ExFit.Controllers
             }
             else if (Model.Member.Identity_Card == null) { Model.Member.Identity_Card = "/Member/ProfilePhotos/AvatarNull.png"; }
 
-            new MemberManager().SaveMember(Model.Member);
+            new MemberManager(context).SaveMember(Model.Member);
 
             if (Model.Member.Member_ID == 0)
             {
-                TaskBuilder(0, Model.Member.Member_ID);
+                new TaskManager(context).SaveTask(TaskBuilder(0, Model.Member.Member_ID));
             }
-            TaskBuilder(1, Model.Member.Member_ID);
-            Model.User = new UserManager().GetUser((int)HttpContext.Session.GetInt32("ID"));
+            new TaskManager(context).SaveTask(TaskBuilder(1, Model.Member.Member_ID));
+            Model.User = new UserManager(context).GetUser((int)HttpContext.Session.GetInt32("ID"));
             return RedirectToAction("Index", "Home");
         }
         public IActionResult SaveMemberMeazurements(MembersViewModel Model)
         {
             Model.MemberMeazurement.Member_ID = Model.Member.Member_ID;
-            new MemberManager().SaveMemberMeazurements(Model.MemberMeazurement);
+            new MemberManager(context).SaveMemberMeazurements(Model.MemberMeazurement);
             return RedirectToAction("MemberAddMeazurements", "Members", new { id = Model.Member.Member_ID });
         }
         public IActionResult AllMembers()
@@ -104,35 +112,35 @@ namespace ExFit.Controllers
         }
         public IActionResult DeleteMemberMeazurements(int member_id, int id)
         {
-            new MemberManager().DeleteMemberMeazurements(id);
+            new MemberManager(context).DeleteMemberMeazurements(id);
             return RedirectToAction("MemberAddMeazurements", "Members", new { id = member_id });
         }
         public IActionResult PassiveMember(int id)
         {
-            new MemberManager().DeleteMember(id);
-            TaskBuilder(2, id);
+            new MemberManager(context).DeleteMember(id);
+            new TaskManager(context).SaveTask(TaskBuilder(2, id));
             return RedirectToAction("OpenedMember", "Members", new { id = id });
         }
         public IActionResult DeleteMember(int id)
         {
-            new MemberManager().DeleteMember(id, true);
-            TaskBuilder(7, 0);
+            new MemberManager(context).DeleteMember(id, true);
+            new TaskManager(context).SaveTask(TaskBuilder(7, id));
             return RedirectToAction("Index", "Home");
         }
         public IActionResult ActiveMember(int id)
         {
-            new MemberManager().ActiveMember(id);
-            TaskBuilder(3, id);
+            new MemberManager(context).ActiveMember(id);
+            new TaskManager(context).SaveTask(TaskBuilder(3, id));
             return RedirectToAction("OpenedMember", "Members", new { id = id });
         }
         public IActionResult DeleteMemberExcersize(int id)
         {
-            new ExcersizeManager().DeleteExcersize(id, true);
+            new ExcersizeManager(context).DeleteExcersize(id, true);
             return RedirectToAction("OpenedMember", "Members", new { id = id });
         }
         public IActionResult DeleteMemberDiet(int id)
         {
-            new DietManager().DeleteDiet(id, true);
+            new DietManager(context).DeleteDiet(id, true);
             return RedirectToAction("OpenedMember", "Members", new { id = id });
         }
     }

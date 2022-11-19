@@ -18,20 +18,9 @@ namespace ExFit.Areas.Member.Models
         public List<ObjPractice> Practices { get; set; }
         public ObjPractice Practice { get; set; }
         public int _EDay { get; set; }
-        public List<ObjExcersize> _ExcersizeArray
-        {
-            get
-            {
-                return new ExcersizeManager().GetExcersizes();
-            }
-        }
-        public List<ObjDiet> _DietArray
-        {
-            get
-            {
-                return new DietManager().GetDiets();
-            }
-        }
+        public List<ObjExcersize> _ExcersizeArray { get; set; }
+        public List<ObjDiet> _DietArray { get; set; }
+
         public int[] C1 { get; set; }
         public int[] C2 { get; set; }
         public int[] C3 { get; set; }

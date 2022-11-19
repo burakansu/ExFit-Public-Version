@@ -1,4 +1,5 @@
 ﻿using BussinesLayer;
+using ExFit.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -29,7 +30,7 @@ namespace ExFit.Controllers
                 context.Result = LocalRedirect("/LogIn/SignIn");
             }
         }
-        public void TaskBuilder(int type, int id)
+        public ObjTask TaskBuilder(int type, int id)
         {
             ObjTask objTask = new ObjTask();
             switch (type)
@@ -61,8 +62,7 @@ namespace ExFit.Controllers
             }
             objTask.User_ID = (int)HttpContext.Session.GetInt32("ID");
             objTask.Member_ID = id;
-            TaskManager taskManager = new TaskManager();
-            taskManager.SaveTask(objTask);
+            return objTask;
         }
     }
 }
