@@ -1,12 +1,15 @@
-﻿using DatabaseLayer;
+﻿using ExFit.Data;
 using ObjectLayer;
 
 namespace BussinesLayer
 {
     public class UserManager
     {
-        SQL SQL = new SQL();
-        TaskManager taskManager = new TaskManager();
+        private Context context;
+        public UserManager(Context _context)
+        {
+            context = _context;
+        }
         public int Authorization(int Joined_User_ID)
         {
             if (Joined_User_ID != 0) { return 1; }
@@ -14,13 +17,11 @@ namespace BussinesLayer
         }
         public ObjUser CheckUserEntering(ObjUser User)
         {
-            ObjUser _user = SQL.Single<ObjUser>("SELECT * FROM TBL_Users WHERE Mail='" + User.Mail + "' AND Password='" + User.Password + "'");
+            ObjUser _User = context.Users.SingleOrDefault(x => x.Mail == User.Mail && x.Password == User.Password);
 
-            if (_user.User_ID != 0)
+            if (_User != null)
             {
-                User.User_ID = _user.User_ID;
-                User.Type = _user.Type;
-                return User;
+                return _User;
             }
             else
             {
@@ -32,29 +33,32 @@ namespace BussinesLayer
         {
             if (objUser.User_ID != 0)
             {
-                SQL.Run("UPDATE TBL_Users SET Phone=@Phone ,Name=@Name ,Surname=@Surname ,Mail=@Mail ,Password=@Password ,Position=@Position ,IMG=@IMG WHERE User_ID=" + objUser.User_ID, objUser);
-                taskManager.DeleteTask(0, 1);
+                context.Update(objUser);
+                context.SaveChanges();
+                new TaskManager(context).DeleteTask(0, 1);
             }
             else
             {
-                SQL.Run("INSERT INTO TBL_Users (Name,Surname,Mail,Password,Position,Type,IMG,Phone) VALUES (@Name,@Surname,@Mail,@Password,@Position,@Type,@IMG,@Phone)", objUser);
+                context.Add(objUser);
+                context.SaveChanges();
             }
         }
-        public void DeleteUser(int User_ID)
+        public void DeleteUser(int id)
         {
-            SQL.Run("DELETE TBL_Users WHERE User_ID=" + User_ID);
+            context.Users.Remove(context.Users.Single(x => x.User_ID == id));
+            context.SaveChanges();
         }
         public List<ObjTask> GetUserTasks(int id)
         {
-            return SQL.Get<ObjTask>("SELECT * FROM TBL_Tasks WHERE User_ID =" + id);
+            return context.Tasks.Where(x => x.User_ID == id).ToList();
         }
-        public ObjUser GetUser(int ID)
+        public ObjUser GetUser(int id)
         {
-            return SQL.Single<ObjUser>("SELECT * FROM TBL_Users WHERE User_ID=" + ID);
+            return context.Users.Single(x => x.User_ID == id);
         }
         public List<ObjUser> GetUsers()
         {
-            return SQL.Get<ObjUser>("SELECT * FROM TBL_Users");
+            return context.Users.OrderBy(x => x.User_ID).ToList();
         }
     }
 }

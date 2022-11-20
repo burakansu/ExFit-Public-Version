@@ -1,12 +1,17 @@
 ﻿using DatabaseLayer;
+using ExFit.Data;
 using FunctionLayer.Stats_Manager.Regression;
 using ObjectLayer;
-using ObjMember = ObjectLayer.ObjMember;
 
 namespace BussinesLayer
 {
     public class MemberManager
     {
+        private Context context;
+        public MemberManager(Context _context)
+        {
+            context = _context;
+        }
         SQL sQL = new SQL();
         public int Authorization(int Joined_Member_ID)
         {
@@ -15,12 +20,11 @@ namespace BussinesLayer
         }
         public ObjMember CheckMemberEntering(ObjMember member)
         {
-            ObjMember _member = sQL.Single<ObjMember>("SELECT * FROM TBL_Members WHERE Mail='" + member.Mail + "' AND Password='" + member.Password + "'");
+            ObjMember _User = context.Members.SingleOrDefault(x => x.Mail == member.Mail && x.Password == member.Password);
 
-            if (_member.Member_ID != 0)
+            if (_User != null)
             {
-                member.Member_ID = _member.Member_ID;
-                return member;
+                return _User;
             }
             else
             {
@@ -30,70 +34,70 @@ namespace BussinesLayer
         }
         public int CountMembers()
         {
-            return sQL.Value<int>("SELECT COUNT(*) FROM TBL_Members");
-        }
-        public List<ObjMember> GetMembers(int last = 0, int pasive = 0)
-        {
-            IncomeManager incomeManager = new IncomeManager();
-            ObjIncome objIncome = new ObjIncome();
-            int c = sQL.Value<int>("SELECT Count(*) FROM TBL_Members WHERE Registration_Date BETWEEN '" + DateTime.Now.Year + "-" + DateTime.Now.Month + "-01' AND '" + DateTime.Now.Year + "-" + DateTime.Now.Month + "-28' ");
-            if (c > 0)
-            {
-                objIncome.Value = sQL.Value<int>("SELECT SUM(Price) AS 'summary' FROM TBL_Members WHERE Registration_Date BETWEEN '" + DateTime.Now.Year + "-" + DateTime.Now.Month + "-01' AND '" + DateTime.Now.Year + "-" + DateTime.Now.Month + "-28' ");
-                objIncome.Income_ID = sQL.Value<int>("SELECT Income_ID FROM TBL_Income WHERE WhichMonth=" + DateTime.Now.Month);
-                incomeManager.SaveIncome(objIncome);
-            }
-
-
-            string Query = "SELECT * FROM TBL_Members WHERE Block = 0";
-            if (last == 1) { Query = "SELECT top 3 * FROM TBL_Members ORDER BY Member_ID DESC"; }
-            else if (pasive == 1) { Query = "SELECT * FROM TBL_Members WHERE Block = 1"; }
-            return sQL.Get<ObjMember>(Query);
+            return context.Members.Count();
         }
         public ObjMember GetMember(int id)
         {
-            return sQL.Single<ObjMember>("SELECT * FROM TBL_Members WHERE Member_ID=" + id);
+            return context.Members.Single(x => x.Member_ID == id);
         }
         public void DeleteMember(int id, bool Del = false)
         {
-            string Query = "UPDATE TBL_Members SET Block=1 WHERE Member_ID=";
-            if (Del == true) { Query = "DELETE TBL_Members WHERE Member_ID="; }
-            sQL.Run(Query + id);
+            if (Del == true)
+            {
+                context.Members.Remove(context.Members.Single(x => x.Member_ID == id));
+                context.SaveChanges();
+            }
+            else
+            {
+                ObjMember objMember = context.Members.Single(x => x.Member_ID == id);
+                objMember.Block = 1;
+                context.Members.Update(objMember);
+                context.SaveChanges();
+            }
         }
         public void ActiveMember(int id)
         {
-            sQL.Run("UPDATE TBL_Members SET Block=0 WHERE Member_ID=" + id);
+            ObjMember objMember = context.Members.Single(x => x.Member_ID == id);
+            objMember.Block = 0;
+            context.Members.Update(objMember);
+            context.SaveChanges();
         }
         public void SaveMember(ObjMember objMember)
         {
-            string Query = "INSERT INTO TBL_Members([Name],Surname,[Phone],[Mail],Adress,Registration_Time,[Block],Registration_Date,[IMG],[Price],Excersize_ID,Diet_ID,Health_Report,Identity_Card) VALUES (@Name,@Surname,@Phone,@Mail,@Adress,@Registration_Time,@Block,@Registration_Date,@IMG,@Price,@Excersize_ID,@Diet_ID,@Identity_Card,@Health_Report) SELECT CAST(scope_identity() AS int)";
             if (objMember.Member_ID != 0)
             {
-                Query = "UPDATE TBL_Members SET [Name]=@Name,Surname=@Surname,[Phone]=@Phone,[Mail]=@Mail,Adress=@Adress,Registration_Time=@Registration_Time,[Block]=@Block,Registration_Date=@Registration_Date,[IMG]=@IMG,[Price]=@Price,Excersize_ID=@Excersize_ID,Diet_ID=@Diet_ID,Health_Report=@Health_Report,Identity_Card=@Identity_Card WHERE Member_ID=" + objMember.Member_ID;
+                context.Update(objMember);
+                context.SaveChanges();
             }
-            sQL.Run(Query, objMember);
+            else
+            {
+                context.Add(objMember);
+                context.SaveChanges();
+            }
         }
         public void SaveMemberMeazurements(ObjMemberMeazurement objMemberMeazurement)
         {
-            int Count = sQL.Value<int>("SELECT COUNT(*) FROM TBL_Members_Meazurements WHERE Member_ID=" + objMemberMeazurement.Member_ID);
-            objMemberMeazurement.Which_Month = Count + 1;
-            sQL.Run("INSERT INTO TBL_Members_Meazurements (Member_ID,Shoulder,Chest,Arm,Belly,Leg,Weight,Age,Size,Which_Month,Avarage_Asleep_Time,Avarage_Calorie_Intake) VALUES (@Member_ID,@Shoulder,@Chest,@Arm,@Belly,@Leg,@Weight,@Age,@Size,@Which_Month,@Avarage_Asleep_Time,@Avarage_Calorie_Intake) ", objMemberMeazurement);
+            objMemberMeazurement.Which_Month = context.MemberMeazurements.Count(x => x.Member_ID == objMemberMeazurement.Member_ID) + 1;
+            context.MemberMeazurements.Update(objMemberMeazurement);
+            context.SaveChanges();
         }
         public void DeleteMemberMeazurements(int id)
         {
-            sQL.Run("DELETE FROM TBL_Members_Meazurements WHERE Meazurement_ID=" + id);
+            context.MemberMeazurements.Remove(context.MemberMeazurements.Single(x => x.Meazurement_ID == id));
+            context.SaveChanges();
         }
         public List<ObjMemberMeazurement> GetMemberMeazurements(int id)
         {
-            return sQL.Get<ObjMemberMeazurement>("SELECT * FROM TBL_Members_Meazurements WHERE Member_ID=" + id);
+            return context.MemberMeazurements.Where(x => x.Member_ID == id).ToList();
         }
         public int GetIncome()
         {
-            return sQL.Value<int>("SELECT SUM(Price) FROM TBL_Members");
+            return context.Members.Sum(x => x.Price);
         }
         public double[] GetMemberWeightsArray(int id)
         {
-            List<int> Array = sQL.Get<int>("SELECT Weight FROM TBL_Members_Meazurements WHERE Member_ID=" + id);
+            int[] Array = context.MemberMeazurements.Where(x => x.Member_ID == id).Select(x => x.Weight).ToArray();
+
             double[] Weights = new double[Array.Count()];
             double[] WeightsAndCurve = new double[12];
             if (Array.Count() > 0)
@@ -103,7 +107,7 @@ namespace BussinesLayer
                     Weights[i] = Convert.ToDouble(Array[i]);
                     WeightsAndCurve[i] = Weights[i];
                 }
-                LinearCurve linearCurve = new LinearCurve();
+                LinearCurve linearCurve = new LinearCurve(context);
                 if (Weights.Count() > 3)
                 {
                     double[] Lcurve = linearCurve.Curve(id, 12 - Weights.Count());
@@ -118,6 +122,38 @@ namespace BussinesLayer
                 }
             }
             return WeightsAndCurve;
+        }
+        public List<ObjMember> GetMembers(int last = 0, int pasive = 0)
+        {
+            // Bir Değişiklik Varsa O Ayki Geliri Günceller Veya Yeni Ay a Geçildiyse Kaydı Oluşturur.
+            ObjIncome objIncome = new ObjIncome();
+            int c = sQL.Value<int>("SELECT Count(*) FROM TBL_Members WHERE Registration_Date BETWEEN '" + DateTime.Now.MonthFirstDay().ToString("yyyy-MM-dd") + "' AND '" + DateTime.Now.MonthLastDay().ToString("yyyy-MM-dd") + "' ");
+
+            if (c > 0)
+            {
+                objIncome.Value = sQL.Value<int>("SELECT SUM(Price) AS 'summary' FROM TBL_Members WHERE Registration_Date BETWEEN '" + DateTime.Now.MonthFirstDay().ToString("yyyy-MM-dd") + "' AND '" + DateTime.Now.MonthLastDay().ToString("yyyy-MM-dd") + "' ");
+
+                if (context.Incomes.Where(x => x.WhichMonth == DateTime.Now.Month).Count() > 0)
+                {
+                    objIncome.Income_ID = context.Incomes.Single(x => x.WhichMonth == DateTime.Now.Month).Income_ID;
+                }
+                new IncomeManager(context).SaveIncome(objIncome);
+            }
+            // end
+
+
+            if (last == 1)
+            {
+                return context.Members.OrderByDescending(x => x.Member_ID).Take(3).ToList();
+            }
+            else if (pasive == 1)
+            {
+                return context.Members.Where(x => x.Block == 1).ToList();
+            }
+            else
+            {
+                return context.Members.Where(x => x.Block == 0).ToList();
+            }
         }
         public int[] GetThisYearRegystry()
         {
@@ -147,6 +183,17 @@ namespace BussinesLayer
                 }
             }
             return ints;
+        }
+    }
+    public static class ExtensionMethods
+    {
+        public static DateTime MonthFirstDay(this DateTime dt)
+        {
+            return new DateTime(dt.Year, dt.Month, 1);
+        }
+        public static DateTime MonthLastDay(this DateTime dt)
+        {
+            return dt.MonthFirstDay().AddMonths(1).AddDays(-1);
         }
     }
 }

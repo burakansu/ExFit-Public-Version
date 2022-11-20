@@ -1,7 +1,10 @@
-﻿namespace DatabaseLayer.ExFit_Database
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DatabaseLayer.ExFit_Database
 {
     public class TBL_Users
     {
+        [Key]
         public int User_ID { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }

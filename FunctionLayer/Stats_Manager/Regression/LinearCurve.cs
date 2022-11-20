@@ -1,4 +1,5 @@
 ﻿using DatabaseLayer;
+using ExFit.Data;
 using System.Data;
 
 namespace FunctionLayer.Stats_Manager.Regression
@@ -7,6 +8,12 @@ namespace FunctionLayer.Stats_Manager.Regression
 
     public class LinearCurve
     {
+        private Context context;
+        public LinearCurve(Context _context)
+        {
+            context = _context;
+        }
+
         Double a, b, Xi_Avg, Yi_Avg, SSA = 0;
         Double[] Xi, Yi, Yi_Tilda;
         int n;
@@ -60,8 +67,8 @@ namespace FunctionLayer.Stats_Manager.Regression
                 Yi_Tilda = new Double[Total];
                 return Yi_Tilda;
             }
-            SQL sQL = new SQL();
-            List<int> Array = sQL.Get<int>("SELECT Weight FROM TBL_Members_Meazurements WHERE Member_ID=" + ID);
+            int[] Array = context.MemberMeazurements.Where(x => x.Member_ID == ID).Select(x => x.Weight).ToArray();
+
             n = Array.Count();
             Yi_Tilda = new Double[Total];
             Xi = new Double[12];

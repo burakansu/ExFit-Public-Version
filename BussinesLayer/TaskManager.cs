@@ -1,42 +1,40 @@
-﻿using DatabaseLayer;
+﻿using ExFit.Data;
 using ObjectLayer;
 
 namespace BussinesLayer
 {
     public class TaskManager
     {
-        SQL sQL = new SQL();
+        private Context context;
+        public TaskManager(Context _context)
+        {
+            context = _context;
+        }
         public List<ObjTask> GetLastFiveTask(int all = 0)
         {
             if (all == 1)
             {
-                return sQL.Get<ObjTask>("SELECT * FROM TBL_Tasks WHERE Create_Date='" + DateTime.Now.ToString("yyyy-MM-dd") + "' ORDER BY Task_ID desc");
+                return context.Tasks.OrderByDescending(x => x.Create_Date == DateTime.Now).Take(5).ToList();
             }
             else
             {
-                return sQL.Get<ObjTask>("SELECT TOP(5)* FROM TBL_Tasks ORDER BY Task_ID desc");
+                return context.Tasks.OrderByDescending(x => x.Task_ID).Take(5).ToList();
             }
         }
         public void SaveTask(ObjTask objTask)
         {
             objTask.Create_Date = DateTime.Now;
-            sQL.Run("INSERT INTO TBL_Tasks (Description,Create_Date,User_ID,Member_ID) VALUES (@Description,@Create_Date,@User_ID,@Member_ID)", objTask);
+            context.Add(objTask);
+            context.SaveChanges();
         }
         public void DeleteTask(int Task_ID, int last = 0)
         {
-            //    if (last == 1)
-            //    {
-            //        int Miss = conn.QuerySingle<int>("SELECT TOP 1 Task_ID FROM TBL_Tasks ORDER BY Task_ID desc");
-            //        SQL.Execute("DELETE FROM TBL_Tasks WHERE Task_ID = " + Miss);
-            //    }
-            //    else
-            //    {
-            //        SQL.Execute("DELETE FROM TBL_Tasks WHERE Task_ID = " + Task_ID);
-            //    }
+            //context.Tasks.Remove(context.Tasks.Single(x => x.Task_ID == Task_ID));
+            //context.SaveChanges();
         }
         public int CountTasks()
         {
-            return sQL.Value<int>("SELECT COUNT(*) FROM TBL_Tasks");
+            return context.Tasks.Count();
         }
     }
 }

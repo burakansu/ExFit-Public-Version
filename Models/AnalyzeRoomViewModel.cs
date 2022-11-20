@@ -20,8 +20,7 @@ namespace ExFit.Models
         {
             get
             {
-                SQL sQL = new SQL();
-                return this.Income - sQL.Value<int>("SELECT SUM(Rent,Electric,Water,Staff_Salaries,Other) FROM TBL_Cost");
+                return this.Income - new SQL().Value<int>("SELECT SUM(Rent,Electric,Water,Staff_Salaries,Other) FROM TBL_Cost");
             }
         }
     }

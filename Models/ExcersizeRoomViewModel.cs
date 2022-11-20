@@ -1,5 +1,6 @@
 ﻿using ObjectLayer;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace ExFit.Models
 {
@@ -12,5 +13,12 @@ namespace ExFit.Models
         public List<ObjPractice> Practices { get; set; }
         public ObjPractice Practice { get; set; }
         public int _Day { get; set; }
+        public int[] C1 { get; set; }
+        public int[] C2 { get; set; }
+        public int[] C3 { get; set; }
+        public int[] C4 { get; set; }
+        public int[] C5 { get; set; }
+        public int[] C6 { get; set; }
+        public int[] C7 { get; set; }
     }
 }

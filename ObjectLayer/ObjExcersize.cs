@@ -1,5 +1,6 @@
 ﻿using DatabaseLayer;
 using DatabaseLayer.ExFit_Database;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ObjectLayer
 {
@@ -7,12 +8,12 @@ namespace ObjectLayer
     {
         //Sanal Tablo Kolonları
 
+        [NotMapped]
         public int Count 
         { 
             get
             {
-                SQL sQL = new SQL();
-                return sQL.Value<int>("SELECT COUNT(*) FROM TBL_Members WHERE Excersize_ID="+ this.Excersize_ID);
+                return new SQL().Value<int>("SELECT COUNT(*) FROM TBL_Members WHERE Excersize_ID="+ this.Excersize_ID);
             }   
         }
     }

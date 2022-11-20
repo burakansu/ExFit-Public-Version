@@ -1,4 +1,5 @@
 ﻿using DatabaseLayer;
+using ExFit.Data;
 using System.Data;
 
 namespace FunctionLayer.Stats_Manager.Regression
@@ -7,6 +8,12 @@ namespace FunctionLayer.Stats_Manager.Regression
 
     public class QuadraticCurve
     {
+        private Context context;
+        public QuadraticCurve(Context _context)
+        {
+            context = _context;
+        }
+
         Double[] Xi, Yi, Yi_Tilda, Z;
         Double a,b,c,d;
         int n;
@@ -31,8 +38,8 @@ namespace FunctionLayer.Stats_Manager.Regression
         }
         public Double[] Curve(int ID,int Total)
         {
-            SQL sQL = new SQL();
-            List<int> Array = sQL.Get<int>("SELECT Weight FROM TBL_Members_Meazurements WHERE Member_ID=" + ID);
+            int[] Array = context.MemberMeazurements.Where(x => x.Member_ID == ID).Select(x => x.Weight).ToArray();
+
             n = Array.Count();
             Yi_Tilda = new Double[Total];
             Xi = new Double[12];

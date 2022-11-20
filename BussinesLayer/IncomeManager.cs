@@ -1,28 +1,34 @@
-﻿using DatabaseLayer;
+﻿using ExFit.Data;
 using ObjectLayer;
 
 namespace BussinesLayer
 {
     public class IncomeManager
     {
-        SQL SQL = new SQL();
+        private Context context;
+        public IncomeManager(Context _context)
+        {
+            context = _context;
+        }
         public List<ObjIncome> GetIncomes()
         {
-            return SQL.Get<ObjIncome>("SELECT * FROM TBL_Income");
+            return context.Incomes.OrderBy(x => x.Year).ToList();
         }
         public void SaveIncome(ObjIncome objIncome)
         {
+            objIncome.Year = DateTime.Now.Year;
+            objIncome.WhichMonth = DateTime.Now.Month;
+
             if (objIncome.Income_ID != 0)
             {
-                objIncome.Year = DateTime.Now;
-                objIncome.WhichMonth = DateTime.Now.Month;
-                SQL.Run("INSERT INTO TBL_Income (Value,WhichMonth,Year) VALUES (@Value,@WhichMonth,@Year)", objIncome);
+                context.Incomes.Remove(context.Incomes.Single(x => x.Income_ID == objIncome.Income_ID ));
+                context.Incomes.Add(objIncome);
+                context.SaveChanges();
             }
             else
             {
-                objIncome.Year = DateTime.Now;
-                objIncome.WhichMonth = DateTime.Now.Month;
-                SQL.Run("UPDATE TBL_Income SET Value=@Value,WhichMonth=@WhichMonth,Year=@Year WHERE WhichMonth=" + objIncome.WhichMonth, objIncome);
+                context.Incomes.Add(objIncome);
+                context.SaveChanges();
             }
         }
     }

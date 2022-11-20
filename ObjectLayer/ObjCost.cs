@@ -1,5 +1,6 @@
 ﻿using DatabaseLayer;
 using DatabaseLayer.MSSQL_Databases.ExFit_Database;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ObjectLayer
 {
@@ -7,14 +8,15 @@ namespace ObjectLayer
     {
         //Sanal Tablo Kolonları
 
+        [NotMapped]
         public int Total_Cost
         {
             get
             {
-                SQL sQL = new SQL();
-                return sQL.Value<int>("SELECT SUM(Rent,Electric,Water,Staff_Salaries,Other) FROM TBL_Cost");
+                return new SQL().Value<int>("SELECT SUM(Rent,Electric,Water,Staff_Salaries,Other) FROM TBL_Cost");
             }
         }
+        [NotMapped]
         public int Which_Cost
         {
             get
