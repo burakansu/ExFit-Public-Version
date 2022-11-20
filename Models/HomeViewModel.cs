@@ -25,14 +25,8 @@ namespace ExFit.Models
         public int TaskCount { get { return Tasks.Count; } }
         public int TodayTaskCount { get; set; }
         public int[] ThisYearRegistrys { get; set; }
-
-        public int Profit 
-        { 
-            get
-            {
-                return this.Income - new SQL().Value<int>("SELECT SUM(Rent,Electric,Water,Staff_Salaries,Other) FROM TBL_Cost");
-            } 
-        }
+        public int TotalCost { get; set; }
+        public int Profit { get; set; }
         public int MemberCapasity 
         { 
             get

@@ -30,5 +30,9 @@ namespace BussinesLayer
             context.Add(objCost);
             context.SaveChanges();
         }
+        public int TotalCost()
+        {
+            return context.Costs.Sum(x => x.Rent) + context.Costs.Sum(x => x.Electric) + context.Costs.Sum(x => x.Water) + context.Costs.Sum(x => x.Staff_Salaries) + context.Costs.Sum(x => x.Other);
+        }
     }
 }

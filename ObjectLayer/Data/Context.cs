@@ -9,7 +9,6 @@ namespace ExFit.Data
         {
         }
 
-
         public DbSet<ObjUser> Users { get; set; }
         public DbSet<ObjMember> Members { get; set; }
         public DbSet<ObjMemberMeazurement> MemberMeazurements { get; set; }

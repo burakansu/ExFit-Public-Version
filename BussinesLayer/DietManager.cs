@@ -12,7 +12,7 @@ namespace BussinesLayer
         }
         public List<ObjDiet> GetDiets(int id = 0, bool Special = false)
         {
-            if (id != 0 || Special == true) 
+            if (id != 0 || Special == true)
             {
                 return context.Diets.Where(x => x.Diet_ID == id).ToList();
             }
@@ -23,7 +23,7 @@ namespace BussinesLayer
         }
         public void DeleteDiet(int id, bool Special = false)
         {
-            if (Special == true) 
+            if (Special == true)
             {
                 ObjMember objMember = context.Members.Single(x => x.Member_ID == id);
                 objMember.Diet_ID = 0;

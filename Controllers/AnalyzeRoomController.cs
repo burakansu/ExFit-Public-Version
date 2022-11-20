@@ -19,6 +19,8 @@ namespace ExFit.Controllers
             AnalyzeRoomViewModel Model = new AnalyzeRoomViewModel();
             Model.Income = new MemberManager(context).GetIncome();
             Model.Costs = new CostManager(context).GetCosts();
+            Model.TotalCost = new CostManager(context).TotalCost();
+            Model.Profit = Model.Income - Model.TotalCost;
             Model.Incomes = new IncomeManager(context).GetIncomes();
             Model.Tasks = new TaskManager(context).GetLastFiveTask();
             Model.User = new UserManager(context).GetUser((int)HttpContext.Session.GetInt32("ID"));

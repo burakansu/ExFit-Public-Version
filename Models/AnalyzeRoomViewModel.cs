@@ -12,16 +12,10 @@ namespace ExFit.Models
         public int[] IncomeArray { get; set; }
         public List<ObjTask> Tasks { get; set; }
         public List<ObjCost> Costs { get; set; }
+        public int TotalCost { get; set; }
         public ObjCost Cost { get; set; }
         public List<ObjIncome> Incomes { get; set; }
         public int Income { get; set; }
-
-        public int Profit
-        {
-            get
-            {
-                return this.Income - new SQL().Value<int>("SELECT SUM(Rent,Electric,Water,Staff_Salaries,Other) FROM TBL_Cost");
-            }
-        }
+        public int Profit { get; set; }
     }
 }
