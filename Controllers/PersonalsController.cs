@@ -1,4 +1,5 @@
 ﻿using BussinesLayer;
+using ExFit.Data;
 using ExFit.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,18 +11,22 @@ namespace ExFit.Controllers
 {
     public class PersonalsController : MemberControllerBase
     {
-
+        private Context context;
+        public PersonalsController(Context _context)
+        {
+            context = _context;
+        }
         public PersonalsViewModel ViewModel(int id = 0)
         {
             PersonalsViewModel personalsViewModel = new PersonalsViewModel();
-            personalsViewModel.User = new UserManager().GetUser((int)HttpContext.Session.GetInt32("ID"));
-            personalsViewModel.Users = new UserManager().GetUsers();
-            personalsViewModel.Tasks = new TaskManager().GetLastFiveTask();
-            personalsViewModel.TodayTasks = new TaskManager().GetLastFiveTask(1);
+            personalsViewModel.User = new UserManager(context).GetUser((int)HttpContext.Session.GetInt32("ID"));
+            personalsViewModel.Users = new UserManager(context).GetUsers();
+            personalsViewModel.Tasks = new TaskManager(context).GetLastFiveTask();
+            personalsViewModel.TodayTasks = new TaskManager(context).GetLastFiveTask(1);
             if (id != 0)
             {
-                personalsViewModel.SelectedUser = new UserManager().GetUser(id);
-                personalsViewModel.UsersTasks = new UserManager().GetUserTasks(id);
+                personalsViewModel.SelectedUser = new UserManager(context).GetUser(id);
+                personalsViewModel.UsersTasks = new UserManager(context).GetUserTasks(id);
             }
             return personalsViewModel;
         }
@@ -47,7 +52,7 @@ namespace ExFit.Controllers
         }
         public IActionResult Delete(int id)
         {
-            new UserManager().DeleteUser(id);
+            new UserManager(context).DeleteUser(id);
             return RedirectToAction("Index", "Home");
         }
         public async Task<IActionResult> RegistryingAsync(PersonalsViewModel personalsViewModel)
@@ -63,9 +68,10 @@ namespace ExFit.Controllers
             }
             else if (personalsViewModel.SelectedUser.IMG == null) { personalsViewModel.SelectedUser.IMG = $"/Personal/AvatarNull.png"; }
 
-            new UserManager().SaveUser(personalsViewModel.SelectedUser);
-            TaskBuilder(4, 0);
-            personalsViewModel.User = new UserManager().GetUser((int)HttpContext.Session.GetInt32("ID"));
+            new UserManager(context).SaveUser(personalsViewModel.SelectedUser);
+            new TaskManager(context).SaveTask(TaskBuilder(4, 0));
+
+            personalsViewModel.User = new UserManager(context).GetUser((int)HttpContext.Session.GetInt32("ID"));
             return RedirectToAction("Index", "Home");
         }
     }

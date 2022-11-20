@@ -20,7 +20,7 @@ Tüm İstatistiksel Formüllerin Ve Hesaplamaların Yapıldığı Katman.
 
 Veritabanı **TSQL**
 
-ORM Sistemi **Dapper** 
+ORM Sistemi **EF Core 7** **Dapper** 
 
 Sekmelerde Ve Çeşitli Noktalarda Sayfa Yüklemelerinde **Ajax**
 
