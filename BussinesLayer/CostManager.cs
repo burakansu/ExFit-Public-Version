@@ -12,7 +12,7 @@ namespace BussinesLayer
         }
         public List<ObjCost> GetCosts()
         {
-            return context.Costs.OrderBy(x => x.Cost_ID).ToList();
+            return context.Costs.ToList();
         }
         public ObjCost GetCost(int id)
         {

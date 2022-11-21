@@ -1,4 +1,5 @@
 ﻿using DatabaseLayer;
+using DatabaseLayer.ExFit_Database;
 using ExFit.Data;
 using FunctionLayer.Stats_Manager.Regression;
 using ObjectLayer;
@@ -127,11 +128,14 @@ namespace BussinesLayer
         {
             // Bir Değişiklik Varsa O Ayki Geliri Günceller Veya Yeni Ay a Geçildiyse Kaydı Oluşturur.
             ObjIncome objIncome = new ObjIncome();
-            int c = sQL.Value<int>("SELECT Count(*) FROM TBL_Members WHERE Registration_Date BETWEEN '" + DateTime.Now.MonthFirstDay().ToString("yyyy-MM-dd") + "' AND '" + DateTime.Now.MonthLastDay().ToString("yyyy-MM-dd") + "' ");
+
+            DateTime MontFirstDay = DateTime.Now.MonthFirstDay();
+            DateTime MonthLastDay = DateTime.Now.MonthLastDay();
+            int c = context.Members.Where(x => x.Registration_Date >= MontFirstDay && x.Registration_Date <= MonthLastDay).Count();
 
             if (c > 0)
             {
-                objIncome.Value = sQL.Value<int>("SELECT SUM(Price) AS 'summary' FROM TBL_Members WHERE Registration_Date BETWEEN '" + DateTime.Now.MonthFirstDay().ToString("yyyy-MM-dd") + "' AND '" + DateTime.Now.MonthLastDay().ToString("yyyy-MM-dd") + "' ");
+                objIncome.Value = context.Members.Where(m => m.Registration_Date >= MontFirstDay && m.Registration_Date <= MonthLastDay).Sum(x => x.Price);
 
                 if (context.Incomes.Where(x => x.WhichMonth == DateTime.Now.Month).Count() > 0)
                 {
@@ -155,31 +159,63 @@ namespace BussinesLayer
                 return context.Members.Where(x => x.Block == 0).ToList();
             }
         }
+        public int CheckDate(String date)
+        {
+            try
+            {
+                DateTime dt = DateTime.Parse(date);
+                return 1;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
         public int[] GetThisYearRegystry()
         {
-            string year = DateTime.Now.ToString("yyyy");
-            int[] ints = new int[12];
-            for (int i = 1; i <= 12; i++)
+            DateTime now = DateTime.Now;
+            int[] ints = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            var objMembers = context.Members.Where(x => x.Registration_Date.Year == now.Year);
+            foreach (var item in objMembers)
             {
-                String CommandPart = "'" + year + "-" + i + "-31'";
-                int RealDate = sQL.Value<int>("SELECT ISDATE (" + CommandPart + ")");
-                if (RealDate == 1)
+                switch (item.Registration_Date.Month.ToString())
                 {
-                    ints[i - 1] = sQL.Value<int>("SELECT COUNT(Name) FROM TBL_Members WHERE Registration_Date BETWEEN '" + year + "-" + i + "-01' AND " + CommandPart + " ");
-                }
-                else
-                {
-                    for (int j = 0; j < 6; j++)
-                    {
-                        int day = 30;
-                        CommandPart = "'" + year + "-" + i + "-" + day + "'";
-                        RealDate = sQL.Value<int>("SELECT ISDATE (" + CommandPart + ")");
-                        if (RealDate == 1)
-                        {
-                            ints[i - 1] = sQL.Value<int>("SELECT COUNT(Name) FROM TBL_Members WHERE Registration_Date BETWEEN '" + year + "-" + i + "-01' AND " + CommandPart + " ");
-                        }
-                        day--;
-                    }
+                    case "1":
+                        ints[0] += 1; 
+                        break;
+                    case "2":
+                        ints[1] += 1;
+                        break;
+                    case "3":
+                        ints[2] += 1;
+                        break;
+                    case "4":
+                        ints[3] += 1;
+                        break;
+                    case "5":
+                        ints[4] += 1;
+                        break;
+                    case "6":
+                        ints[5] += 1;
+                        break;
+                    case "7":
+                        ints[6] += 1;
+                        break;
+                    case "8":
+                        ints[7] += 1;
+                        break;
+                    case "9":
+                        ints[8] += 1;
+                        break;
+                    case "10":
+                        ints[9] += 1;
+                        break;
+                    case "11":
+                        ints[10] += 1;
+                        break;
+                    case "12":
+                        ints[11] += 1;
+                        break;
                 }
             }
             return ints;
