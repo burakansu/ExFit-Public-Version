@@ -8,7 +8,7 @@ namespace ObjectLayer
         //Sanal Tablo Kolonları
 
         [NotMapped]
-        public int Which_Cost
+        public int Which_Cost // Objeninin Toplam Giderini Verir
         {
             get
             {

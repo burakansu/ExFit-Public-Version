@@ -9,7 +9,7 @@ namespace ObjectLayer
         //Sanal Tablo Kolonları
 
         [NotMapped]
-        public string FullName
+        public string FullName // Personelin Tam Adı
         {
             get
             {

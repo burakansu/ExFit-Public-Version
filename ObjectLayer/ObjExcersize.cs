@@ -14,7 +14,7 @@ namespace ObjectLayer
         //Sanal Tablo Kolonları
 
         [NotMapped]
-        public int Count 
+        public int Count // Egzersizin Üyeler Tarafından Kullanılma Sayısı
         { 
             get
             {

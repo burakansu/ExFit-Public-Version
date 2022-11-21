@@ -15,7 +15,7 @@ namespace ObjectLayer
         // Sanal Tablo Kolonları
 
         [NotMapped]
-        public int Count
+        public int Count // Diyetin Üyeler Tarafından Kullanım Sayısı
         {
             get
             {
@@ -23,7 +23,7 @@ namespace ObjectLayer
             }
         }
         [NotMapped]
-        public int TotalCalorie
+        public int TotalCalorie // Diyetteki Toplam Kalori
         {
             get
             {
@@ -31,7 +31,7 @@ namespace ObjectLayer
             }
         }
         [NotMapped]
-        public int TotalProtein
+        public int TotalProtein // Diyetteki Toplam Protein
         {
             get
             {
@@ -39,7 +39,7 @@ namespace ObjectLayer
             }
         }
         [NotMapped]
-        public int TotalFat
+        public int TotalFat //Diyetteki Toplam Yağ
         {
             get
             {
@@ -47,7 +47,7 @@ namespace ObjectLayer
             }
         }
         [NotMapped]
-        public int TotalCarbonhidrat
+        public int TotalCarbonhidrat // Diyetteki Toplam Karbonhidrat
         {
             get
             {

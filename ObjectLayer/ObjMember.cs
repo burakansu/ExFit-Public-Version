@@ -15,7 +15,7 @@ namespace ObjectLayer
         //Sanal Tablo Kolonları
 
         [NotMapped]
-        public string FullName
+        public string FullName // Üyenin Tam İsmi
         {
             get
             {
@@ -23,7 +23,7 @@ namespace ObjectLayer
             }
         }
         [NotMapped]
-        public int RemainingDay 
+        public int RemainingDay // Üyenin Kalan Günü
         { 
             get
             {

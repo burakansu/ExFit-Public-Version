@@ -15,7 +15,7 @@ namespace ObjectLayer
         //Sanal Tablo Kolonları
 
         [NotMapped]
-        public string MemberName
+        public string MemberName // İşlem İle İlgili Üyenin Adı
         { 
             get
             {
@@ -29,7 +29,7 @@ namespace ObjectLayer
             }
         }
         [NotMapped]
-        public string User_IMG
+        public string User_IMG // İşlemi Gerçekleştiren Personelin Resmi
         {
             get
             {
@@ -37,7 +37,7 @@ namespace ObjectLayer
             }
         }
         [NotMapped]
-        public string UserName
+        public string UserName // İşlemi Gerçekleştiren Personelin Tam Adı
         {
             get
             {
