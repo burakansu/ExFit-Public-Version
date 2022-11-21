@@ -7,10 +7,10 @@
  DatabaseLayer İle Controller Arası Katman Tüm İş Yükleri Burada Gerçekleşir.
  
 **DatabaseLayer:** 
-Veritabanı Katmanı Tüm Bağlantılar Ve Veritabanı İşlemleri Burada Yapılır, Fiziksel Tablolar Burada Bulunur.
+Veritabanı Katmanı Fiziksel Veritabanı Tablolarının Kopyası Burada Bulunur.
 
 **ObjectLayer:** 
-Fiziksel Tablolardan Kalıtım Almış Sanal Tablo Kolonları İçeren Veritabanının Programlama Dilindeki Nesne Hali.
+Database Katmanındaki Tablolardan Kalıtım Almış Fiziksel Veritabanı Tablolarına Sanal Kolonlar Eklenmiş Nesne Hali.
 
 **FunctionLayer:** 
 Tüm İstatistiksel Formüllerin Ve Hesaplamaların Yapıldığı Katman.
@@ -18,17 +18,17 @@ Tüm İstatistiksel Formüllerin Ve Hesaplamaların Yapıldığı Katman.
 
 ### Kullanılan Teknolojiler
 
+Geliştirme Ortamı **.Net 6** VS2022
+
 Veritabanı **TSQL**
 
-ORM Sistemi **EF Core 7** **Dapper** 
+ORM Sistemi **Entity Framework Core 7**
 
-Sekmelerde Ve Çeşitli Noktalarda Sayfa Yüklemelerinde **Ajax**
+**Sekmelerde** Ve Çeşitli Noktalarda Sayfa Yüklemelerinde **Ajax**
 
 Full Responsive Tasarım Ve Animasyonlar  **Html5, Css3, Javascript**
 
-Geliştirme Ortamı **.Net 6** VS2022
-
-**Jquery ve Bootstrap** Kütüphanelerinden Yararlanılmıştır.
+Kütüphaneler **Jquery ve Bootstrap**
 
 
 ### Canlı Olarak Deneyin
