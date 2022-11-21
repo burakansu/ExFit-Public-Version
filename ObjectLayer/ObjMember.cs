@@ -1,5 +1,4 @@
-﻿using DatabaseLayer;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ObjectLayer
@@ -28,7 +27,9 @@ namespace ObjectLayer
         { 
             get
             {
-                return new SQL().Value<int>("SELECT DATEDIFF(DAY,'" + DateTime.Now.ToString("yyyyMMdd") + "','"+ this.Registration_Time.ToString("yyyyMMdd") + "')");
+                DateTime now = DateTime.Now;
+                TimeSpan ts = this.Registration_Time - now;
+                return Convert.ToInt32(ts.Days);
             }
         }
     }

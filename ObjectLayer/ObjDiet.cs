@@ -1,19 +1,25 @@
-﻿using DatabaseLayer;
-using DatabaseLayer.ExFit_Database;
+﻿using DatabaseLayer.ExFit_Database;
+using ExFit.Data;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ObjectLayer
 {
     public class ObjDiet : TBL_Diet
     {
-        //Sanal Tablo Kolonları
+        private Context context;
+        public ObjDiet(Context _context)
+        {
+            context = _context;
+        }
+
+        // Sanal Tablo Kolonları
 
         [NotMapped]
         public int Count
         {
             get
             {
-                return new SQL().Value<int>("SELECT COUNT(*) FROM TBL_Members WHERE Diet_ID=" + this.Diet_ID);
+                return context.Members.Where(x => x.Diet_ID == this.Diet_ID).Count();
             }
         }
         [NotMapped]
@@ -21,7 +27,7 @@ namespace ObjectLayer
         {
             get
             {
-                return new SQL().Value<int>("SELECT ISNULL((SELECT SUM(Calorie) FROM TBL_Food WHERE Diet_ID="+ this.Diet_ID +"), 0) AS i");
+                return context.Foods.Where(x => x.Diet_ID == this.Diet_ID).Sum(x => x.Calorie);
             }
         }
         [NotMapped]
@@ -29,7 +35,7 @@ namespace ObjectLayer
         {
             get
             {
-                return new SQL().Value<int>("SELECT ISNULL((SELECT SUM(Protein) FROM TBL_Food WHERE Diet_ID=" + this.Diet_ID + "), 0) AS i");
+                return context.Foods.Where(x => x.Diet_ID == this.Diet_ID).Sum(x => x.Protein);
             }
         }
         [NotMapped]
@@ -37,7 +43,7 @@ namespace ObjectLayer
         {
             get
             {
-                return new SQL().Value<int>("SELECT ISNULL((SELECT SUM(Fat) FROM TBL_Food WHERE Diet_ID=" + this.Diet_ID + "), 0) AS i");
+                return context.Foods.Where(x => x.Diet_ID == this.Diet_ID).Sum(x => x.Fat);
             }
         }
         [NotMapped]
@@ -45,7 +51,7 @@ namespace ObjectLayer
         {
             get
             {
-                return new SQL().Value<int>("SELECT ISNULL((SELECT SUM(Carbonhidrat) FROM TBL_Food WHERE Diet_ID=" + this.Diet_ID + "), 0) AS i");
+                return context.Foods.Where(x => x.Diet_ID == this.Diet_ID).Sum(x => x.Carbonhidrat);
             }
         }
     }

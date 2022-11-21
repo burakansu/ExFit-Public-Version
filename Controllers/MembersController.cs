@@ -78,9 +78,9 @@ namespace ExFit.Controllers
 
             if (Model.Member.Member_ID == 0)
             {
-                new TaskManager(context).SaveTask(TaskBuilder(0, Model.Member.Member_ID));
+                new TaskManager(context).SaveTask(new TaskManager(context).TaskBuilder(0, Model.Member.Member_ID, Model.User.User_ID));
             }
-            new TaskManager(context).SaveTask(TaskBuilder(1, Model.Member.Member_ID));
+            new TaskManager(context).SaveTask(new TaskManager(context).TaskBuilder(1, Model.Member.Member_ID, Model.User.User_ID));
             Model.User = new UserManager(context).GetUser((int)HttpContext.Session.GetInt32("ID"));
             return RedirectToAction("Index", "Home");
         }
@@ -118,19 +118,19 @@ namespace ExFit.Controllers
         public IActionResult PassiveMember(int id)
         {
             new MemberManager(context).DeleteMember(id);
-            new TaskManager(context).SaveTask(TaskBuilder(2, id));
+            new TaskManager(context).SaveTask(new TaskManager(context).TaskBuilder(2, id, (int)HttpContext.Session.GetInt32("ID")));
             return RedirectToAction("OpenedMember", "Members", new { id = id });
         }
         public IActionResult DeleteMember(int id)
         {
             new MemberManager(context).DeleteMember(id, true);
-            new TaskManager(context).SaveTask(TaskBuilder(7, id));
+            new TaskManager(context).SaveTask(new TaskManager(context).TaskBuilder(7, id, (int)HttpContext.Session.GetInt32("ID")));
             return RedirectToAction("Index", "Home");
         }
         public IActionResult ActiveMember(int id)
         {
             new MemberManager(context).ActiveMember(id);
-            new TaskManager(context).SaveTask(TaskBuilder(3, id));
+            new TaskManager(context).SaveTask(new TaskManager(context).TaskBuilder(3, id, (int)HttpContext.Session.GetInt32("ID")));
             return RedirectToAction("OpenedMember", "Members", new { id = id });
         }
         public IActionResult DeleteMemberExcersize(int id)

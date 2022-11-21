@@ -30,39 +30,5 @@ namespace ExFit.Controllers
                 context.Result = LocalRedirect("/LogIn/SignIn");
             }
         }
-        public ObjTask TaskBuilder(int type, int id)
-        {
-            ObjTask objTask = new ObjTask();
-            switch (type)
-            {
-                case 0:
-                    objTask.Description = "Yeni Üye Kayıt Edildi";
-                    break;
-                case 1:
-                    objTask.Description = "Üye Güncellendi";
-                    break;
-                case 2:
-                    objTask.Description = "Üye Kaydı Pasif Durumda!";
-                    break;
-                case 3:
-                    objTask.Description = "Üye Kaydı Aktifleştirildi";
-                    break;
-                case 4:
-                    objTask.Description = "Yeni Çalışan İşe Alındı";
-                    break; 
-                case 5:
-                    objTask.Description = "Yeni Egzersiz Programı";
-                    break;
-                case 6:
-                    objTask.Description = "Yeni Diyet Programı";
-                    break;
-                case 7:
-                    objTask.Description = "Üye Kaydı Silindi";
-                    break;
-            }
-            objTask.User_ID = (int)HttpContext.Session.GetInt32("ID");
-            objTask.Member_ID = id;
-            return objTask;
-        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ExFit.Data;
+using Microsoft.AspNetCore.Http;
 using ObjectLayer;
 
 namespace BussinesLayer
@@ -35,6 +36,40 @@ namespace BussinesLayer
         public int CountTasks()
         {
             return context.Tasks.Count();
+        }
+        public ObjTask TaskBuilder(int type, int id, int userid)
+        {
+            ObjTask objTask = new ObjTask(context);
+            switch (type)
+            {
+                case 0:
+                    objTask.Description = "Yeni Üye Kayıt Edildi";
+                    break;
+                case 1:
+                    objTask.Description = "Üye Güncellendi";
+                    break;
+                case 2:
+                    objTask.Description = "Üye Kaydı Pasif Durumda!";
+                    break;
+                case 3:
+                    objTask.Description = "Üye Kaydı Aktifleştirildi";
+                    break;
+                case 4:
+                    objTask.Description = "Yeni Çalışan İşe Alındı";
+                    break;
+                case 5:
+                    objTask.Description = "Yeni Egzersiz Programı";
+                    break;
+                case 6:
+                    objTask.Description = "Yeni Diyet Programı";
+                    break;
+                case 7:
+                    objTask.Description = "Üye Kaydı Silindi";
+                    break;
+            }
+            objTask.User_ID = userid;
+            objTask.Member_ID = id;
+            return objTask;
         }
     }
 }

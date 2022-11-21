@@ -1,11 +1,16 @@
-﻿using DatabaseLayer;
-using DatabaseLayer.MSSQL_Databases.ExFit_Database;
+﻿using DatabaseLayer.MSSQL_Databases.ExFit_Database;
+using ExFit.Data;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ObjectLayer
 {
     public class ObjTask : TBL_Tasks
     {
+        private Context context;
+        public ObjTask(Context _context)
+        {
+            context = _context;
+        }
 
         //Sanal Tablo Kolonları
 
@@ -14,9 +19,13 @@ namespace ObjectLayer
         { 
             get
             {
-                string Name = new SQL().Value<string>("SELECT Name FROM TBL_Members WHERE Member_ID=" + this.Member_ID);
-                string Surname = new SQL().Value<string>("SELECT Surname FROM TBL_Members WHERE Member_ID=" + this.Member_ID);
-                return Name + " " + Surname;
+                if (this.Member_ID != 0)
+                {
+                    string Name = context.Members.Single(x => x.Member_ID == this.Member_ID).Name;
+                    string Surname = context.Members.Single(x => x.Member_ID == this.Member_ID).Surname;
+                    return Name + " " + Surname;
+                }
+                return "-";
             }
         }
         [NotMapped]
@@ -24,7 +33,7 @@ namespace ObjectLayer
         {
             get
             {
-                return new SQL().Value<string>("SELECT IMG FROM TBL_Users WHERE User_ID=" + this.User_ID);
+                return context.Users.Single(x => x.User_ID == this.User_ID).IMG;
             }
         }
         [NotMapped]
@@ -32,8 +41,8 @@ namespace ObjectLayer
         {
             get
             {
-                string Name = new SQL().Value<string>("SELECT Name FROM TBL_Users WHERE User_ID=" + this.User_ID);
-                string Surname = new SQL().Value<string>("SELECT Surname FROM TBL_Users WHERE User_ID=" + this.User_ID);
+                string Name = context.Users.Single(x => x.User_ID == this.User_ID).Name;
+                string Surname = context.Users.Single(x => x.User_ID == this.User_ID).Surname;
                 return Name + " " + Surname;
             }
         }

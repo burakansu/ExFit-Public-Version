@@ -32,7 +32,7 @@ namespace ExFit.Controllers
                 VM.C6 = new DietManager(context).Counts(6, id);
                 VM.C7 = new DietManager(context).Counts(7, id);
             }
-            else { VM.Diet = new ObjDiet(); }
+            else { VM.Diet = new ObjDiet(context); }
 
             return VM;
         }
@@ -68,7 +68,7 @@ namespace ExFit.Controllers
         public IActionResult SaveDatabaseDiet(DietRoomViewModel viewModelDietRoom)
         {
             new DietManager(context).AddDatabaseDiet(viewModelDietRoom.Diet);
-            new TaskManager(context).SaveTask(TaskBuilder(6, 0));
+            new TaskManager(context).SaveTask(new TaskManager(context).TaskBuilder(6, 0, (int)HttpContext.Session.GetInt32("ID")));
             return RedirectToAction("Index", "Home");
         }
     }

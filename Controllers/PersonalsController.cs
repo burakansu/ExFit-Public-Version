@@ -69,7 +69,7 @@ namespace ExFit.Controllers
             else if (personalsViewModel.SelectedUser.IMG == null) { personalsViewModel.SelectedUser.IMG = $"/Personal/AvatarNull.png"; }
 
             new UserManager(context).SaveUser(personalsViewModel.SelectedUser);
-            new TaskManager(context).SaveTask(TaskBuilder(4, 0));
+            new TaskManager(context).SaveTask(new TaskManager(context).TaskBuilder(4, 0, (int)HttpContext.Session.GetInt32("ID")));
 
             personalsViewModel.User = new UserManager(context).GetUser((int)HttpContext.Session.GetInt32("ID"));
             return RedirectToAction("Index", "Home");

@@ -33,7 +33,7 @@ namespace ExFit.Controllers
                 VM.C6 = new ExcersizeManager(context).Counts(6, id);
                 VM.C7 = new ExcersizeManager(context).Counts(7, id);
             }
-            else { VM.Excersize = new ObjExcersize(); }
+            else { VM.Excersize = new ObjExcersize(context); }
 
             return VM;
         }
@@ -69,7 +69,7 @@ namespace ExFit.Controllers
         public IActionResult SaveDatabaseExcersize(ExcersizeRoomViewModel Model)
         {
             new ExcersizeManager(context).AddDatabaseExcersize(Model.Excersize);
-            new TaskManager(context).SaveTask(TaskBuilder(5, 0));
+            new TaskManager(context).SaveTask(new TaskManager(context).TaskBuilder(5, 0,Model.User.User_ID));
             return RedirectToAction("Index", "Home");
         }
     }
