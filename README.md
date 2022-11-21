@@ -24,7 +24,7 @@ Veritabanı **TSQL**
 
 ORM Sistemi **Entity Framework Core 7**
 
-Sekmelerde Ve Çeşitli Noktalarda Sayfa Yüklemelerinde **Ajax**
+**Sekmelerde** Ve Çeşitli Noktalarda Sayfa Yüklemelerinde **Ajax**
 
 Full Responsive Tasarım Ve Animasyonlar  **Html5, Css3, Javascript**
 
