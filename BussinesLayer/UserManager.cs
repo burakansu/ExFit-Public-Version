@@ -5,11 +5,6 @@ namespace BussinesLayer
 {
     public class UserManager
     {
-        private Context context;
-        public UserManager(Context _context)
-        {
-            context = _context;
-        }
         public int Authorization(int Joined_User_ID)
         {
             if (Joined_User_ID != 0) { return 1; }
@@ -17,48 +12,65 @@ namespace BussinesLayer
         }
         public ObjUser CheckUserEntering(ObjUser User)
         {
-            ObjUser _User = context.Users.SingleOrDefault(x => x.Mail == User.Mail && x.Password == User.Password);
+            using (Context x = new Context())
+            {
+                ObjUser _User = x.Users.SingleOrDefault(x => x.Mail == User.Mail && x.Password == User.Password);
 
-            if (_User != null)
-            {
-                return _User;
-            }
-            else
-            {
-                User.User_ID = 0;
-                return User;
+                if (_User != null)
+                {
+                    return _User;
+                }
+                else
+                {
+                    User.User_ID = 0;
+                    return User;
+                }
             }
         }
         public void SaveUser(ObjUser objUser)
         {
-            if (objUser.User_ID != 0)
+            using (Context x = new Context())
             {
-                context.Update(objUser);
-                context.SaveChanges();
-                new TaskManager(context).DeleteTask(0, 1);
-            }
-            else
-            {
-                context.Add(objUser);
-                context.SaveChanges();
+                if (objUser.User_ID != 0)
+                {
+                    x.Update(objUser);
+                    new TaskManager().DeleteTask(0, 1);
+                }
+                else
+                {
+                    x.Add(objUser);
+                }
+                x.SaveChanges();
             }
         }
         public void DeleteUser(int id)
         {
-            context.Users.Remove(context.Users.Single(x => x.User_ID == id));
-            context.SaveChanges();
+            using (Context x = new Context())
+            {
+                x.Users.Remove(x.Users.Single(x => x.User_ID == id));
+                x.SaveChanges();
+            }
         }
         public List<ObjTask> GetUserTasks(int id)
         {
-            return context.Tasks.Where(x => x.User_ID == id).ToList();
+            using (Context x = new Context())
+            {
+                return x.Tasks.Where(x => x.User_ID == id).ToList();
+            }
         }
         public ObjUser GetUser(int id)
         {
-            return context.Users.Single(x => x.User_ID == id);
+            using (Context x = new Context())
+            {
+                return x.Users.Single(x => x.User_ID == id);
+            }
         }
-        public List<ObjUser> GetUsers()
+        public List<ObjUser> GetUsers(int Company_ID)
         {
-            return context.Users.OrderBy(x => x.User_ID).ToList();
+            using (Context x = new Context())
+            {
+                return x.Users.Where(x => x.Company_ID == Company_ID).OrderBy(x => x.User_ID).ToList();
+            }
         }
     }
 }

@@ -6,11 +6,6 @@ namespace ObjectLayer
 {
     public class ObjExcersize : TBL_Excersize
     {
-        private Context context;
-        public ObjExcersize(Context _context)
-        {
-            context = _context;
-        }
         //Sanal Tablo Kolonları
 
         [NotMapped]
@@ -18,7 +13,10 @@ namespace ObjectLayer
         { 
             get
             {
-                return context.Excersizes.Where(x => x.Excersize_ID == this.Excersize_ID).Count();
+                using (Context x = new Context())
+                {
+                    return x.Excersizes.Where(x => x.Excersize_ID == this.Excersize_ID).Count();
+                }
             }   
         }
     }

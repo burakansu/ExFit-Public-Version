@@ -6,11 +6,6 @@ namespace ObjectLayer
 {
     public class ObjDiet : TBL_Diet
     {
-        private Context context;
-        public ObjDiet(Context _context)
-        {
-            context = _context;
-        }
 
         // Sanal Tablo Kolonları
 
@@ -19,7 +14,10 @@ namespace ObjectLayer
         {
             get
             {
-                return context.Members.Where(x => x.Diet_ID == this.Diet_ID).Count();
+                using (Context x = new Context())
+                {
+                    return x.Members.Where(x => x.Diet_ID == this.Diet_ID).Count();
+                }
             }
         }
         [NotMapped]
@@ -27,7 +25,10 @@ namespace ObjectLayer
         {
             get
             {
-                return context.Foods.Where(x => x.Diet_ID == this.Diet_ID).Sum(x => x.Calorie);
+                using (Context x = new Context())
+                {
+                    return x.Foods.Where(x => x.Diet_ID == this.Diet_ID).Sum(x => x.Calorie);
+                }
             }
         }
         [NotMapped]
@@ -35,7 +36,10 @@ namespace ObjectLayer
         {
             get
             {
-                return context.Foods.Where(x => x.Diet_ID == this.Diet_ID).Sum(x => x.Protein);
+                using (Context x = new Context())
+                {
+                    return x.Foods.Where(x => x.Diet_ID == this.Diet_ID).Sum(x => x.Protein);
+                }
             }
         }
         [NotMapped]
@@ -43,7 +47,10 @@ namespace ObjectLayer
         {
             get
             {
-                return context.Foods.Where(x => x.Diet_ID == this.Diet_ID).Sum(x => x.Fat);
+                using (Context x = new Context())
+                {
+                    return x.Foods.Where(x => x.Diet_ID == this.Diet_ID).Sum(x => x.Fat);
+                }
             }
         }
         [NotMapped]
@@ -51,7 +58,10 @@ namespace ObjectLayer
         {
             get
             {
-                return context.Foods.Where(x => x.Diet_ID == this.Diet_ID).Sum(x => x.Carbonhidrat);
+                using (Context x = new Context())
+                {
+                    return x.Foods.Where(x => x.Diet_ID == this.Diet_ID).Sum(x => x.Carbonhidrat);
+                }
             }
         }
     }

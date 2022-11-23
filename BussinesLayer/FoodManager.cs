@@ -5,24 +5,28 @@ namespace BussinesLayer
 {
     public class FoodManager
     {
-        private Context context;
-        public FoodManager(Context _context)
-        {
-            context = _context;
-        }
         public List<ObjFood> GetFoods()
         {
-            return context.Foods.OrderBy(x => x.Food_ID).ToList();
+            using (Context x = new Context())
+            {
+                return x.Foods.OrderBy(x => x.Food_ID).ToList();
+            }
         }
         public void DeleteFood(int id)
         {
-            context.Foods.Remove(context.Foods.Single(x => x.Food_ID == id));
-            context.SaveChanges();
+            using (Context x = new Context())
+            {
+                x.Foods.Remove(x.Foods.Single(x => x.Food_ID == id));
+                x.SaveChanges();
+            }
         }
         public void AddDatabaseFood(ObjFood ObjFood)
         {
-            context.Add(ObjFood);
-            context.SaveChanges();
+            using (Context x = new Context())
+            {
+                x.Add(ObjFood);
+                x.SaveChanges();
+            }
         }
     }
 }

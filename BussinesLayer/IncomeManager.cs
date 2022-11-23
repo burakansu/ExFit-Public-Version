@@ -5,30 +5,30 @@ namespace BussinesLayer
 {
     public class IncomeManager
     {
-        private Context context;
-        public IncomeManager(Context _context)
+        public List<ObjIncome> GetIncomes(int Company_ID)
         {
-            context = _context;
-        }
-        public List<ObjIncome> GetIncomes()
-        {
-            return context.Incomes.OrderBy(x => x.Year).ToList();
+            using (Context x = new Context())
+            {
+                return x.Incomes.Where(x => x.Company_ID == Company_ID).OrderBy(x => x.Year).ToList();
+            }
         }
         public void SaveIncome(ObjIncome objIncome)
         {
-            objIncome.Year = DateTime.Now.Year;
-            objIncome.WhichMonth = DateTime.Now.Month;
+            using (Context x = new Context())
+            {
+                objIncome.Year = DateTime.Now.Year;
+                objIncome.WhichMonth = DateTime.Now.Month;
 
-            if (objIncome.Income_ID != 0)
-            {
-                context.Incomes.Remove(context.Incomes.Single(x => x.Income_ID == objIncome.Income_ID ));
-                context.Incomes.Add(objIncome);
-                context.SaveChanges();
-            }
-            else
-            {
-                context.Incomes.Add(objIncome);
-                context.SaveChanges();
+                if (objIncome.Income_ID != 0)
+                {
+                    x.Incomes.Remove(x.Incomes.Single(x => x.Income_ID == objIncome.Income_ID));
+                    x.Incomes.Add(objIncome);
+                }
+                else
+                {
+                    x.Incomes.Add(objIncome);
+                }
+                x.SaveChanges();
             }
         }
     }

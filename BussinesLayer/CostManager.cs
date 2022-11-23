@@ -5,34 +5,44 @@ namespace BussinesLayer
 {
     public class CostManager
     {
-        private Context context;
-        public CostManager(Context _context)
+        public List<ObjCost> GetCosts(int Company_ID)
         {
-            context = _context;
-        }
-        public List<ObjCost> GetCosts()
-        {
-            return context.Costs.ToList();
+            using (Context x = new Context())
+            {
+                return x.Costs.Where(x => x.Company_ID == Company_ID).ToList();
+            }
         }
         public ObjCost GetCost(int id)
         {
-            return context.Costs.Single(x => x.Cost_ID == id);
+            using (Context x = new Context())
+            {
+                return x.Costs.Single(x => x.Cost_ID == id);
+            }
         }
         public void DeleteCost(int id)
         {
-            context.Costs.Remove(context.Costs.Single(x => x.Cost_ID == id));
-            context.SaveChanges();
+            using (Context x = new Context())
+            {
+                x.Costs.Remove(x.Costs.Single(x => x.Cost_ID == id));
+                x.SaveChanges();
+            }
         }
         public void AddDatabaseCost(ObjCost objCost)
         {
-            objCost.Year = DateTime.Now;
-            objCost.WhichMonth = DateTime.Now.Month;
-            context.Add(objCost);
-            context.SaveChanges();
+            using (Context x = new Context())
+            {
+                objCost.Year = DateTime.Now;
+                objCost.WhichMonth = DateTime.Now.Month;
+                x.Add(objCost);
+                x.SaveChanges();
+            }
         }
-        public int TotalCost()
+        public int TotalCost(int Company_ID)
         {
-            return context.Costs.Sum(x => x.Rent) + context.Costs.Sum(x => x.Electric) + context.Costs.Sum(x => x.Water) + context.Costs.Sum(x => x.Staff_Salaries) + context.Costs.Sum(x => x.Other);
+            using (Context x = new Context())
+            {
+                return x.Costs.Where(x => x.Company_ID == Company_ID).Sum(x => x.Rent) + x.Costs.Where(x => x.Company_ID == Company_ID).Sum(x => x.Electric) + x.Costs.Where(x => x.Company_ID == Company_ID).Sum(x => x.Water) + x.Costs.Where(x => x.Company_ID == Company_ID).Sum(x => x.Staff_Salaries) + x.Costs.Where(x => x.Company_ID == Company_ID).Sum(x => x.Other);
+            }
         }
     }
 }

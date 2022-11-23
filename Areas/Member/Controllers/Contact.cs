@@ -11,17 +11,13 @@ namespace ExFit.Areas.Member.Controllers
 
     public class Contact : _MemberControllerBase
     {
-        private Context context;
-        public Contact(Context _context)
-        {
-            context = _context;
-        }
         public _ContactViewModel ViewModel()
         {
             _ContactViewModel VM = new _ContactViewModel();
             int id = (int)HttpContext.Session.GetInt32("Member_ID");
-            VM._Member = new MemberManager(context).GetMember(id);
-            VM._MemberWeightArray = new MemberManager(context).GetMemberWeightsArray(id);
+            VM._Member = new MemberManager().GetMember(id);
+            VM.Company = new CompanyManager().GetCompany(VM._Member.Company_ID);
+            VM._MemberWeightArray = new MemberManager().GetMemberWeightsArray(id);
             return VM;
         }
         public IActionResult Index()

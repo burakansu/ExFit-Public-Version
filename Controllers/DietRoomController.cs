@@ -9,30 +9,27 @@ namespace ExFit.Controllers
 {
     public class DietRoomController : MemberControllerBase
     {
-        private Context context;
-        public DietRoomController(Context _context)
-        {
-            context = _context;
-        }
         public DietRoomViewModel ViewModel(int id = 0)
         {
             DietRoomViewModel VM = new DietRoomViewModel();
-            VM.Diets = new DietManager(context).GetDiets();
-            VM.Tasks = new TaskManager(context).GetLastFiveTask();
-            VM.User = new UserManager(context).GetUser((int)HttpContext.Session.GetInt32("ID"));
+            VM.User = new UserManager().GetUser((int)HttpContext.Session.GetInt32("ID"));
+            VM.Company = new CompanyManager().GetCompany(VM.User.Company_ID);
+            VM.Diets = new DietManager().GetDiets(VM.Company.Company_ID);
+            VM.Tasks = new TaskManager().GetLastFiveTask(VM.Company.Company_ID);
+
             if (id != 0)
             {
-                VM.Diet = new DietManager(context).GetDiets(id, true)[0];
-                VM.Foods = new FoodManager(context).GetFoods();
-                VM.C1 = new DietManager(context).Counts(1, id);
-                VM.C2 = new DietManager(context).Counts(2, id);
-                VM.C3 = new DietManager(context).Counts(3, id);
-                VM.C4 = new DietManager(context).Counts(4, id);
-                VM.C5 = new DietManager(context).Counts(5, id);
-                VM.C6 = new DietManager(context).Counts(6, id);
-                VM.C7 = new DietManager(context).Counts(7, id);
+                VM.Diet = new DietManager().GetDiets(VM.Company.Company_ID,id, true)[0];
+                VM.Foods = new FoodManager().GetFoods();
+                VM.C1 = new DietManager().Counts(1, id);
+                VM.C2 = new DietManager().Counts(2, id);
+                VM.C3 = new DietManager().Counts(3, id);
+                VM.C4 = new DietManager().Counts(4, id);
+                VM.C5 = new DietManager().Counts(5, id);
+                VM.C6 = new DietManager().Counts(6, id);
+                VM.C7 = new DietManager().Counts(7, id);
             }
-            else { VM.Diet = new ObjDiet(context); }
+            else { VM.Diet = new ObjDiet(); }
 
             return VM;
         }
@@ -48,27 +45,27 @@ namespace ExFit.Controllers
         {
             return View(ViewModel(id));
         }
-        public IActionResult SaveFood(DietRoomViewModel Model)
+        public IActionResult SaveFood(DietRoomViewModel VM)
         {
-            Model.Food.Diet_ID = Model.Diet.Diet_ID;
-            Model.Food.Day = Model._Day;
-            new FoodManager(context).AddDatabaseFood(Model.Food);
-            return RedirectToAction("EditDiet", "DietRoom", new { id = Model.Food.Diet_ID });
+            VM.Food.Diet_ID = VM.Diet.Diet_ID;
+            VM.Food.Day = VM._Day;
+            new FoodManager().AddDatabaseFood(VM.Food);
+            return RedirectToAction("EditDiet", "DietRoom", new { id = VM.Food.Diet_ID });
         }
         public IActionResult DeleteFood(int id = 0, int Diet_ID = 0)
         {
-            new FoodManager(context).DeleteFood(id);
+            new FoodManager().DeleteFood(id);
             return RedirectToAction("EditDiet", "DietRoom", new { id = Diet_ID });
         }
         public IActionResult DeleteDiet(int id)
         {
-            new DietManager(context).DeleteDiet(id);
+            new DietManager().DeleteDiet(id);
             return RedirectToAction("Index", "Home");
         }
-        public IActionResult SaveDatabaseDiet(DietRoomViewModel viewModelDietRoom)
+        public IActionResult SaveDatabaseDiet(DietRoomViewModel VM)
         {
-            new DietManager(context).AddDatabaseDiet(viewModelDietRoom.Diet);
-            new TaskManager(context).SaveTask(new TaskManager(context).TaskBuilder(6, 0, (int)HttpContext.Session.GetInt32("ID")));
+            new DietManager().AddDatabaseDiet(VM.Diet);
+            new TaskManager().SaveTask(new TaskManager().TaskBuilder(VM.Diet.Company_ID,6, 0, VM.User.User_ID));
             return RedirectToAction("Index", "Home");
         }
     }

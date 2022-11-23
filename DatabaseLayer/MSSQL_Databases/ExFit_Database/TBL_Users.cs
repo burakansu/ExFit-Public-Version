@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace DatabaseLayer.ExFit_Database
 {
@@ -14,5 +15,6 @@ namespace DatabaseLayer.ExFit_Database
         public int Type { get; set; }
         public string IMG { get; set; }
         public string Phone { get; set; }
+        public int Company_ID { get; set; }
     }
 }

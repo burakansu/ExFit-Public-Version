@@ -11,24 +11,21 @@ namespace ExFit.Controllers
 {
     public class PersonalsController : MemberControllerBase
     {
-        private Context context;
-        public PersonalsController(Context _context)
-        {
-            context = _context;
-        }
         public PersonalsViewModel ViewModel(int id = 0)
         {
-            PersonalsViewModel personalsViewModel = new PersonalsViewModel();
-            personalsViewModel.User = new UserManager(context).GetUser((int)HttpContext.Session.GetInt32("ID"));
-            personalsViewModel.Users = new UserManager(context).GetUsers();
-            personalsViewModel.Tasks = new TaskManager(context).GetLastFiveTask();
-            personalsViewModel.TodayTasks = new TaskManager(context).GetLastFiveTask(1);
+            PersonalsViewModel VM = new PersonalsViewModel();
+            VM.User = new UserManager().GetUser((int)HttpContext.Session.GetInt32("ID"));
+            VM.Company = new CompanyManager().GetCompany(VM.User.Company_ID);
+
+            VM.Users = new UserManager().GetUsers(VM.Company.Company_ID);
+            VM.Tasks = new TaskManager().GetLastFiveTask(VM.Company.Company_ID);
+            VM.TodayTasks = new TaskManager().GetLastFiveTask(1);
             if (id != 0)
             {
-                personalsViewModel.SelectedUser = new UserManager(context).GetUser(id);
-                personalsViewModel.UsersTasks = new UserManager(context).GetUserTasks(id);
+                VM.SelectedUser = new UserManager().GetUser(id);
+                VM.UsersTasks = new UserManager().GetUserTasks(id);
             }
-            return personalsViewModel;
+            return VM;
         }
         public IActionResult Index()
         {
@@ -52,26 +49,27 @@ namespace ExFit.Controllers
         }
         public IActionResult Delete(int id)
         {
-            new UserManager(context).DeleteUser(id);
+            new UserManager().DeleteUser(id);
             return RedirectToAction("Index", "Home");
         }
-        public async Task<IActionResult> RegistryingAsync(PersonalsViewModel personalsViewModel)
+        public async Task<IActionResult> RegistryingAsync(PersonalsViewModel VM)
         {
-            if (personalsViewModel.file != null)
+            if (VM.file != null)
             {
-                string imageExtension = Path.GetExtension(personalsViewModel.file.FileName);
+                string imageExtension = Path.GetExtension(VM.file.FileName);
                 string imageName = Guid.NewGuid() + imageExtension;
                 string path = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot/Personal/{imageName}");
                 using var stream = new FileStream(path, FileMode.Create);
-                await personalsViewModel.file.CopyToAsync(stream);
-                personalsViewModel.SelectedUser.IMG = $"/Personal/{imageName}";
+                await VM.file.CopyToAsync(stream);
+                VM.SelectedUser.IMG = $"/Personal/{imageName}";
             }
-            else if (personalsViewModel.SelectedUser.IMG == null) { personalsViewModel.SelectedUser.IMG = $"/Personal/AvatarNull.png"; }
+            else if (VM.SelectedUser.IMG == null) { VM.SelectedUser.IMG = $"/Personal/AvatarNull.png"; }
 
-            new UserManager(context).SaveUser(personalsViewModel.SelectedUser);
-            new TaskManager(context).SaveTask(new TaskManager(context).TaskBuilder(4, 0, (int)HttpContext.Session.GetInt32("ID")));
+            VM.SelectedUser.Company_ID = VM.Company.Company_ID;
+            new UserManager().SaveUser(VM.SelectedUser);
+            new TaskManager().SaveTask(new TaskManager().TaskBuilder(VM.SelectedUser.Company_ID, 4, 0, (int)HttpContext.Session.GetInt32("ID")));
 
-            personalsViewModel.User = new UserManager(context).GetUser((int)HttpContext.Session.GetInt32("ID"));
+            VM.User = new UserManager().GetUser((int)HttpContext.Session.GetInt32("ID"));
             return RedirectToAction("Index", "Home");
         }
     }

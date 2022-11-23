@@ -5,24 +5,28 @@ namespace BussinesLayer
 {
     public class PracticeManager
     {
-        private Context context;
-        public PracticeManager(Context _context)
-        {
-            context = _context;
-        }
         public List<ObjPractice> GetPractices()
         {
-            return context.Practices.OrderBy(x => x.Practice_ID).ToList();
+            using (Context x = new Context())
+            {
+                return x.Practices.OrderBy(x => x.Practice_ID).ToList();
+            }
         }
         public void DeletePractice(int id)
         {
-            context.Practices.Remove(context.Practices.Single(x => x.Practice_ID == id));
-            context.SaveChanges();
+            using (Context x = new Context())
+            {
+                x.Practices.Remove(x.Practices.Single(x => x.Practice_ID == id));
+                x.SaveChanges();
+            }
         }
         public void AddDatabasePractice(ObjPractice objPractice)
         {
-            context.Add(objPractice);
-            context.SaveChanges();
+            using (Context x = new Context())
+            {
+                x.Add(objPractice);
+                x.SaveChanges();
+            }
         }
     }
 }

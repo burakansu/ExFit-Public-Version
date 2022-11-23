@@ -3,6 +3,7 @@ using ExFit.Data;
 using ExFit.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ObjectLayer;
 using System;
 using System.Data;
 using System.IO;
@@ -12,31 +13,34 @@ namespace ExFit.Controllers
 {
     public class MembersController : MemberControllerBase
     {
-        private Context context;
-        public MembersController(Context _context)
-        {
-            context = _context;
-        }
         private MembersViewModel ViewModel(int last, int passive, int id = 0)
         {
             MembersViewModel VM = new MembersViewModel();
+            VM.User = new UserManager().GetUser((int)HttpContext.Session.GetInt32("ID"));
+            VM.Company = new CompanyManager().GetCompany(VM.User.Company_ID);
+            VM.ExcersizeArray = new ExcersizeManager().GetExcersizes(VM.Company.Company_ID);
+            VM.DietArray = new DietManager().GetDiets(VM.Company.Company_ID);
+            VM.Tasks = new TaskManager().GetLastFiveTask(VM.Company.Company_ID);
             if (id != 0)
             {
-                VM.Member = (ObjectLayer.ObjMember)new MemberManager(context).GetMember(id);
-                VM.MemberMeazurements = new MemberManager(context).GetMemberMeazurements(id);
-                VM.MemberWeightArray = new MemberManager(context).GetMemberWeightsArray(id);
-                VM.MemberDiet = new DietManager(context).GetDiets(VM.Member.Diet_ID, true)[0];
-                VM.MemberExcersize = new ExcersizeManager(context).GetExcersizes(VM.Member.Excersize_ID, true)[0];
-                VM.ExcersizeArray = new ExcersizeManager(context).GetExcersizes();
-                VM.DietArray = new DietManager(context).GetDiets();
+                VM.Member = (ObjectLayer.ObjMember)new MemberManager().GetMember(id);
+                VM.MemberMeazurements = new MemberManager().GetMemberMeazurements(id);
+                VM.MemberWeightArray = new MemberManager().GetMemberWeightsArray(id);
+                if (new DietManager().GetDiets(VM.Company.Company_ID, VM.Member.Diet_ID, true).Count == 0)
+                    VM.MemberDiet = new ObjDiet();
+                else
+                    VM.MemberDiet = new DietManager().GetDiets(VM.Company.Company_ID, VM.Member.Diet_ID, true)[0];
+                if (new ExcersizeManager().GetExcersizes(VM.Company.Company_ID, VM.Member.Excersize_ID, true).Count == 0)
+                    VM.MemberExcersize = new ObjExcersize();
+                else
+                VM.MemberExcersize = new ExcersizeManager().GetExcersizes(VM.Company.Company_ID,VM.Member.Excersize_ID, true)[0];
             }
             else
             {
-                VM.Members = new MemberManager(context).GetMembers(last, passive);
+                VM.Members = new MemberManager().GetMembers(VM.Company.Company_ID, passive);
                 VM.Member = new ObjectLayer.ObjMember();
             }
-            VM.Tasks = new TaskManager(context).GetLastFiveTask();
-            VM.User = new UserManager(context).GetUser((int)HttpContext.Session.GetInt32("ID"));
+
             return VM;
         }
         public async Task<IActionResult> SaveMemberAsync(MembersViewModel Model)
@@ -74,20 +78,20 @@ namespace ExFit.Controllers
             }
             else if (Model.Member.Identity_Card == null) { Model.Member.Identity_Card = "/Member/ProfilePhotos/AvatarNull.png"; }
 
-            new MemberManager(context).SaveMember(Model.Member);
+            new MemberManager().SaveMember(Model.Member);
 
             if (Model.Member.Member_ID == 0)
-            {
-                new TaskManager(context).SaveTask(new TaskManager(context).TaskBuilder(0, Model.Member.Member_ID, Model.User.User_ID));
-            }
-            new TaskManager(context).SaveTask(new TaskManager(context).TaskBuilder(1, Model.Member.Member_ID, Model.User.User_ID));
-            Model.User = new UserManager(context).GetUser((int)HttpContext.Session.GetInt32("ID"));
+            { new TaskManager().SaveTask(new TaskManager().TaskBuilder(Model.Member.Company_ID, 0, Model.Member.Member_ID, (int)HttpContext.Session.GetInt32("ID"))); }
+            else
+            { new TaskManager().SaveTask(new TaskManager().TaskBuilder(Model.Member.Company_ID, 1, Model.Member.Member_ID, (int)HttpContext.Session.GetInt32("ID"))); }
+
+            Model.User = new UserManager().GetUser((int)HttpContext.Session.GetInt32("ID"));
             return RedirectToAction("Index", "Home");
         }
         public IActionResult SaveMemberMeazurements(MembersViewModel Model)
         {
             Model.MemberMeazurement.Member_ID = Model.Member.Member_ID;
-            new MemberManager(context).SaveMemberMeazurements(Model.MemberMeazurement);
+            new MemberManager().SaveMemberMeazurements(Model.MemberMeazurement);
             return RedirectToAction("MemberAddMeazurements", "Members", new { id = Model.Member.Member_ID });
         }
         public IActionResult AllMembers()
@@ -112,35 +116,40 @@ namespace ExFit.Controllers
         }
         public IActionResult DeleteMemberMeazurements(int member_id, int id)
         {
-            new MemberManager(context).DeleteMemberMeazurements(id);
+            new MemberManager().DeleteMemberMeazurements(id);
             return RedirectToAction("MemberAddMeazurements", "Members", new { id = member_id });
         }
         public IActionResult PassiveMember(int id)
         {
-            new MemberManager(context).DeleteMember(id);
-            new TaskManager(context).SaveTask(new TaskManager(context).TaskBuilder(2, id, (int)HttpContext.Session.GetInt32("ID")));
+            new MemberManager().DeleteMember(id);
+            ObjUser objUser = new UserManager().GetUser((int)HttpContext.Session.GetInt32("ID"));
+
+            new TaskManager().SaveTask(new TaskManager().TaskBuilder(objUser.Company_ID, 2, id, objUser.User_ID));
             return RedirectToAction("OpenedMember", "Members", new { id = id });
         }
         public IActionResult DeleteMember(int id)
         {
-            new MemberManager(context).DeleteMember(id, true);
-            new TaskManager(context).SaveTask(new TaskManager(context).TaskBuilder(7, id, (int)HttpContext.Session.GetInt32("ID")));
+            new MemberManager().DeleteMember(id, true);
+            ObjUser objUser = new UserManager().GetUser((int)HttpContext.Session.GetInt32("ID"));
+
+            new TaskManager().SaveTask(new TaskManager().TaskBuilder(objUser.Company_ID, 7, id, objUser.User_ID));
             return RedirectToAction("Index", "Home");
         }
         public IActionResult ActiveMember(int id)
         {
-            new MemberManager(context).ActiveMember(id);
-            new TaskManager(context).SaveTask(new TaskManager(context).TaskBuilder(3, id, (int)HttpContext.Session.GetInt32("ID")));
+            new MemberManager().ActiveMember(id);
+            ObjUser objUser = new UserManager().GetUser((int)HttpContext.Session.GetInt32("ID"));
+            new TaskManager().SaveTask(new TaskManager().TaskBuilder(objUser.Company_ID, 3, id, objUser.User_ID));
             return RedirectToAction("OpenedMember", "Members", new { id = id });
         }
         public IActionResult DeleteMemberExcersize(int id)
         {
-            new ExcersizeManager(context).DeleteExcersize(id, true);
+            new ExcersizeManager().DeleteExcersize(id, true);
             return RedirectToAction("OpenedMember", "Members", new { id = id });
         }
         public IActionResult DeleteMemberDiet(int id)
         {
-            new DietManager(context).DeleteDiet(id, true);
+            new DietManager().DeleteDiet(id, true);
             return RedirectToAction("OpenedMember", "Members", new { id = id });
         }
     }

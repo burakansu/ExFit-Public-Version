@@ -1,33 +1,32 @@
 ﻿using BussinesLayer;
-using DatabaseLayer.ExFit_Database;
 using ExFit.Data;
 using ExFit.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.OData.Edm;
-using ObjectLayer;
-using System.Linq;
 
 namespace ExFit.Controllers
 {
     public class LogInController : Controller
     {
-        private Context context;
-        public LogInController(Context _context)
-        {
-            context = _context;
-        }
         public IActionResult SignIn()
         {
            // context.Database.EnsureCreated();
             HttpContext.Session.SetInt32("ID", 0);
             return View();
         }
+        public IActionResult Register()
+        {
+            HttpContext.Session.SetInt32("ID", 0);
+            return View();
+        }
+        public IActionResult Registering(LogInViewModel VM)
+        {
+            new CompanyManager().SaveCompany(VM.Company, VM.User);
+            return RedirectToAction("SignIn");
+        }
         public IActionResult Entering(LogInViewModel logInViewModel)
         {
-            logInViewModel.User = new UserManager(context).CheckUserEntering(logInViewModel.User);
+            logInViewModel.User = new UserManager().CheckUserEntering(logInViewModel.User);
             if (logInViewModel.User.User_ID != 0)
             {
                 HttpContext.Session.SetInt32("ID", logInViewModel.User.User_ID);

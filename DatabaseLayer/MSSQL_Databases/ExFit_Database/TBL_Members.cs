@@ -19,8 +19,9 @@ namespace DatabaseLayer.ExFit_Database
         public int Block { get; set; }
         public string Health_Report { get; set; }
         public string Identity_Card { get; set; }
+        public string Password { get; set; }
         public int Excersize_ID { get; set; }
         public int Diet_ID { get; set; }
-        public string Password { get; set; }
+        public int Company_ID { get; set; }
     }
 }

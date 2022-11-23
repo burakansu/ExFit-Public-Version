@@ -5,75 +5,82 @@ namespace BussinesLayer
 {
     public class ExcersizeManager
     {
-        private Context context;
-        public ExcersizeManager(Context _context)
+        public List<ObjExcersize> GetExcersizes(int Company_ID, int id = 0, bool Special = false)
         {
-            context = _context;
-        }
-        public List<ObjExcersize> GetExcersizes(int id = 0, bool Special = false)
-        {
-            if (id != 0 || Special == true)
+            using (Context x = new Context())
             {
-                return context.Excersizes.Where(x => x.Excersize_ID == id).ToList();
-            }
-            else
-            {
-                return context.Excersizes.Where(x => x.Active == 1).ToList();
+                if (id != 0 || Special == true)
+                {
+                    return x.Excersizes.Where(x => x.Excersize_ID == id).ToList();
+                }
+                else
+                {
+                    return x.Excersizes.Where(x => x.Active == 1 && x.Company_ID == Company_ID).ToList();
+                }
             }
         }
         public void DeleteExcersize(int id, bool Special = false)
         {
-            if (Special == true)
+            using (Context x = new Context())
             {
-                ObjMember objMember = context.Members.Single(x => x.Member_ID == id);
-                objMember.Excersize_ID = 0;
-                context.Members.Update(objMember);
-                context.SaveChanges();
-            }
-            else
-            {
-                ObjExcersize objExcersize = context.Excersizes.Single(x => x.Excersize_ID == id);
-                objExcersize.Active = 0;
-                context.Excersizes.Update(objExcersize);
-                context.SaveChanges();
+                if (Special == true)
+                {
+                    ObjMember objMember = x.Members.Single(x => x.Member_ID == id);
+                    objMember.Excersize_ID = 0;
+                    x.Members.Update(objMember);
+                    x.SaveChanges();
+                }
+                else
+                {
+                    ObjExcersize objExcersize = x.Excersizes.Single(x => x.Excersize_ID == id);
+                    objExcersize.Active = 0;
+                    x.Excersizes.Update(objExcersize);
+                    x.SaveChanges();
+                }
             }
         }
         public void AddDatabaseExcersize(ObjExcersize objExcersize)
         {
-            objExcersize.Registration_Date = DateTime.Now;
-            objExcersize.IMG = "";
-            context.Add(objExcersize);
-            context.SaveChanges();
+            using (Context x = new Context())
+            {
+                objExcersize.Registration_Date = DateTime.Now;
+                objExcersize.Active = 1;
+                x.Add(objExcersize);
+                x.SaveChanges();
+            }
         }
         public int[] Counts(int day, int id)
         {
-            int[] ints = { 0, 0, 0, 0, 0, 0 };
-            List<ObjPractice> list = context.Practices.Where(x => x.Day == day && x.Excersize_ID == id).ToList();
-            foreach (var item in list)
+            using (Context x = new Context())
             {
-                switch (item.BodySection)
+                int[] ints = { 0, 0, 0, 0, 0, 0 };
+                List<ObjPractice> list = x.Practices.Where(x => x.Day == day && x.Excersize_ID == id).ToList();
+                foreach (var item in list)
                 {
-                    case 1:
-                        ints[0] = 1;
-                        break;
-                    case 2:
-                        ints[1] = 1;
-                        break;
-                    case 3:
-                        ints[2] = 1;
-                        break;
-                    case 4:
-                        ints[3] = 1;
-                        break;
-                    case 5:
-                        ints[4] = 1;
-                        break;
-                    case 6:
-                        ints[5] = 1;
-                        break;
+                    switch (item.BodySection)
+                    {
+                        case 1:
+                            ints[0] = 1;
+                            break;
+                        case 2:
+                            ints[1] = 1;
+                            break;
+                        case 3:
+                            ints[2] = 1;
+                            break;
+                        case 4:
+                            ints[3] = 1;
+                            break;
+                        case 5:
+                            ints[4] = 1;
+                            break;
+                        case 6:
+                            ints[5] = 1;
+                            break;
+                    }
                 }
+                return ints;
             }
-            return ints;
         }
     }
 }

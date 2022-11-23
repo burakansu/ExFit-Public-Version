@@ -7,6 +7,7 @@ namespace ExFit.Models
     public class HomeViewModel
     {
         public ObjUser User { get; set; }
+        public ObjCompany Company { get; set; }
         public List<ObjUser> Users { get; set; }
         public List<ObjTask> Tasks { get; set; }
         public ObjMember Member { get; set; }

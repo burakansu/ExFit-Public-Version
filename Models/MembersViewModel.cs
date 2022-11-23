@@ -6,6 +6,7 @@ namespace ExFit.Models
     public class MembersViewModel
     {
         public ObjUser User { get; set; }
+        public ObjCompany Company { get; set; }
         public ObjMember Member { get; set; }
         public ObjExcersize MemberExcersize { get; set; }
         public ObjDiet MemberDiet { get; set; }

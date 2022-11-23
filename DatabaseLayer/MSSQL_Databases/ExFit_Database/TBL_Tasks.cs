@@ -10,5 +10,6 @@ namespace DatabaseLayer.MSSQL_Databases.ExFit_Database
         public DateTime Create_Date { get; set; }
         public int User_ID { get; set; }
         public int Member_ID { get; set; }
+        public int Company_ID { get; set; }
     }
 }

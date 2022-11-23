@@ -1,5 +1,4 @@
-﻿using DatabaseLayer;
-using ExFit.Data;
+﻿using ExFit.Data;
 using System.Data;
 
 namespace FunctionLayer.Stats_Manager.Regression

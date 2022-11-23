@@ -7,6 +7,7 @@ namespace ExFit.Models
     public class AnalyzeRoomViewModel
     {
         public ObjUser User { get; set; }
+        public ObjCompany Company { get; set; }
         public int[] MemberMeazurementsArray { get; set; }
         public int[] CostArray { get; set; }
         public int[] IncomeArray { get; set; }
