@@ -1,5 +1,6 @@
 ﻿using ExFit.Data;
 using FunctionLayer.Stats_Manager.Regression;
+using Microsoft.AspNetCore.Http;
 using ObjectLayer;
 
 namespace BussinesLayer
@@ -20,14 +21,16 @@ namespace BussinesLayer
                 ObjMember _User = x.Members.SingleOrDefault(x => x.Mail == member.Mail && x.Password == member.Password);
 
                 if (_User != null)
-                {
                     return _User;
-                }
-                else
-                {
-                    member.Member_ID = 0;
-                    return member;
-                }
+                member.Member_ID = 0;
+                return member;
+            }
+        }
+        public int CheckEmailAndPhone(string Email, string Phone)
+        {
+            using (Context x = new Context())
+            {
+                return x.Members.Where(x => x.Mail == Email || x.Phone == Phone).Count();
             }
         }
         public int CountMembers(int Company_ID)
@@ -72,21 +75,35 @@ namespace BussinesLayer
                 x.SaveChanges();
             }
         }
-        public void SaveMember(ObjMember objMember)
+        public void SaveMember(ObjMember objMember, int SelectedPackageID, int Extra)
         {
             using (Context x = new Context())
             {
+                ObjPackage objPackage = x.Packages.Single(x => x.Package_ID == SelectedPackageID);
+
                 if (objMember.Member_ID != 0)
+                {
+                    if (objMember.Package_ID == 0)
+                    {
+                        objMember.Package_ID = SelectedPackageID;
+                        objMember.Registration_Time = objMember.Registration_Time.AddMonths(objPackage.Month + Extra);
+                    }
+                    else
+                        objMember.Registration_Time = objMember.Registration_Time.AddMonths(Extra);
                     x.Update(objMember);
+                }
                 else
                 {
-                    if (objMember.Registration_Date == DateTime.MinValue)
+                    int Count = new MemberManager().CheckEmailAndPhone(objMember.Mail, objMember.Phone);
+                    if (Count == 0)
+                    {
+                        objMember.Price += objPackage.Price;
                         objMember.Registration_Date = DateTime.Now;
-                    if (objMember.Registration_Time == DateTime.MinValue)
-                        objMember.Registration_Time = DateTime.Now.AddMonths(1);
-
-                    objMember.Password = objMember.Phone.ToString() + objMember.Name;
-                    x.Add(objMember);
+                        objMember.Registration_Time = DateTime.Now.AddMonths(objPackage.Month + Extra);
+                        objMember.Package_ID = SelectedPackageID;
+                        objMember.Password = objMember.Phone.ToString() + objMember.Name;
+                        x.Add(objMember);
+                    }
                 }
                 x.SaveChanges();
             }
@@ -162,7 +179,7 @@ namespace BussinesLayer
                 // Bir Değişiklik Varsa O Ayki Geliri Günceller Veya Yeni Ay a Geçildiyse Kaydı Oluşturur.
                 ObjIncome objIncome = new ObjIncome();
 
-                int c = x.Members.Where(x => x.Registration_Date >= MontFirstDay && x.Registration_Date <= MonthLastDay).Count();
+                int c = x.Members.Where(x => x.Registration_Date >= MontFirstDay && x.Registration_Date <= MonthLastDay && x.Company_ID == Company_ID).Count();
 
                 if (c > 0)
                 {

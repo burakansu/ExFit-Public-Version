@@ -21,19 +21,25 @@ namespace ExFit.Controllers
         }
         public IActionResult Registering(LogInViewModel VM)
         {
-            new CompanyManager().SaveCompany(VM.Company, VM.User);
-            return RedirectToAction("SignIn");
-        }
-        public IActionResult Entering(LogInViewModel logInViewModel)
-        {
-            logInViewModel.User = new UserManager().CheckUserEntering(logInViewModel.User);
-            if (logInViewModel.User.User_ID != 0)
+            int Count = new UserManager().CheckEmail(VM.User.Mail);
+            if (Count == 0)
             {
-                HttpContext.Session.SetInt32("ID", logInViewModel.User.User_ID);
-                switch (logInViewModel.User.Type)
+                new CompanyManager().SaveCompany(VM.Company);
+                new UserManager().SaveUser(VM.User, 1);
+                return RedirectToAction("SignIn");
+            }
+            return RedirectToAction("Register");
+        }
+        public IActionResult Entering(LogInViewModel VM)
+        {
+            VM.User = new UserManager().CheckUserEntering(VM.User);
+            if (VM.User.User_ID != 0)
+            {
+                HttpContext.Session.SetInt32("ID", VM.User.User_ID);
+                switch (VM.User.Type)
                 {
                     case 1:
-                        return RedirectToAction("Index", "Home", new { ID = logInViewModel.User.User_ID });
+                        return RedirectToAction("Index", "Home", new { ID = VM.User.User_ID });
                     case 2:
                         return RedirectToAction("Index", "Home");
                 }
@@ -43,6 +49,11 @@ namespace ExFit.Controllers
             {
                 return RedirectToAction("SignIn");
             }
+        }
+        public IActionResult ForgetPassword()
+        {
+            HttpContext.Session.SetInt32("ID", 0);
+            return View(); 
         }
     }
 }

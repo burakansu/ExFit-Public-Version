@@ -7,10 +7,6 @@ namespace ExFit.Data
 {
     public class Context : DbContext
     {
-        //public Context(DbContextOptions<Context> options) : base(options)
-        //{
-        //}
-
         public Context()
         {
 
@@ -35,7 +31,7 @@ namespace ExFit.Data
         public DbSet<ObjCost> Costs { get; set; }
         public DbSet<ObjIncome> Incomes { get; set; }
         public DbSet<ObjTask> Tasks { get; set; }
-        public DbSet<ObjBlog> Posts { get; set; }
+        public DbSet<ObjPackage> Packages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -50,7 +46,7 @@ namespace ExFit.Data
             modelBuilder.Entity<ObjCost>().ToTable("TBL_Cost");
             modelBuilder.Entity<ObjIncome>().ToTable("TBL_Income");
             modelBuilder.Entity<ObjTask>().ToTable("TBL_Tasks");
-            modelBuilder.Entity<ObjBlog>().ToTable("TBL_Blog");
+            modelBuilder.Entity<ObjPackage>().ToTable("TBL_Package");
         }
     }
 }

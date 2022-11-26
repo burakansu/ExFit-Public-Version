@@ -1,9 +1,6 @@
-﻿using BussinesLayer;
-using ExFit.Data;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using ObjectLayer;
 
 namespace ExFit.Controllers
 {

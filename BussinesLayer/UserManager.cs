@@ -27,20 +27,39 @@ namespace BussinesLayer
                 }
             }
         }
-        public void SaveUser(ObjUser objUser)
+        public int CheckEmail(string Email)
         {
             using (Context x = new Context())
             {
-                if (objUser.User_ID != 0)
+                return x.Users.Where(x => x.Mail == Email).Count();
+            }
+        }
+        public void SaveUser(ObjUser objUser, int first = 0)
+        {
+            using (Context x = new Context())
+            {
+                if (first == 0)
                 {
-                    x.Update(objUser);
-                    new TaskManager().DeleteTask(0, 1);
+                    if (objUser.User_ID != 0)
+                    {
+                        x.Update(objUser);
+                        new TaskManager().DeleteTask(0, 1);
+                    }
+                    else
+                    {
+                        x.Add(objUser);
+                    }
+                    x.SaveChanges();
                 }
                 else
                 {
-                    x.Add(objUser);
+                    int id = x.Companies.Max(x => x.Company_ID);
+                    objUser.Company_ID = id;
+                    objUser.Position = "Yönetici";
+                    objUser.Type = 1;
+                    objUser.IMG = "/Personal/AvatarNull.png";
+                    x.Users.Add(objUser);
                 }
-                x.SaveChanges();
             }
         }
         public void DeleteUser(int id)

@@ -51,12 +51,14 @@ namespace ExFit.Controllers
         {
             return View(ViewModel(id));
         }
-        public IActionResult SavePractice(ExcersizeRoomViewModel Model)
+        public IActionResult SavePractice(ExcersizeRoomViewModel VM)
         {
-            Model.Practice.Excersize_ID = Model.Excersize.Excersize_ID;
-            Model.Practice.Day = Model._Day;
-            new PracticeManager().AddDatabasePractice(Model.Practice);
-            return RedirectToAction("EditExcersize", "ExcersizeRoom", new { id = Model.Practice.Excersize_ID });
+            VM.Practice.Excersize_ID = VM.Excersize.Excersize_ID;
+            VM.Practice.Day = VM._Day;
+            if (VM.Practice.Note == null)
+                VM.Practice.Note = ".";
+            new PracticeManager().AddDatabasePractice(VM.Practice);
+            return RedirectToAction("EditExcersize", "ExcersizeRoom", new { id = VM.Practice.Excersize_ID });
         }
         public IActionResult DeletePractice(int id = 0,int Excersize_ID = 0)
         {

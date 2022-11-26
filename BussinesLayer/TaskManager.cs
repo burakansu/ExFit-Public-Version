@@ -29,11 +29,11 @@ namespace BussinesLayer
         }
         public void DeleteTask(int Task_ID, int last = 0)
         {
-            //using (Context x = new Context())
-            //{
-            //    x.Tasks.Remove(x.Tasks.Single(x => x.Task_ID == Task_ID));
-            //    x.SaveChanges();
-            //}
+            using (Context x = new Context())
+            {
+                x.Tasks.Remove(x.Tasks.Single(x => x.Task_ID == Task_ID));
+                x.SaveChanges();
+            }
         }
         public int CountTasks(int Company_ID)
         {
@@ -72,6 +72,9 @@ namespace BussinesLayer
                         break;
                     case 7:
                         objTask.Description = "Üye Kaydı Silindi";
+                        break;
+                    case 8:
+                        objTask.Description = "Üye Kaydedilemedi Zaten Kayıtlı Email Veya Telefon";
                         break;
                 }
                 objTask.Create_Date = DateTime.Now;

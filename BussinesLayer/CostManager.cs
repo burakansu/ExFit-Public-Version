@@ -33,7 +33,7 @@ namespace BussinesLayer
             {
                 objCost.Year = DateTime.Now;
                 objCost.WhichMonth = DateTime.Now.Month;
-                x.Add(objCost);
+                x.Costs.Add(objCost);
                 x.SaveChanges();
             }
         }

@@ -23,5 +23,6 @@ namespace DatabaseLayer.ExFit_Database
         public int Excersize_ID { get; set; }
         public int Diet_ID { get; set; }
         public int Company_ID { get; set; }
+        public int Package_ID { get; set; }
     }
 }

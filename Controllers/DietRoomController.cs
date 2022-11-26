@@ -49,6 +49,8 @@ namespace ExFit.Controllers
         {
             VM.Food.Diet_ID = VM.Diet.Diet_ID;
             VM.Food.Day = VM._Day;
+            if (VM.Food.Note == null)
+                VM.Food.Note = ".";
             new FoodManager().AddDatabaseFood(VM.Food);
             return RedirectToAction("EditDiet", "DietRoom", new { id = VM.Food.Diet_ID });
         }

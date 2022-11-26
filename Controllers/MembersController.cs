@@ -19,6 +19,7 @@ namespace ExFit.Controllers
             VM.User = new UserManager().GetUser((int)HttpContext.Session.GetInt32("ID"));
             VM.Company = new CompanyManager().GetCompany(VM.User.Company_ID);
             VM.ExcersizeArray = new ExcersizeManager().GetExcersizes(VM.Company.Company_ID);
+            VM.PackageArray = new PackageManager().GetPackages(VM.Company.Company_ID);
             VM.DietArray = new DietManager().GetDiets(VM.Company.Company_ID);
             VM.Tasks = new TaskManager().GetLastFiveTask(VM.Company.Company_ID);
             if (id != 0)
@@ -33,7 +34,7 @@ namespace ExFit.Controllers
                 if (new ExcersizeManager().GetExcersizes(VM.Company.Company_ID, VM.Member.Excersize_ID, true).Count == 0)
                     VM.MemberExcersize = new ObjExcersize();
                 else
-                VM.MemberExcersize = new ExcersizeManager().GetExcersizes(VM.Company.Company_ID,VM.Member.Excersize_ID, true)[0];
+                    VM.MemberExcersize = new ExcersizeManager().GetExcersizes(VM.Company.Company_ID, VM.Member.Excersize_ID, true)[0];
             }
             else
             {
@@ -43,56 +44,55 @@ namespace ExFit.Controllers
 
             return VM;
         }
-        public async Task<IActionResult> SaveMemberAsync(MembersViewModel Model)
+        public async Task<IActionResult> SaveMemberAsync(MembersViewModel VM)
         {
-            if (Model.Member.FileAvatarIMG != null)
+            if (VM.Member.FileAvatarIMG != null)
             {
-                string imageExtension = Path.GetExtension(Model.Member.FileAvatarIMG.FileName);
+                string imageExtension = Path.GetExtension(VM.Member.FileAvatarIMG.FileName);
                 string imageName = Guid.NewGuid() + imageExtension;
                 string path = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot/Member/ProfilePhotos/{imageName}");
                 using var stream = new FileStream(path, FileMode.Create);
-                await Model.Member.FileAvatarIMG.CopyToAsync(stream);
-                Model.Member.IMG = $"/Member/ProfilePhotos/{imageName}";
+                await VM.Member.FileAvatarIMG.CopyToAsync(stream);
+                VM.Member.IMG = $"/Member/ProfilePhotos/{imageName}";
             }
-            else if (Model.Member.IMG == null) { Model.Member.IMG = "/Member/ProfilePhotos/AvatarNull.png"; }
+            else if (VM.Member.IMG == null) { VM.Member.IMG = "/Member/ProfilePhotos/AvatarNull.png"; }
 
-            if (Model.Member.FileHealthReport != null)
+            if (VM.Member.FileHealthReport != null)
             {
-                string imageExtension = Path.GetExtension(Model.Member.FileHealthReport.FileName);
+                string imageExtension = Path.GetExtension(VM.Member.FileHealthReport.FileName);
                 string imageName = Guid.NewGuid() + imageExtension;
                 string path = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot/Member/HealthReports/{imageName}");
                 using var stream = new FileStream(path, FileMode.Create);
-                await Model.Member.FileHealthReport.CopyToAsync(stream);
-                Model.Member.Health_Report = $"/Member/HealthReports/{imageName}";
+                await VM.Member.FileHealthReport.CopyToAsync(stream);
+                VM.Member.Health_Report = $"/Member/HealthReports/{imageName}";
             }
-            else if (Model.Member.Health_Report == null) { Model.Member.Health_Report = "/Member/HealthReports/AvatarNull.png"; }
+            else if (VM.Member.Health_Report == null) { VM.Member.Health_Report = "/Member/HealthReports/AvatarNull.png"; }
 
-            if (Model.Member.FileIdentityCard != null)
+            if (VM.Member.FileIdentityCard != null)
             {
-                string imageExtension = Path.GetExtension(Model.Member.FileIdentityCard.FileName);
+                string imageExtension = Path.GetExtension(VM.Member.FileIdentityCard.FileName);
                 string imageName = Guid.NewGuid() + imageExtension;
                 string path = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot/Member/IdentityCards/{imageName}");
                 using var stream = new FileStream(path, FileMode.Create);
-                await Model.Member.FileIdentityCard.CopyToAsync(stream);
-                Model.Member.Identity_Card = $"/Member/IdentityCards/{imageName}";
+                await VM.Member.FileIdentityCard.CopyToAsync(stream);
+                VM.Member.Identity_Card = $"/Member/IdentityCards/{imageName}";
             }
-            else if (Model.Member.Identity_Card == null) { Model.Member.Identity_Card = "/Member/ProfilePhotos/AvatarNull.png"; }
+            else if (VM.Member.Identity_Card == null) { VM.Member.Identity_Card = "/Member/ProfilePhotos/AvatarNull.png"; }
 
-            new MemberManager().SaveMember(Model.Member);
+            new MemberManager().SaveMember(VM.Member, VM.SelectedPackageID, VM.ExtraMonth);
 
-            if (Model.Member.Member_ID == 0)
-            { new TaskManager().SaveTask(new TaskManager().TaskBuilder(Model.Member.Company_ID, 0, Model.Member.Member_ID, (int)HttpContext.Session.GetInt32("ID"))); }
+            if (VM.Member.Member_ID == 0)
+                new TaskManager().SaveTask(new TaskManager().TaskBuilder(VM.Member.Company_ID, 0, VM.Member.Member_ID, (int)HttpContext.Session.GetInt32("ID")));
             else
-            { new TaskManager().SaveTask(new TaskManager().TaskBuilder(Model.Member.Company_ID, 1, Model.Member.Member_ID, (int)HttpContext.Session.GetInt32("ID"))); }
+                new TaskManager().SaveTask(new TaskManager().TaskBuilder(VM.Member.Company_ID, 1, VM.Member.Member_ID, (int)HttpContext.Session.GetInt32("ID")));
 
-            Model.User = new UserManager().GetUser((int)HttpContext.Session.GetInt32("ID"));
             return RedirectToAction("Index", "Home");
         }
-        public IActionResult SaveMemberMeazurements(MembersViewModel Model)
+        public IActionResult SaveMemberMeazurements(MembersViewModel VM)
         {
-            Model.MemberMeazurement.Member_ID = Model.Member.Member_ID;
-            new MemberManager().SaveMemberMeazurements(Model.MemberMeazurement);
-            return RedirectToAction("MemberAddMeazurements", "Members", new { id = Model.Member.Member_ID });
+            VM.MemberMeazurement.Member_ID = VM.Member.Member_ID;
+            new MemberManager().SaveMemberMeazurements(VM.MemberMeazurement);
+            return RedirectToAction("MemberAddMeazurements", "Members", new { id = VM.Member.Member_ID });
         }
         public IActionResult AllMembers()
         {

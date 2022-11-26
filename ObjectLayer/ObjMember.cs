@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using ExFit.Data;
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ObjectLayer
@@ -30,6 +31,19 @@ namespace ObjectLayer
                 DateTime now = DateTime.Now;
                 TimeSpan ts = this.Registration_Time - now;
                 return Convert.ToInt32(ts.Days);
+            }
+        }
+        [NotMapped]
+        public String? PackageName
+        {
+            get
+            {
+                using (Context x = new Context())
+                {
+                    if (x.Packages.Where(x => x.Package_ID == this.Package_ID).Count() > 0)
+                        return x.Packages.Single(x => x.Package_ID == this.Package_ID).Name;
+                    return "-";
+                }
             }
         }
     }
