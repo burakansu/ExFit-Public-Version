@@ -15,7 +15,7 @@ namespace ObjectLayer
             {
                 using (Context x = new Context())
                 {
-                    return x.Excersizes.Where(x => x.Excersize_ID == this.Excersize_ID).Count();
+                    return x.Members.Where(x => x.Excersize_ID == this.Excersize_ID).Count();
                 }
             }   
         }

@@ -75,21 +75,19 @@ namespace BussinesLayer
                 x.SaveChanges();
             }
         }
-        public void SaveMember(ObjMember objMember, int SelectedPackageID, int Extra)
+        public void SaveMember(ObjMember objMember)
         {
+            ObjPackage objPackage = new ObjPackage();
             using (Context x = new Context())
             {
-                ObjPackage objPackage = x.Packages.Single(x => x.Package_ID == SelectedPackageID);
+                if (objMember.Package_ID != 0)
+                    objPackage = x.Packages.Single(x => x.Package_ID == objMember.Package_ID);
+                else
+                    objPackage = new ObjPackage { Month = 0, Price = 0 };
 
                 if (objMember.Member_ID != 0)
                 {
-                    if (objMember.Package_ID == 0)
-                    {
-                        objMember.Package_ID = SelectedPackageID;
-                        objMember.Registration_Time = objMember.Registration_Time.AddMonths(objPackage.Month + Extra);
-                    }
-                    else
-                        objMember.Registration_Time = objMember.Registration_Time.AddMonths(Extra);
+                    objMember.Registration_Time = objMember.Registration_Date.AddMonths(objPackage.Month + objMember.Gift);
                     x.Update(objMember);
                 }
                 else
@@ -99,8 +97,7 @@ namespace BussinesLayer
                     {
                         objMember.Price += objPackage.Price;
                         objMember.Registration_Date = DateTime.Now;
-                        objMember.Registration_Time = DateTime.Now.AddMonths(objPackage.Month + Extra);
-                        objMember.Package_ID = SelectedPackageID;
+                        objMember.Registration_Time = DateTime.Now.AddMonths(objPackage.Month + objMember.Gift);
                         objMember.Password = objMember.Phone.ToString() + objMember.Name;
                         x.Add(objMember);
                     }

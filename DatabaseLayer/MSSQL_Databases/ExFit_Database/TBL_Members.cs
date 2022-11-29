@@ -15,6 +15,7 @@ namespace DatabaseLayer.ExFit_Database
         public string Adress { get; set; }
         public DateTime Registration_Date { get; set; }
         public DateTime Registration_Time { get; set; }
+        public int Gift { get; set; }
         public int Price { get; set; }
         public int Block { get; set; }
         public string Health_Report { get; set; }

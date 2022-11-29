@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ObjectLayer;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ExFit.Controllers
@@ -19,7 +21,10 @@ namespace ExFit.Controllers
             VM.User = new UserManager().GetUser((int)HttpContext.Session.GetInt32("ID"));
             VM.Company = new CompanyManager().GetCompany(VM.User.Company_ID);
             VM.ExcersizeArray = new ExcersizeManager().GetExcersizes(VM.Company.Company_ID);
-            VM.PackageArray = new PackageManager().GetPackages(VM.Company.Company_ID);
+            List<ObjPackage> objPackages = new List<ObjPackage>();
+            objPackages.Add(new ObjPackage { Name = "Paket Yok" });
+            objPackages.AddRange(new PackageManager().GetPackages(VM.Company.Company_ID));
+            VM.PackageArray = objPackages;
             VM.DietArray = new DietManager().GetDiets(VM.Company.Company_ID);
             VM.Tasks = new TaskManager().GetLastFiveTask(VM.Company.Company_ID);
             if (id != 0)
@@ -79,7 +84,7 @@ namespace ExFit.Controllers
             }
             else if (VM.Member.Identity_Card == null) { VM.Member.Identity_Card = "/Member/ProfilePhotos/AvatarNull.png"; }
 
-            new MemberManager().SaveMember(VM.Member, VM.SelectedPackageID, VM.ExtraMonth);
+            new MemberManager().SaveMember(VM.Member);
 
             if (VM.Member.Member_ID == 0)
                 new TaskManager().SaveTask(new TaskManager().TaskBuilder(VM.Member.Company_ID, 0, VM.Member.Member_ID, (int)HttpContext.Session.GetInt32("ID")));

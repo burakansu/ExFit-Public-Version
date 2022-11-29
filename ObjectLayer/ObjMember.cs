@@ -20,12 +20,12 @@ namespace ObjectLayer
         {
             get
             {
-                return this.Name +" "+ this.Surname;
+                return this.Name + " " + this.Surname;
             }
         }
         [NotMapped]
         public int RemainingDay // Üyenin Kalan Günü
-        { 
+        {
             get
             {
                 DateTime now = DateTime.Now;
@@ -43,6 +43,18 @@ namespace ObjectLayer
                     if (x.Packages.Where(x => x.Package_ID == this.Package_ID).Count() > 0)
                         return x.Packages.Single(x => x.Package_ID == this.Package_ID).Name;
                     return "-";
+                }
+            }
+        }
+        public int TotalPrice
+        {
+            get
+            {
+                using (Context x = new Context())
+                {
+                    if (x.Packages.Where(x => x.Package_ID == this.Package_ID).Count() > 0)
+                        return x.Packages.Single(x => x.Package_ID == this.Package_ID).Price + this.Price;
+                    return this.Price;
                 }
             }
         }
