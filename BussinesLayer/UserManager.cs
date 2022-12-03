@@ -5,19 +5,6 @@ namespace BussinesLayer
 {
     public class UserManager
     {
-        public UserManager()
-        {
-            using (Context x = new Context())
-            {
-                // Kontratı Dolan Üyeleri Pasifleştirir
-                List<ObjMember> objMembers = x.Members.Where(x => x.Registration_Time < DateTime.Now.AddDays(-3)).ToList();
-                foreach (var item in objMembers)
-                {
-                    new MemberManager().DeleteMember(item.Member_ID);
-                }
-                //end
-            }
-        }
         public int Authorization(int Joined_User_ID)
         {
             if (Joined_User_ID != 0) { return 1; }
