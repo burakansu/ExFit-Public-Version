@@ -11,7 +11,6 @@ namespace DatabaseLayer.ExFit_Database
         public string Surname { get; set; }
         public string Mail { get; set; }
         public string Password { get; set; }
-        public string Position { get; set; }
         public int Type { get; set; }
         public string IMG { get; set; }
         public string Phone { get; set; }

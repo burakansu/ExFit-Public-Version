@@ -10,13 +10,9 @@ namespace BussinesLayer
             using (Context x = new Context())
             {
                 if (id != 0 || Special == true)
-                {
                     return x.Excersizes.Where(x => x.Excersize_ID == id).ToList();
-                }
                 else
-                {
                     return x.Excersizes.Where(x => x.Active == 1 && x.Company_ID == Company_ID).ToList();
-                }
             }
         }
         public void DeleteExcersize(int id, bool Special = false)

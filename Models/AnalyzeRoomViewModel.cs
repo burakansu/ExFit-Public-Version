@@ -1,5 +1,4 @@
-﻿using DatabaseLayer;
-using ObjectLayer;
+﻿using ObjectLayer;
 using System.Collections.Generic;
 
 namespace ExFit.Models

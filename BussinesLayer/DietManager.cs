@@ -10,13 +10,9 @@ namespace BussinesLayer
             using (Context x = new Context())
             {
                 if (id != 0 || Special == true)
-                {
                     return x.Diets.Where(x => x.Diet_ID == id).ToList();
-                }
                 else
-                {
                     return x.Diets.Where(x => x.Active == 1 && x.Company_ID == Company_ID).ToList();
-                }
             }
         }
         public void DeleteDiet(int id, bool Special = false)

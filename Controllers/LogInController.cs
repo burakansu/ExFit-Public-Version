@@ -1,5 +1,4 @@
 ﻿using BussinesLayer;
-using ExFit.Data;
 using ExFit.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,15 +7,17 @@ namespace ExFit.Controllers
 {
     public class LogInController : Controller
     {
-        public IActionResult SignIn()
+        public IActionResult SignIn(string Msg = null)
         {
-           // context.Database.EnsureCreated();
+            // context.Database.EnsureCreated();
+            ViewBag.Msg = Msg;
             HttpContext.Session.SetInt32("ID", 0);
             return View();
         }
-        public IActionResult Register()
+        public IActionResult Register(string Msg = null)
         {
             HttpContext.Session.SetInt32("ID", 0);
+            ViewBag.Msg = Msg;
             return View();
         }
         public IActionResult Registering(LogInViewModel VM)
@@ -26,9 +27,9 @@ namespace ExFit.Controllers
             {
                 new CompanyManager().SaveCompany(VM.Company);
                 new UserManager().SaveUser(VM.User, 1);
-                return RedirectToAction("SignIn");
+                return RedirectToAction("SignIn", new { Msg = "-"});
             }
-            return RedirectToAction("Register");
+            return RedirectToAction("Register", new { Msg = "-"});
         }
         public IActionResult Entering(LogInViewModel VM)
         {
@@ -36,6 +37,8 @@ namespace ExFit.Controllers
             if (VM.User.User_ID != 0)
             {
                 HttpContext.Session.SetInt32("ID", VM.User.User_ID);
+                new IncomeManager().UpdateIncomeAuto(VM.User.User_ID);
+                new MemberManager().PasiveMemberAuto();
                 switch (VM.User.Type)
                 {
                     case 1:

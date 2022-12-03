@@ -1,14 +1,12 @@
 ﻿using ExFit.Data;
 using FunctionLayer.Stats_Manager.Regression;
-using Microsoft.AspNetCore.Http;
+using Microsoft.Identity.Client;
 using ObjectLayer;
 
 namespace BussinesLayer
 {
     public class MemberManager
     {
-        private DateTime MontFirstDay = DateTime.Now.MonthFirstDay();
-        private DateTime MonthLastDay = DateTime.Now.MonthLastDay();
         public int Authorization(int Joined_Member_ID)
         {
             if (Joined_Member_ID != 0) { return 1; }
@@ -60,18 +58,11 @@ namespace BussinesLayer
                 {
                     ObjMember objMember = x.Members.Single(x => x.Member_ID == id);
                     objMember.Block = 1;
+                    objMember.Package_ID = 0;
+                    objMember.Gift = 0;
+                    objMember.Price = 0;
                     x.Members.Update(objMember);
                 }
-                x.SaveChanges();
-            }
-        }
-        public void ActiveMember(int id)
-        {
-            using (Context x = new Context())
-            {
-                ObjMember objMember = x.Members.Single(x => x.Member_ID == id);
-                objMember.Block = 0;
-                x.Members.Update(objMember);
                 x.SaveChanges();
             }
         }
@@ -88,6 +79,9 @@ namespace BussinesLayer
                 if (objMember.Member_ID != 0)
                 {
                     objMember.Registration_Time = objMember.Registration_Date.AddMonths(objPackage.Month + objMember.Gift);
+                    if (objMember.Block == 1)
+                        objMember.Registration_Date = DateTime.Now;
+                    objMember.Block = 0;
                     x.Update(objMember);
                 }
                 else
@@ -95,10 +89,10 @@ namespace BussinesLayer
                     int Count = new MemberManager().CheckEmailAndPhone(objMember.Mail, objMember.Phone);
                     if (Count == 0)
                     {
-                        objMember.Price += objPackage.Price;
                         objMember.Registration_Date = DateTime.Now;
                         objMember.Registration_Time = DateTime.Now.AddMonths(objPackage.Month + objMember.Gift);
                         objMember.Password = objMember.Phone.ToString() + objMember.Name;
+                        objMember.Block = 1;
                         x.Add(objMember);
                     }
                 }
@@ -133,7 +127,7 @@ namespace BussinesLayer
         {
             using (Context x = new Context())
             {
-                return x.Members.Where(x => x.Company_ID == Company_ID).Sum(x => x.Price);
+                return x.Incomes.Where(x => x.Company_ID == Company_ID && x.Year == DateTime.Now.Year).Sum(x => x.Value);
             }
         }
         public double[] GetMemberWeightsArray(int id)
@@ -172,27 +166,11 @@ namespace BussinesLayer
         {
             using (Context x = new Context())
             {
-
-                // Bir Değişiklik Varsa O Ayki Geliri Günceller Veya Yeni Ay a Geçildiyse Kaydı Oluşturur.
-                ObjIncome objIncome = new ObjIncome();
-
-                int c = x.Members.Where(x => x.Registration_Date >= MontFirstDay && x.Registration_Date <= MonthLastDay && x.Company_ID == Company_ID).Count();
-
-                if (c > 0)
-                {
-                    objIncome.Value = x.Members.Where(m => m.Registration_Date >= MontFirstDay && m.Registration_Date <= MonthLastDay).Sum(x => x.Price);
-                    objIncome.Company_ID = Company_ID;
-                    if (x.Incomes.Where(x => x.WhichMonth == DateTime.Now.Month).Count() > 0)
-                    {
-                        objIncome.Income_ID = x.Incomes.Single(x => x.WhichMonth == DateTime.Now.Month).Income_ID;
-                    }
-                    new IncomeManager().SaveIncome(objIncome);
-                }
-                // end
+                
 
                 if (last == 1)
                 {
-                    return x.Members.Where(x => x.Company_ID == Company_ID).OrderByDescending(x => x.Member_ID).Take(3).ToList();
+                    return x.Members.Where(x => x.Company_ID == Company_ID).OrderByDescending(x => x.Registration_Date).Take(3).ToList();
                 }
                 else if (pasive == 1)
                 {
@@ -209,63 +187,64 @@ namespace BussinesLayer
             using (Context x = new Context())
             {
                 DateTime now = DateTime.Now;
-                int[] ints = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+                int[] Months = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
                 var objMembers = x.Members.Where(x => x.Registration_Date.Year == now.Year && x.Company_ID == Company_ID);
                 foreach (var item in objMembers)
                 {
                     switch (item.Registration_Date.Month.ToString())
                     {
                         case "1":
-                            ints[0] += 1;
+                            Months[0] += 1;
                             break;
                         case "2":
-                            ints[1] += 1;
+                            Months[1] += 1;
                             break;
                         case "3":
-                            ints[2] += 1;
+                            Months[2] += 1;
                             break;
                         case "4":
-                            ints[3] += 1;
+                            Months[3] += 1;
                             break;
                         case "5":
-                            ints[4] += 1;
+                            Months[4] += 1;
                             break;
                         case "6":
-                            ints[5] += 1;
+                            Months[5] += 1;
                             break;
                         case "7":
-                            ints[6] += 1;
+                            Months[6] += 1;
                             break;
                         case "8":
-                            ints[7] += 1;
+                            Months[7] += 1;
                             break;
                         case "9":
-                            ints[8] += 1;
+                            Months[8] += 1;
                             break;
                         case "10":
-                            ints[9] += 1;
+                            Months[9] += 1;
                             break;
                         case "11":
-                            ints[10] += 1;
+                            Months[10] += 1;
                             break;
                         case "12":
-                            ints[11] += 1;
+                            Months[11] += 1;
                             break;
                     }
                 }
-                return ints;
+                return Months;
             }
         }
-    }
-    public static class ExtensionMethods
-    {
-        public static DateTime MonthFirstDay(this DateTime dt)
+        public void PasiveMemberAuto()
         {
-            return new DateTime(dt.Year, dt.Month, 1);
-        }
-        public static DateTime MonthLastDay(this DateTime dt)
-        {
-            return dt.MonthFirstDay().AddMonths(1).AddDays(-1);
+            using (Context x = new Context())
+            {
+                // Kontratı Dolan Üyeleri Pasifleştirir
+                List<ObjMember> objMembers = x.Members.Where(x => x.Registration_Time < DateTime.Now).ToList();
+                foreach (var item in objMembers)
+                {
+                    DeleteMember(item.Member_ID);
+                }
+            }
         }
     }
 }

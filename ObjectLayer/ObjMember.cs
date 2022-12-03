@@ -46,6 +46,20 @@ namespace ObjectLayer
                 }
             }
         }
+        [NotMapped]
+        public int TotalMonth
+        {
+            get
+            {
+                using (Context x = new Context())
+                {
+                    if (x.Packages.Where(x => x.Package_ID == this.Package_ID).Count() > 0)
+                        return x.Packages.Single(x => x.Package_ID == this.Package_ID).Month + this.Gift;
+                    return 0;
+                }
+            }
+        }
+        [NotMapped]
         public int TotalPrice
         {
             get
@@ -58,5 +72,7 @@ namespace ObjectLayer
                 }
             }
         }
+        [NotMapped]
+        public bool ResetRegistrationDate { get; set; }
     }
 }

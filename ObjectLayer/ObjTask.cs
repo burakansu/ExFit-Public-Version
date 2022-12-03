@@ -18,9 +18,11 @@ namespace ObjectLayer
                 {
                     using (Context x = new Context())
                     {
-                        string Name = x.Members.Single(x => x.Member_ID == this.Member_ID).Name;
-                        string Surname = x.Members.Single(x => x.Member_ID == this.Member_ID).Surname;
-                        return Name + " " + Surname;
+                        if (x.Members.Where(x => x.Member_ID == this.Member_ID).Count() > 0)
+                        {
+                            ObjMember objMember = x.Members.Single(x => x.Member_ID == this.Member_ID);
+                            return objMember.Name + " " + objMember.Surname;
+                        }
                     }
                 }
                 return "-";

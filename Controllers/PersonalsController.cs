@@ -19,7 +19,7 @@ namespace ExFit.Controllers
 
             VM.Users = new UserManager().GetUsers(VM.Company.Company_ID);
             VM.Tasks = new TaskManager().GetLastFiveTask(VM.Company.Company_ID);
-            VM.TodayTasks = new TaskManager().GetLastFiveTask(1);
+            VM.TodayTasks = new TaskManager().GetLastFiveTask(VM.Company.Company_ID, 1);
             if (id != 0)
             {
                 VM.SelectedUser = new UserManager().GetUser(id);

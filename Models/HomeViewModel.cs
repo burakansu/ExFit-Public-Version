@@ -1,5 +1,4 @@
-﻿using DatabaseLayer;
-using ObjectLayer;
+﻿using ObjectLayer;
 using System.Collections.Generic;
 
 namespace ExFit.Models
@@ -32,7 +31,7 @@ namespace ExFit.Models
         { 
             get
             {
-                return (this.ActiveMembersCount * 100) / 250;
+                return (this.ActiveMembersCount * 100) / 300;
             }
         }
         public int PersonalCapasity

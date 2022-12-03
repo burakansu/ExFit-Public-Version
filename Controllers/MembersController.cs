@@ -1,5 +1,4 @@
 ﻿using BussinesLayer;
-using ExFit.Data;
 using ExFit.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ExFit.Controllers
@@ -43,7 +41,7 @@ namespace ExFit.Controllers
             }
             else
             {
-                VM.Members = new MemberManager().GetMembers(VM.Company.Company_ID, passive);
+                VM.Members = new MemberManager().GetMembers(VM.Company.Company_ID,last, passive);
                 VM.Member = new ObjectLayer.ObjMember();
             }
 
@@ -139,13 +137,6 @@ namespace ExFit.Controllers
 
             new TaskManager().SaveTask(new TaskManager().TaskBuilder(objUser.Company_ID, 7, id, objUser.User_ID));
             return RedirectToAction("Index", "Home");
-        }
-        public IActionResult ActiveMember(int id)
-        {
-            new MemberManager().ActiveMember(id);
-            ObjUser objUser = new UserManager().GetUser((int)HttpContext.Session.GetInt32("ID"));
-            new TaskManager().SaveTask(new TaskManager().TaskBuilder(objUser.Company_ID, 3, id, objUser.User_ID));
-            return RedirectToAction("OpenedMember", "Members", new { id = id });
         }
         public IActionResult DeleteMemberExcersize(int id)
         {

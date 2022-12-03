@@ -11,11 +11,11 @@ namespace BussinesLayer
             {
                 if (all == 1)
                 {
-                    return x.Tasks.Where(x => x.Company_ID == Company_ID).OrderByDescending(x => x.Create_Date == DateTime.Now).Take(5).ToList();
+                    return x.Tasks.Where(x => x.Company_ID == Company_ID).OrderByDescending(x => x.Create_Date).ToList();
                 }
                 else
                 {
-                    return x.Tasks.Where(x => x.Company_ID == Company_ID).OrderByDescending(x => x.Task_ID).Take(5).ToList();
+                    return x.Tasks.Where(x => x.Company_ID == Company_ID).OrderByDescending(x => x.Create_Date).Take(5).ToList();
                 }
             }
         }
@@ -42,7 +42,7 @@ namespace BussinesLayer
                 return x.Tasks.Where(x => x.Company_ID == Company_ID).Count();
             }
         }
-        public ObjTask TaskBuilder(int Company_ID, int type, int id, int userid)
+        public ObjTask TaskBuilder(int Company_ID, int type, int Member_ID, int User_ID)
         {
             using (Context x = new Context())
             {
@@ -78,8 +78,8 @@ namespace BussinesLayer
                         break;
                 }
                 objTask.Create_Date = DateTime.Now;
-                objTask.User_ID = userid;
-                objTask.Member_ID = id;
+                objTask.User_ID = User_ID;
+                objTask.Member_ID = Member_ID;
                 objTask.Company_ID = Company_ID;
                 return objTask;
             }
