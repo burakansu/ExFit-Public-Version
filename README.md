@@ -33,6 +33,6 @@ Kütüphaneler **Jquery ve Bootstrap**
 
 ### Canlı Olarak Deneyin
 
-**Proje Linki:**  https://burakkansu.com/LogIn/SignIn  adresinden ulaşılabilir.
+**Proje Linki:**  https://burakkansu.com/landing/Index  adresinden ulaşılabilir.
 User: burakkansu9@gmail.com / Pasw: 123
 
