@@ -1,12 +1,24 @@
 ﻿using ExFit.Data;
 using FunctionLayer.Stats_Manager.Regression;
-using Microsoft.Identity.Client;
 using ObjectLayer;
 
 namespace BussinesLayer
 {
     public class MemberManager
     {
+        public void SendSmsMember(ObjMember objMember, string SmsText)
+        {
+            using (Context x = new Context())
+            {
+                ObjCompany objCompany = x.Companies.Single(x => x.Company_ID == objMember.Company_ID);
+                if (objCompany.Package_Type > 0)
+                {
+                    List<ObjMember> objMembers = new List<ObjMember>();
+                    objMembers.Add(objMember);
+                    new SmsManager().SmsSender(objCompany.Name, SmsText, objMembers);
+                }
+            }
+        }
         public int Authorization(int Joined_Member_ID)
         {
             if (Joined_Member_ID != 0) { return 1; }
@@ -62,6 +74,7 @@ namespace BussinesLayer
                     objMember.Gift = 0;
                     objMember.Price = 0;
                     x.Members.Update(objMember);
+                    SendSmsMember(objMember, "Üyeliğiniz " + DateTime.Now.ToShortDateString() + " itibarıyla Pasif Durumdadır. Daha fazla bilgi için Exfit Yönetim Panelinden Üye Girişi Yapabilirsiniz.");
                 }
                 x.SaveChanges();
             }
@@ -95,6 +108,7 @@ namespace BussinesLayer
                         objMember.Password = objMember.Phone.ToString() + objMember.Name;
                         objMember.Block = 1;
                         x.Add(objMember);
+                        SendSmsMember(objMember, "Hoşgeldin! Üyeliğiniz " + DateTime.Now.ToShortDateString() + " itibarıyla Başlamıştır. Kalan Gününüz: " + objMember.RemainingDay + " Daha fazla bilgi için Exfit İle Üye Girişi Yapabilirsiniz. Mail:"+ objMember.Mail +" Şifre: " + objMember.Password);
                     }
                 }
                 x.SaveChanges();
@@ -168,7 +182,7 @@ namespace BussinesLayer
         {
             using (Context x = new Context())
             {
-                
+
 
                 if (last == 1)
                 {

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ObjectLayer;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -71,10 +72,16 @@ namespace ExFit.Controllers
             VM.SelectedUser.Company_ID = VM.Company.Company_ID;
             int Type = new UserManager().SaveUser(VM.SelectedUser);
             if (Type == 0)
+            {
                 new TaskManager().SaveTask(new TaskManager().TaskBuilder(VM.SelectedUser.Company_ID, 4, 0, User.User_ID));
+                List<ObjUser> objUsers = new List<ObjUser>();
+                objUsers.Add(VM.SelectedUser);
+                if (VM.Company.Package_Type > 0)
+                    new SmsManager().SmsSender(VM.Company.Name, "Hoşgeldin! " + VM.SelectedUser.Name + " " + DateTime.Now.ToShortDateString() + " itibarıyla ExFit Yönetim Paneline Girerek Çalışmaya Başlayabilirsin Mail:" + VM.SelectedUser.Mail + "Şifre: " + VM.SelectedUser.Password, null, objUsers);
+            }
             else if (Type == 1)
                 new TaskManager().SaveTask(new TaskManager().TaskBuilder(VM.SelectedUser.Company_ID, 9, 0, User.User_ID));
-            else if(VM.SelectedUser.User_ID != User.User_ID)
+            else if (VM.SelectedUser.User_ID != User.User_ID)
                 new TaskManager().SaveTask(new TaskManager().TaskBuilder(VM.SelectedUser.Company_ID, 10, 0, User.User_ID));
 
             VM.User = new UserManager().GetUser((int)HttpContext.Session.GetInt32("ID"));
