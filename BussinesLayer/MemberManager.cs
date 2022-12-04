@@ -8,11 +8,12 @@ namespace BussinesLayer
     {
         public void SendSmsMember(ObjMember objMember, string SmsText)
         {
-            using (Context x = new Context())
+            if (objCompany.Package_Type > 0)
             {
-                ObjCompany objCompany = x.Companies.Single(x => x.Company_ID == objMember.Company_ID);
-                if (objCompany.Package_Type > 0)
+                using (Context x = new Context())
                 {
+                    ObjCompany objCompany = x.Companies.Single(x => x.Company_ID == objMember.Company_ID);
+                    
                     List<ObjMember> objMembers = new List<ObjMember>();
                     objMembers.Add(objMember);
                     new SmsManager().SmsSender(objCompany.Name, SmsText, objMembers);
