@@ -5,19 +5,6 @@ namespace BussinesLayer
 {
     public class UserManager
     {
-        public UserManager()
-        {
-            using (Context x = new Context())
-            {
-                // Kontratı Dolan Üyeleri Pasifleştirir
-                List<ObjMember> objMembers = x.Members.Where(x => x.Registration_Time < DateTime.Now.AddDays(-3)).ToList();
-                foreach (var item in objMembers)
-                {
-                    new MemberManager().DeleteMember(item.Member_ID);
-                }
-                //end
-            }
-        }
         public int Authorization(int Joined_User_ID)
         {
             if (Joined_User_ID != 0) { return 1; }
@@ -47,14 +34,17 @@ namespace BussinesLayer
                 return x.Users.Where(x => x.Mail == Email).Count();
             }
         }
-        public void SaveUser(ObjUser objUser, int first = 0)
+        public int SaveUser(ObjUser objUser, int first = 0)
         {
+            int Count = 0;
+            bool Update = false;
             using (Context x = new Context())
             {
                 if (first == 0)
                 {
                     if (objUser.User_ID != 0)
                     {
+                        Update = true;
                         x.Update(objUser);
                     }
                     else
@@ -64,14 +54,23 @@ namespace BussinesLayer
                 }
                 else
                 {
-                    int id = x.Companies.Max(x => x.Company_ID);
-                    objUser.Company_ID = id;
-                    objUser.Type = 1;
-                    objUser.IMG = "/Personal/AvatarNull.png";
-                    x.Users.Add(objUser);
+                    Count = CheckEmail(objUser.Mail);
+                    if (Count == 0)
+                    {
+                        int id = x.Companies.Max(x => x.Company_ID);
+                        objUser.Company_ID = id;
+                        objUser.Type = 1;
+                        objUser.IMG = "/Personal/AvatarNull.png";
+                        x.Users.Add(objUser);
+                    }
                 }
                 x.SaveChanges();
             }
+            if (Update == true)
+                return 2;
+            else if (Count == 0 && Update == false)
+                return 0;
+            return 1;
         }
         public void DeleteUser(int id)
         {

@@ -22,7 +22,7 @@ namespace BussinesLayer
                 // Bir Değişiklik Varsa O Ayki Geliri Günceller Veya Yeni Aya Geçildiyse Gelir Kaydı Oluşturur.
                 ObjIncome objIncome = new ObjIncome();
                 int Company_ID = x.Users.Single(x => x.User_ID== User_ID).Company_ID;
-                foreach (var item in x.Members.Where(x => x.Registration_Date >= MontFirstDay && x.Registration_Date <= MonthLastDay && x.Company_ID == Company_ID).ToList())
+                foreach (var item in x.Members.Where(x => x.Registration_Date >= MontFirstDay && x.Registration_Date <= MonthLastDay && x.Company_ID == Company_ID && x.Block == 0).ToList())
                 {
                     objIncome.Value += item.TotalPrice;
                     objIncome.Company_ID = Company_ID;

@@ -82,9 +82,12 @@ namespace ExFit.Controllers
             }
             else if (VM.Member.Identity_Card == null) { VM.Member.Identity_Card = "/Member/ProfilePhotos/AvatarNull.png"; }
 
-            new MemberManager().SaveMember(VM.Member);
+            int Before = VM.Member.Member_ID;
+            int Count = new MemberManager().SaveMember(VM.Member);
 
-            if (VM.Member.Member_ID == 0)
+            if (Count > 0)
+                new TaskManager().SaveTask(new TaskManager().TaskBuilder(VM.Member.Company_ID, 8, VM.Member.Member_ID, (int)HttpContext.Session.GetInt32("ID")));
+            else if (Before == 0)
                 new TaskManager().SaveTask(new TaskManager().TaskBuilder(VM.Member.Company_ID, 0, VM.Member.Member_ID, (int)HttpContext.Session.GetInt32("ID")));
             else
                 new TaskManager().SaveTask(new TaskManager().TaskBuilder(VM.Member.Company_ID, 1, VM.Member.Member_ID, (int)HttpContext.Session.GetInt32("ID")));

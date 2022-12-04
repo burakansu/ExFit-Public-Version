@@ -66,8 +66,9 @@ namespace BussinesLayer
                 x.SaveChanges();
             }
         }
-        public void SaveMember(ObjMember objMember)
+        public int SaveMember(ObjMember objMember)
         {
+            int Count = 0;
             ObjPackage objPackage = new ObjPackage();
             using (Context x = new Context())
             {
@@ -86,7 +87,7 @@ namespace BussinesLayer
                 }
                 else
                 {
-                    int Count = new MemberManager().CheckEmailAndPhone(objMember.Mail, objMember.Phone);
+                    Count = new MemberManager().CheckEmailAndPhone(objMember.Mail, objMember.Phone);
                     if (Count == 0)
                     {
                         objMember.Registration_Date = DateTime.Now;
@@ -98,6 +99,7 @@ namespace BussinesLayer
                 }
                 x.SaveChanges();
             }
+            return Count;
         }
         public void SaveMemberMeazurements(ObjMemberMeazurement objMemberMeazurement)
         {

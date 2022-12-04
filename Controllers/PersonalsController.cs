@@ -1,8 +1,8 @@
 ﻿using BussinesLayer;
-using ExFit.Data;
 using ExFit.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ObjectLayer;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -50,10 +50,13 @@ namespace ExFit.Controllers
         public IActionResult Delete(int id)
         {
             new UserManager().DeleteUser(id);
+            ObjUser User = new UserManager().GetUser((int)HttpContext.Session.GetInt32("ID"));
+            new TaskManager().SaveTask(new TaskManager().TaskBuilder(User.Company_ID, 11, 0, User.User_ID));
             return RedirectToAction("Index", "Home");
         }
         public async Task<IActionResult> RegistryingAsync(PersonalsViewModel VM)
         {
+            ObjUser User = new UserManager().GetUser((int)HttpContext.Session.GetInt32("ID"));
             if (VM.file != null)
             {
                 string imageExtension = Path.GetExtension(VM.file.FileName);
@@ -66,8 +69,13 @@ namespace ExFit.Controllers
             else if (VM.SelectedUser.IMG == null) { VM.SelectedUser.IMG = $"/Personal/AvatarNull.png"; }
 
             VM.SelectedUser.Company_ID = VM.Company.Company_ID;
-            new UserManager().SaveUser(VM.SelectedUser);
-            new TaskManager().SaveTask(new TaskManager().TaskBuilder(VM.SelectedUser.Company_ID, 4, 0, (int)HttpContext.Session.GetInt32("ID")));
+            int Type = new UserManager().SaveUser(VM.SelectedUser);
+            if (Type == 0)
+                new TaskManager().SaveTask(new TaskManager().TaskBuilder(VM.SelectedUser.Company_ID, 4, 0, User.User_ID));
+            else if (Type == 1)
+                new TaskManager().SaveTask(new TaskManager().TaskBuilder(VM.SelectedUser.Company_ID, 9, 0, User.User_ID));
+            else if(VM.SelectedUser.User_ID != User.User_ID)
+                new TaskManager().SaveTask(new TaskManager().TaskBuilder(VM.SelectedUser.Company_ID, 10, 0, User.User_ID));
 
             VM.User = new UserManager().GetUser((int)HttpContext.Session.GetInt32("ID"));
             return RedirectToAction("Index", "Home");

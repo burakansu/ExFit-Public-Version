@@ -27,13 +27,20 @@ namespace BussinesLayer
                 x.SaveChanges();
             }
         }
-        public void AddDatabaseCost(ObjCost objCost)
+        public void SaveCost(ObjCost objCost)
         {
             using (Context x = new Context())
             {
-                objCost.Year = DateTime.Now;
-                objCost.WhichMonth = DateTime.Now.Month;
-                x.Costs.Add(objCost);
+                if (objCost.Cost_ID != 0)
+                    x.Costs.Update(objCost);
+                else
+                {
+                    objCost.Year = DateTime.Now;
+                    objCost.WhichMonth = DateTime.Now.Month;
+                    int count = x.Costs.Where(x => x.WhichMonth == objCost.WhichMonth && x.Company_ID == objCost.Company_ID).Count();
+                    if (count == 0)
+                        x.Costs.Add(objCost);
+                }
                 x.SaveChanges();
             }
         }

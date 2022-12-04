@@ -46,7 +46,7 @@ namespace ExFit.Controllers
         public IActionResult SaveCost(AnalyzeRoomViewModel VM)
         {
             VM.Cost.Company_ID= VM.User.Company_ID;
-            new CostManager().AddDatabaseCost(VM.Cost);
+            new CostManager().SaveCost(VM.Cost);
             return RedirectToAction("Index", "Home");
         }
         public IActionResult DeleteCost(int id)

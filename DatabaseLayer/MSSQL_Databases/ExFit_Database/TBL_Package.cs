@@ -9,6 +9,7 @@ namespace DatabaseLayer.MSSQL_Databases.ExFit_Database
         public string Name { get; set; }
         public int Month { get; set; }
         public int Price { get; set; }
+        public int Active { get; set; }
         public int Company_ID { get; set; }
     }
 }

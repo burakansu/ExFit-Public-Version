@@ -9,7 +9,7 @@ namespace BussinesLayer
         {
             using (Context x = new Context())
             {
-                return x.Packages.Where(x => x.Company_ID == Company_ID).ToList();
+                return x.Packages.Where(x => x.Company_ID == Company_ID && x.Active == 1).ToList();
             }
         }
         public ObjPackage GetPackage(int id)
@@ -23,7 +23,9 @@ namespace BussinesLayer
         {
             using (Context x = new Context())
             {
-                x.Packages.Remove(x.Packages.Single(x => x.Package_ID == id));
+                ObjPackage objPackage = x.Packages.Single(x => x.Package_ID == id);
+                objPackage.Active = 0;
+                x.Packages.Update(objPackage);
                 x.SaveChanges();
             }
         }
@@ -31,6 +33,7 @@ namespace BussinesLayer
         {
             using (Context x = new Context())
             {
+                objPackage.Active = 1;
                 x.Packages.Add(objPackage);
                 x.SaveChanges();
             }

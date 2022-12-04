@@ -11,11 +11,11 @@ namespace BussinesLayer
             {
                 if (all == 1)
                 {
-                    return x.Tasks.Where(x => x.Company_ID == Company_ID).OrderByDescending(x => x.Create_Date).ToList();
+                    return x.Tasks.Where(x => x.Company_ID == Company_ID).OrderByDescending(x => x.Task_ID).ToList();
                 }
                 else
                 {
-                    return x.Tasks.Where(x => x.Company_ID == Company_ID).OrderByDescending(x => x.Create_Date).Take(5).ToList();
+                    return x.Tasks.Where(x => x.Company_ID == Company_ID).OrderByDescending(x => x.Task_ID).Take(5).ToList();
                 }
             }
         }
@@ -42,12 +42,12 @@ namespace BussinesLayer
                 return x.Tasks.Where(x => x.Company_ID == Company_ID).Count();
             }
         }
-        public ObjTask TaskBuilder(int Company_ID, int type, int Member_ID, int User_ID)
+        public ObjTask TaskBuilder(int Company_ID, int desctype, int Member_ID, int User_ID)
         {
             using (Context x = new Context())
             {
                 ObjTask objTask = new ObjTask();
-                switch (type)
+                switch (desctype)
                 {
                     case 0:
                         objTask.Description = "Yeni Üye Kayıt Edildi";
@@ -56,10 +56,10 @@ namespace BussinesLayer
                         objTask.Description = "Üye Güncellendi";
                         break;
                     case 2:
-                        objTask.Description = "Üye Kaydı Pasif Durumda!";
+                        objTask.Description = "Üye Kontratı Sonlandı!";
                         break;
                     case 3:
-                        objTask.Description = "Üye Kaydı Aktifleştirildi";
+                        objTask.Description = "Üye Kontratı Yenilendi";
                         break;
                     case 4:
                         objTask.Description = "Yeni Çalışan İşe Alındı";
@@ -75,6 +75,15 @@ namespace BussinesLayer
                         break;
                     case 8:
                         objTask.Description = "Üye Kaydedilemedi Zaten Kayıtlı Email Veya Telefon";
+                        break;
+                    case 9:
+                        objTask.Description = "Personel Kaydedilemedi Zaten Kayıtlı Email Veya Telefon";
+                        break;
+                    case 10:
+                        objTask.Description = "Personel Güncellendi";
+                        break;
+                    case 11:
+                        objTask.Description = "Personel İşten Çıkarıldı";
                         break;
                 }
                 objTask.Create_Date = DateTime.Now;
