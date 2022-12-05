@@ -47,8 +47,8 @@ namespace BussinesLayer
         {
             String Xml = "<request>";
             Xml += "<authentication>";
-            Xml += "<username>Private</username>";
-            Xml += "<password>Private</password>";
+            Xml += "<username> Private </username>";
+            Xml += "<password> Private </password>";
             Xml += "</authentication>";
             Xml += "<order>";
             Xml += $"<sender> {CompanyName} </sender>";
