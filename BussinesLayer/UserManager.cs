@@ -7,8 +7,9 @@ namespace BussinesLayer
     {
         public int Authorization(int Joined_User_ID)
         {
-            if (Joined_User_ID != 0) { return 1; }
-            else { return 0; }
+            if (Joined_User_ID != 0)
+                return 1;
+            return 0;
         }
         public ObjUser CheckUserEntering(ObjUser User)
         {
@@ -17,14 +18,10 @@ namespace BussinesLayer
                 ObjUser _User = x.Users.SingleOrDefault(x => x.Mail == User.Mail && x.Password == User.Password);
 
                 if (_User != null)
-                {
                     return _User;
-                }
-                else
-                {
-                    User.User_ID = 0;
-                    return User;
-                }
+
+                User.User_ID = 0;
+                return User;
             }
         }
         public int CheckEmail(string Email)
@@ -48,9 +45,7 @@ namespace BussinesLayer
                         x.Update(objUser);
                     }
                     else
-                    {
                         x.Add(objUser);
-                    }
                 }
                 else
                 {

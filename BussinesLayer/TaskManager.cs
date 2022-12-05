@@ -10,13 +10,9 @@ namespace BussinesLayer
             using (Context x = new Context())
             {
                 if (all == 1)
-                {
                     return x.Tasks.Where(x => x.Company_ID == Company_ID).OrderByDescending(x => x.Task_ID).ToList();
-                }
                 else
-                {
                     return x.Tasks.Where(x => x.Company_ID == Company_ID).OrderByDescending(x => x.Task_ID).Take(5).ToList();
-                }
             }
         }
         public void SaveTask(ObjTask objTask)

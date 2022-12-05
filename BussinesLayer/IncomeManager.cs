@@ -48,9 +48,7 @@ namespace BussinesLayer
                     x.Incomes.Add(objIncome);
                 }
                 else
-                {
                     x.Incomes.Add(objIncome);
-                }
                 x.SaveChanges();
             }
         }

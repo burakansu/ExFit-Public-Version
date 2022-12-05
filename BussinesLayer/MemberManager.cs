@@ -8,12 +8,11 @@ namespace BussinesLayer
     {
         public void SendSmsMember(ObjMember objMember, string SmsText)
         {
-            if (objCompany.Package_Type > 0)
+            using (Context x = new Context())
             {
-                using (Context x = new Context())
+                ObjCompany objCompany = x.Companies.Single(x => x.Company_ID == objMember.Company_ID);
+                if (objCompany.Package_Type > 0)
                 {
-                    ObjCompany objCompany = x.Companies.Single(x => x.Company_ID == objMember.Company_ID);
-                    
                     List<ObjMember> objMembers = new List<ObjMember>();
                     objMembers.Add(objMember);
                     new SmsManager().SmsSender(objCompany.Name, SmsText, objMembers);
@@ -22,8 +21,10 @@ namespace BussinesLayer
         }
         public int Authorization(int Joined_Member_ID)
         {
-            if (Joined_Member_ID != 0) { return 1; }
-            else { return 0; }
+            if (Joined_Member_ID != 0)
+                return 1;
+            else
+                return 0;
         }
         public ObjMember CheckMemberEntering(ObjMember member)
         {
@@ -109,7 +110,7 @@ namespace BussinesLayer
                         objMember.Password = objMember.Phone.ToString() + objMember.Name;
                         objMember.Block = 1;
                         x.Add(objMember);
-                        SendSmsMember(objMember, "Hoşgeldin! Üyeliğiniz " + DateTime.Now.ToShortDateString() + " itibarıyla Başlamıştır. Kalan Gününüz: " + objMember.RemainingDay + " Daha fazla bilgi için Exfit İle Üye Girişi Yapabilirsiniz. Mail:"+ objMember.Mail +" Şifre: " + objMember.Password);
+                        SendSmsMember(objMember, "Hoşgeldin! Üyeliğiniz " + DateTime.Now.ToShortDateString() + " itibarıyla Başlamıştır. Kalan Gününüz: " + objMember.RemainingDay + " Daha fazla bilgi için Exfit İle Üye Girişi Yapabilirsiniz. Mail:" + objMember.Mail + " Şifre: " + objMember.Password);
                     }
                 }
                 x.SaveChanges();
@@ -183,20 +184,12 @@ namespace BussinesLayer
         {
             using (Context x = new Context())
             {
-
-
                 if (last == 1)
-                {
                     return x.Members.Where(x => x.Company_ID == Company_ID).OrderByDescending(x => x.Registration_Date).Take(3).ToList();
-                }
                 else if (pasive == 1)
-                {
                     return x.Members.Where(x => x.Block == 1 && x.Company_ID == Company_ID).ToList();
-                }
                 else
-                {
                     return x.Members.Where(x => x.Block == 0 && x.Company_ID == Company_ID).ToList();
-                }
             }
         }
         public int[] GetThisYearRegystry(int Company_ID)
