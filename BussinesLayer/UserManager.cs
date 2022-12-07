@@ -18,8 +18,11 @@ namespace BussinesLayer
                 ObjUser _User = x.Users.SingleOrDefault(x => x.Mail == User.Mail && x.Password == User.Password);
 
                 if (_User != null)
-                    return _User;
-
+                {
+                    DateTime dt = x.Companies.Single(x => x.Company_ID == _User.Company_ID).Registration_Time;
+                    if (dt >= DateTime.Now)
+                        return _User;
+                }
                 User.User_ID = 0;
                 return User;
             }

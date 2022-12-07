@@ -27,9 +27,9 @@ namespace ExFit.Controllers
             {
                 new CompanyManager().SaveCompany(VM.Company);
                 new UserManager().SaveUser(VM.User, 1);
-                return RedirectToAction("SignIn", new { Msg = "-"});
+                return RedirectToAction("SignIn", new { Msg = "-" });
             }
-            return RedirectToAction("Register", new { Msg = "-"});
+            return RedirectToAction("Register", new { Msg = "-" });
         }
         public IActionResult Entering(LogInViewModel VM)
         {
@@ -37,16 +37,11 @@ namespace ExFit.Controllers
             if (VM.User.User_ID != 0)
             {
                 HttpContext.Session.SetInt32("ID", VM.User.User_ID);
+
                 new IncomeManager().UpdateIncomeAuto(VM.User.User_ID);
                 new MemberManager().PasiveMemberAuto();
-                switch (VM.User.Type)
-                {
-                    case 1:
-                        return RedirectToAction("Index", "Home", new { ID = VM.User.User_ID });
-                    case 2:
-                        return RedirectToAction("Index", "Home");
-                }
-                return RedirectToAction("SignIn");
+
+                return RedirectToAction("Index", "Home", new { ID = VM.User.User_ID });
             }
             else
             {
@@ -56,7 +51,7 @@ namespace ExFit.Controllers
         public IActionResult ForgetPassword()
         {
             HttpContext.Session.SetInt32("ID", 0);
-            return View(); 
+            return View();
         }
     }
 }

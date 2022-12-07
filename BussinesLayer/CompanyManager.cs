@@ -26,6 +26,8 @@ namespace BussinesLayer
                 if (objCompany.Company_ID == 0)
                 {
                     objCompany.Logo = "-";
+                    objCompany.Registration_Date = DateTime.Now;
+                    objCompany.Registration_Time = DateTime.Now.AddYears(45);
                     x.Companies.Add(objCompany);
                     x.SaveChanges();
                 }
